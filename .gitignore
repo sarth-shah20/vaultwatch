@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+
+# Node / frontend
+node_modules/
+dist/
+build/
+.env
+.env.local
+
+# Data (large files — do not commit raw datasets)
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+ml/models/*.pkl
+ml/models/*.pt
+ml/models/*.h5
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Secrets
+*.pem
+*.key
+secrets.json
