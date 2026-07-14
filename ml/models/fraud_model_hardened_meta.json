@@ -1,0 +1,46 @@
+{
+  "variant": "hardened",
+  "label": "production-realistic variant (raw + destination balances dropped)",
+  "model_path": "ml/models/fraud_model_hardened.json",
+  "features": [
+    "amount",
+    "error_balance_orig",
+    "error_balance_dest",
+    "is_merchant_dest",
+    "hour_of_day",
+    "day_index",
+    "orig_txn_count_trailing_window",
+    "orig_total_amount_trailing_window",
+    "orig_unique_dest_trailing_window",
+    "orig_steps_since_prev_txn",
+    "amount_to_orig_trailing_avg_amount",
+    "is_transfer_then_cashout",
+    "type_CASH_OUT",
+    "type_TRANSFER"
+  ],
+  "label_column": "isFraud",
+  "scope": "TRANSFER+CASH_OUT",
+  "threshold": 0.9869352579116821,
+  "best_iteration": 53,
+  "scale_pos_weight": 534.7933022234422,
+  "split": {
+    "train_max_step": 323,
+    "val_max_step": 377,
+    "strategy": "time_based"
+  },
+  "xgb_params": {
+    "n_estimators": 600,
+    "max_depth": 6,
+    "learning_rate": 0.1,
+    "subsample": 0.8,
+    "colsample_bytree": 0.8,
+    "min_child_weight": 1.0,
+    "reg_lambda": 1.0,
+    "objective": "binary:logistic",
+    "eval_metric": "aucpr",
+    "tree_method": "hist",
+    "random_state": 42,
+    "n_jobs": -1
+  },
+  "trained_at": "2026-07-14T11:38:00.200177+00:00"
+}
