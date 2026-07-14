@@ -241,7 +241,13 @@ def build_entity_mapping(
             display_name = cert_user
             role = _role_for_category(category, row_number)
 
-        privilege_level = "privileged" if category == "privileged" else "standard"
+        # Map onto the shared PrivilegeLevel enum (standard / elevated / admin).
+        # "admin" roles (database_admin, system_admin) become ADMIN; other
+        # privileged roles become ELEVATED. There is no "privileged" enum member.
+        if category == "privileged":
+            privilege_level = "admin" if "admin" in role else "elevated"
+        else:
+            privilege_level = "standard"
         department = DEPARTMENTS[(row_number - 1) % len(DEPARTMENTS)]
 
         entities.append(
@@ -308,7 +314,7 @@ def print_selection_summary(selected_accounts: pd.DataFrame, payload: dict[str, 
 
     summary = pd.DataFrame(entity_rows)
     print("Entity mapping category counts:")
-    print(f"privileged: {(summary['privilege_level'] == 'privileged').sum()}")
+    print(f"privileged: {(summary['category'] == 'privileged').sum()}")
     print(f"service_account: {(summary['entity_type'] == 'service_account').sum()}")
     print(f"fraud_scenario: {(summary['category'] == 'fraud_scenario').sum()}")
     print()
