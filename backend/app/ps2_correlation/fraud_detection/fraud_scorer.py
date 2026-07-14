@@ -30,6 +30,11 @@ DOMAIN = "ps2_transaction"
 DEFAULT_MODEL_PATH = "ml/models/fraud_model.json"
 DEFAULT_META_PATH = "ml/models/fraud_model_meta.json"
 
+# The model is trained only on the transaction types that ever carry fraud in
+# PaySim. Any other type must NOT be scored — the model has no basis to
+# discriminate on it, so the scorer returns None (no assessment) instead.
+FRAUD_ELIGIBLE_TYPES = frozenset({"TRANSFER", "CASH_OUT"})
+
 # Plain-English phrasing for each model feature, used to render reasons.
 FEATURE_PHRASES: dict[str, str] = {
     "amount": "transaction amount",
@@ -51,6 +56,23 @@ FEATURE_PHRASES: dict[str, str] = {
     "type_CASH_OUT": "transaction type is CASH_OUT",
     "type_TRANSFER": "transaction type is TRANSFER",
 }
+
+
+def _as_float(value) -> float:
+    """Coerce a possibly-missing one-hot/flag value to a float (missing -> 0)."""
+    if value is None:
+        return 0.0
+    try:
+        if pd.isna(value):
+            return 0.0
+    except (TypeError, ValueError):
+        pass
+    if isinstance(value, (bool, np.bool_)):
+        return float(int(value))
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return 0.0
 
 
 class FraudScorer:
@@ -89,13 +111,38 @@ class FraudScorer:
         matrix = xgb.DMatrix(self._frame(row), feature_names=self.features)
         return float(self._booster.predict(matrix)[0])
 
+    def is_eligible(self, row: Mapping) -> bool:
+        """Whether this transaction is a type the model can score.
+
+        Only TRANSFER / CASH_OUT carry fraud in PaySim and are the only types the
+        model was trained on. Uses the raw ``type`` when present, otherwise the
+        one-hot ``type_TRANSFER`` / ``type_CASH_OUT`` columns.
+        """
+        type_value = row.get("type") if hasattr(row, "get") else None
+        if type_value is not None:
+            try:
+                missing = pd.isna(type_value)
+            except (TypeError, ValueError):
+                missing = False
+            if not missing:
+                return str(type_value) in FRAUD_ELIGIBLE_TYPES
+        cash_out = _as_float(row.get("type_CASH_OUT") if hasattr(row, "get") else None)
+        transfer = _as_float(row.get("type_TRANSFER") if hasattr(row, "get") else None)
+        return bool(cash_out) or bool(transfer)
+
     def score_row(
         self,
         row: Mapping,
         entity_id: str | None = None,
         top_k: int = 3,
-    ) -> RiskAssessment:
-        """Return a RiskAssessment with SHAP-derived, plain-English reasons."""
+    ) -> RiskAssessment | None:
+        """Return a RiskAssessment with SHAP-derived, plain-English reasons, or
+        ``None`` when the transaction type is not fraud-eligible (TRANSFER /
+        CASH_OUT). The model was never trained to discriminate other types, so
+        emitting a score for them would be meaningless."""
+
+        if not self.is_eligible(row):
+            return None
 
         frame = self._frame(row)
         proba = float(self._booster.predict(xgb.DMatrix(frame, feature_names=self.features))[0])
@@ -109,10 +156,13 @@ class FraudScorer:
         return RiskAssessment(entity_id=resolved_id, score=proba, reasons=reasons)
 
     def score_frame(self, feature_frame: pd.DataFrame, top_k: int = 3) -> list[RiskAssessment]:
-        return [
-            self.score_row(record, entity_id=record.get("entity_id"), top_k=top_k)
-            for record in feature_frame.to_dict(orient="records")
-        ]
+        """Score a feature frame, skipping rows whose type is not fraud-eligible."""
+        assessments: list[RiskAssessment] = []
+        for record in feature_frame.to_dict(orient="records"):
+            assessment = self.score_row(record, entity_id=record.get("entity_id"), top_k=top_k)
+            if assessment is not None:
+                assessments.append(assessment)
+        return assessments
 
     def _reasons(self, values: pd.Series, contributions: np.ndarray, top_k: int) -> list[Reason]:
         abs_total = float(np.abs(contributions).sum()) + 1e-12

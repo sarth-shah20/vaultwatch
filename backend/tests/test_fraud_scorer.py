@@ -37,6 +37,7 @@ def scorer_root(tmp_path):
 
 def _row(**overrides) -> dict:
     row = {feature: 0.0 for feature in FEATURE_COLUMNS}
+    row["type_TRANSFER"] = 1  # fraud-eligible by default so the scorer will score it
     row.update(overrides)
     return row
 
@@ -80,3 +81,34 @@ def test_missing_features_do_not_crash(scorer_root) -> None:
     assessment = scorer.score_row({"amount": 1000.0, "type_CASH_OUT": 1}, entity_id="E001")
     assert isinstance(assessment, RiskAssessment)
     assert 0.0 <= assessment.score <= 1.0
+
+
+def test_ineligible_transaction_types_return_none(scorer_root) -> None:
+    scorer = FraudScorer(root=scorer_root)
+
+    # Non-fraud-eligible types identified by the raw `type` column.
+    for txn_type in ("PAYMENT", "CASH_IN", "DEBIT"):
+        row = {feature: 0.0 for feature in FEATURE_COLUMNS}
+        row["type"] = txn_type
+        assert scorer.score_row(row, entity_id="E010") is None
+
+    # No raw type and neither one-hot set -> also ineligible.
+    all_zero = {feature: 0.0 for feature in FEATURE_COLUMNS}
+    assert scorer.score_row(all_zero, entity_id="E010") is None
+
+
+def test_score_frame_skips_ineligible_rows(scorer_root) -> None:
+    scorer = FraudScorer(root=scorer_root)
+    base = {feature: 0.0 for feature in FEATURE_COLUMNS}
+    frame = pd.DataFrame(
+        [
+            {**base, "type": "TRANSFER", "type_TRANSFER": 1, "error_balance_orig": 9.0, "entity_id": "E027"},
+            {**base, "type": "PAYMENT", "entity_id": "E010"},  # ineligible -> skipped
+            {**base, "type": "CASH_OUT", "type_CASH_OUT": 1, "entity_id": "E011"},
+        ]
+    )
+
+    assessments = scorer.score_frame(frame)
+
+    assert len(assessments) == 2
+    assert {a.entity_id for a in assessments} == {"E027", "E011"}
