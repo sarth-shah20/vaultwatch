@@ -57,7 +57,7 @@ def test_select_and_build_entity_mapping_preserves_requested_composition() -> No
         item for item in entities if item["entity"]["entity_type"] == "service_account"
     ]
     privileged_entities = [
-        item for item in entities if item["entity"]["privilege_level"] == "privileged"
+        item for item in entities if item["entity"]["privilege_level"] != "standard"
     ]
 
     assert len(service_entities) == SERVICE_ACCOUNT_COUNT

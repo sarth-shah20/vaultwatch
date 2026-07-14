@@ -81,7 +81,11 @@ def _load_mapping() -> _EntityMappingCache:
         device_ids = list(source_ids["telemetry"]["device_ids"])
         ip_addresses = list(source_ids["telemetry"]["ip_addresses"])
 
-        _add_index_entry(cert_index, cert_user, entity_id, "cert")
+        # Service accounts have no CERT identity (cert_user is null); only index
+        # real CERT user IDs so multiple null service accounts don't collide on
+        # a shared None key.
+        if cert_user is not None:
+            _add_index_entry(cert_index, cert_user, entity_id, "cert")
         _add_index_entry(paysim_index, paysim_account, entity_id, "paysim")
         for raw_id in device_ids + ip_addresses:
             _add_index_entry(telemetry_index, raw_id, entity_id, "telemetry")
