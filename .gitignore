@@ -21,6 +21,8 @@ data/processed/*
 ml/models/*.pkl
 ml/models/*.pt
 ml/models/*.h5
+ml/models/*.json
+ml/models/*.ubj
 
 # OS / editor
 .DS_Store

@@ -306,22 +306,35 @@ def add_transfer_cashout_flag(
     if row_order_column not in features.columns:
         features[row_order_column] = np.arange(len(features), dtype=np.int64)
 
+    # Vectorized equivalent of "for each CASH_OUT, was there a TRANSFER from the
+    # same origin account within the trailing step window?". A merge_asof
+    # (direction=backward) finds, per CASH_OUT, the most recent TRANSFER step for
+    # that account; the row is flagged when the gap is within the window. This
+    # stays O(n log n) and runs on the full 6.3M-row PaySim in seconds, whereas a
+    # per-row Python loop does not.
+    type_str = features["type"].astype("string")
     flags = pd.Series(False, index=features.index, dtype="bool")
-    sort_columns = ["step", row_order_column]
-    for _, account_rows in features.groupby("nameOrig", sort=False):
-        ordered_rows = account_rows.sort_values(sort_columns, kind="mergesort")
-        latest_transfer_step: int | None = None
-        for index, row in ordered_rows.iterrows():
-            transaction_type = str(row["type"])
-            current_step = int(row["step"])
-            if (
-                transaction_type == "CASH_OUT"
-                and latest_transfer_step is not None
-                and 0 <= current_step - latest_transfer_step <= transfer_cashout_window
-            ):
-                flags.at[index] = True
-            if transaction_type == "TRANSFER":
-                latest_transfer_step = current_step
+
+    transfers = features.loc[type_str == "TRANSFER", ["nameOrig", "step"]].copy()
+    cashouts = features.loc[type_str == "CASH_OUT", ["nameOrig", "step"]].copy()
+
+    if not transfers.empty and not cashouts.empty:
+        transfers["transfer_step"] = transfers["step"]
+        transfers = transfers.sort_values("step", kind="mergesort")
+        cashouts = cashouts.sort_values("step", kind="mergesort")
+
+        matched = pd.merge_asof(
+            cashouts,
+            transfers[["nameOrig", "step", "transfer_step"]],
+            on="step",
+            by="nameOrig",
+            direction="backward",
+        )
+        matched.index = cashouts.index  # restore original row indices (left order)
+
+        gap = matched["step"] - matched["transfer_step"]
+        flagged = matched["transfer_step"].notna() & (gap >= 0) & (gap <= transfer_cashout_window)
+        flags.loc[flagged.index[flagged.to_numpy()]] = True
 
     features["is_transfer_then_cashout"] = flags
     return features
