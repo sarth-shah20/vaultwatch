@@ -1,0 +1,298 @@
+{
+  "full": {
+    "meta": {
+      "variant": "full",
+      "label": "primary demo model (raw balances included)",
+      "model_path": "ml/models/fraud_model.json",
+      "features": [
+        "amount",
+        "oldbalanceOrg",
+        "newbalanceOrig",
+        "oldbalanceDest",
+        "newbalanceDest",
+        "error_balance_orig",
+        "error_balance_dest",
+        "is_merchant_dest",
+        "hour_of_day",
+        "day_index",
+        "orig_txn_count_trailing_window",
+        "orig_total_amount_trailing_window",
+        "orig_unique_dest_trailing_window",
+        "orig_steps_since_prev_txn",
+        "amount_to_orig_trailing_avg_amount",
+        "is_transfer_then_cashout",
+        "type_CASH_OUT",
+        "type_TRANSFER"
+      ],
+      "label_column": "isFraud",
+      "scope": "TRANSFER+CASH_OUT",
+      "threshold": 0.9842227101325989,
+      "best_iteration": 72,
+      "scale_pos_weight": 534.7933022234422,
+      "split": {
+        "train_max_step": 323,
+        "val_max_step": 377,
+        "strategy": "time_based"
+      },
+      "xgb_params": {
+        "n_estimators": 600,
+        "max_depth": 6,
+        "learning_rate": 0.1,
+        "subsample": 0.8,
+        "colsample_bytree": 0.8,
+        "min_child_weight": 1.0,
+        "reg_lambda": 1.0,
+        "objective": "binary:logistic",
+        "eval_metric": "aucpr",
+        "tree_method": "hist",
+        "random_state": 42,
+        "n_jobs": -1
+      },
+      "trained_at": "2026-07-14T11:37:36.525518+00:00"
+    },
+    "metrics": {
+      "validation": {
+        "rows": 410437,
+        "fraud": 560,
+        "pr_auc": 0.9991883625691976,
+        "roc_auc": 0.9999988803261187,
+        "precision": 0.9788359788359788,
+        "recall": 0.9910714285714286,
+        "f1": 0.9849157054125999,
+        "confusion_matrix": {
+          "tn": 409865,
+          "fp": 12,
+          "fn": 5,
+          "tp": 555
+        }
+      },
+      "test": {
+        "rows": 408077,
+        "fraud": 4010,
+        "pr_auc": 0.9998301440529246,
+        "roc_auc": 0.9999983351937505,
+        "precision": 0.9964708847995967,
+        "recall": 0.985785536159601,
+        "f1": 0.9910994108060674,
+        "confusion_matrix": {
+          "tn": 404053,
+          "fp": 14,
+          "fn": 57,
+          "tp": 3953
+        }
+      }
+    },
+    "shap_importance": [
+      {
+        "feature": "error_balance_orig",
+        "mean_abs_shap": 4.341367721557617
+      },
+      {
+        "feature": "oldbalanceOrg",
+        "mean_abs_shap": 0.8928202390670776
+      },
+      {
+        "feature": "newbalanceOrig",
+        "mean_abs_shap": 0.8667903542518616
+      },
+      {
+        "feature": "day_index",
+        "mean_abs_shap": 0.8141232132911682
+      },
+      {
+        "feature": "oldbalanceDest",
+        "mean_abs_shap": 0.4384218454360962
+      },
+      {
+        "feature": "amount",
+        "mean_abs_shap": 0.2675151824951172
+      },
+      {
+        "feature": "newbalanceDest",
+        "mean_abs_shap": 0.2347017079591751
+      },
+      {
+        "feature": "orig_total_amount_trailing_window",
+        "mean_abs_shap": 0.19853916764259338
+      },
+      {
+        "feature": "hour_of_day",
+        "mean_abs_shap": 0.16829824447631836
+      },
+      {
+        "feature": "error_balance_dest",
+        "mean_abs_shap": 0.12047954648733139
+      },
+      {
+        "feature": "type_CASH_OUT",
+        "mean_abs_shap": 0.048076875507831573
+      },
+      {
+        "feature": "type_TRANSFER",
+        "mean_abs_shap": 0.01806267723441124
+      },
+      {
+        "feature": "is_merchant_dest",
+        "mean_abs_shap": 0.0
+      },
+      {
+        "feature": "orig_txn_count_trailing_window",
+        "mean_abs_shap": 0.0
+      },
+      {
+        "feature": "orig_unique_dest_trailing_window",
+        "mean_abs_shap": 0.0
+      },
+      {
+        "feature": "orig_steps_since_prev_txn",
+        "mean_abs_shap": 0.0
+      },
+      {
+        "feature": "amount_to_orig_trailing_avg_amount",
+        "mean_abs_shap": 0.0
+      },
+      {
+        "feature": "is_transfer_then_cashout",
+        "mean_abs_shap": 0.0
+      }
+    ]
+  },
+  "hardened": {
+    "meta": {
+      "variant": "hardened",
+      "label": "production-realistic variant (raw + destination balances dropped)",
+      "model_path": "ml/models/fraud_model_hardened.json",
+      "features": [
+        "amount",
+        "error_balance_orig",
+        "error_balance_dest",
+        "is_merchant_dest",
+        "hour_of_day",
+        "day_index",
+        "orig_txn_count_trailing_window",
+        "orig_total_amount_trailing_window",
+        "orig_unique_dest_trailing_window",
+        "orig_steps_since_prev_txn",
+        "amount_to_orig_trailing_avg_amount",
+        "is_transfer_then_cashout",
+        "type_CASH_OUT",
+        "type_TRANSFER"
+      ],
+      "label_column": "isFraud",
+      "scope": "TRANSFER+CASH_OUT",
+      "threshold": 0.9869352579116821,
+      "best_iteration": 53,
+      "scale_pos_weight": 534.7933022234422,
+      "split": {
+        "train_max_step": 323,
+        "val_max_step": 377,
+        "strategy": "time_based"
+      },
+      "xgb_params": {
+        "n_estimators": 600,
+        "max_depth": 6,
+        "learning_rate": 0.1,
+        "subsample": 0.8,
+        "colsample_bytree": 0.8,
+        "min_child_weight": 1.0,
+        "reg_lambda": 1.0,
+        "objective": "binary:logistic",
+        "eval_metric": "aucpr",
+        "tree_method": "hist",
+        "random_state": 42,
+        "n_jobs": -1
+      },
+      "trained_at": "2026-07-14T11:38:00.200177+00:00"
+    },
+    "metrics": {
+      "validation": {
+        "rows": 410437,
+        "fraud": 560,
+        "pr_auc": 0.8668344181037347,
+        "roc_auc": 0.9976591496612747,
+        "precision": 0.956989247311828,
+        "recall": 0.7946428571428571,
+        "f1": 0.8682926829268293,
+        "confusion_matrix": {
+          "tn": 409857,
+          "fp": 20,
+          "fn": 115,
+          "tp": 445
+        }
+      },
+      "test": {
+        "rows": 408077,
+        "fraud": 4010,
+        "pr_auc": 0.919482589491435,
+        "roc_auc": 0.9974815335648362,
+        "precision": 0.9634326157475671,
+        "recall": 0.814713216957606,
+        "f1": 0.882853668423186,
+        "confusion_matrix": {
+          "tn": 403943,
+          "fp": 124,
+          "fn": 743,
+          "tp": 3267
+        }
+      }
+    },
+    "shap_importance": [
+      {
+        "feature": "error_balance_orig",
+        "mean_abs_shap": 3.840897798538208
+      },
+      {
+        "feature": "day_index",
+        "mean_abs_shap": 0.5107184052467346
+      },
+      {
+        "feature": "hour_of_day",
+        "mean_abs_shap": 0.3196595311164856
+      },
+      {
+        "feature": "error_balance_dest",
+        "mean_abs_shap": 0.24116219580173492
+      },
+      {
+        "feature": "amount",
+        "mean_abs_shap": 0.2305583655834198
+      },
+      {
+        "feature": "type_CASH_OUT",
+        "mean_abs_shap": 0.2274029403924942
+      },
+      {
+        "feature": "orig_total_amount_trailing_window",
+        "mean_abs_shap": 0.2143143266439438
+      },
+      {
+        "feature": "type_TRANSFER",
+        "mean_abs_shap": 0.038250040262937546
+      },
+      {
+        "feature": "orig_txn_count_trailing_window",
+        "mean_abs_shap": 6.67966617129423e-07
+      },
+      {
+        "feature": "is_merchant_dest",
+        "mean_abs_shap": 0.0
+      },
+      {
+        "feature": "orig_unique_dest_trailing_window",
+        "mean_abs_shap": 0.0
+      },
+      {
+        "feature": "orig_steps_since_prev_txn",
+        "mean_abs_shap": 0.0
+      },
+      {
+        "feature": "amount_to_orig_trailing_avg_amount",
+        "mean_abs_shap": 0.0
+      },
+      {
+        "feature": "is_transfer_then_cashout",
+        "mean_abs_shap": 0.0
+      }
+    ]
+  }
+}
