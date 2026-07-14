@@ -31,3 +31,5 @@ ml/models/*.h5
 *.pem
 *.key
 secrets.json
+paysim1.zip
+*.zip
