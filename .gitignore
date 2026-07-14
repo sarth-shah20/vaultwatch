@@ -21,8 +21,16 @@ data/processed/*
 ml/models/*.pkl
 ml/models/*.pt
 ml/models/*.h5
-ml/models/*.json
 ml/models/*.ubj
+ml/models/*.json
+# Exception: the trained fraud model artifacts are committed directly for team
+# handoff (they are small and skip retraining). Any other *.json under
+# ml/models/ stays ignored; regeneration via ml/models/train_fraud_model.py
+# remains available if fresh weights are ever wanted.
+!ml/models/fraud_model.json
+!ml/models/fraud_model_meta.json
+!ml/models/fraud_model_hardened.json
+!ml/models/fraud_model_hardened_meta.json
 
 # OS / editor
 .DS_Store
