@@ -1,0 +1,3 @@
+# Post-quantum crypto (reference implementations) for pqc_utils.
+dilithium-py>=1.0
+kyber-py>=1.0
