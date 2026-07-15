@@ -1,0 +1,119 @@
+{
+  "generated_at": "2026-07-15T06:59:13.116111+00:00",
+  "purpose": "Grounded PS1(CERT)+PS2(PaySim) demo scenarios for the Step 6 correlation engine.",
+  "methodology": "Each scenario pairs one entity's REAL CERT behavioral anomaly with their REAL isFraud=1 PaySim transaction. Cross-dataset time alignment is curated (see incident_window). Any synthetic row is labelled source='injected'; nothing injected is presented as real.",
+  "summary": {
+    "scenarios": 3,
+    "real_cert_events": 3,
+    "injected_cert_events": 0,
+    "real_paysim_txns": 3,
+    "injected_paysim_txns": 0
+  },
+  "scenarios": [
+    {
+      "scenario_id": "S1",
+      "entity_id": "E028",
+      "cert_user": "DJA0740",
+      "paysim_account": "C686187434",
+      "role": "finance_analyst",
+      "narrative": "E028 (finance_analyst): off hours logon (real CERT event at 2010-04-29 02:43:15), then ~37 min later a CASH_OUT of 6,188,515 on their account (real isFraud=1 PaySim transaction) \u2014 a single privileged actor whose behavioral and transactional signals both spike inside one window.",
+      "incident_window": {
+        "anchor_time": "2010-04-29 02:43:15",
+        "curated_gap_minutes": 37,
+        "paysim_curated_time": "2010-04-29 03:20:15",
+        "curated_alignment": true,
+        "alignment_note": "CERT timestamp and PaySim step are both REAL; the minutes-apart placement is a curated demo bridge because CERT (absolute dates) and PaySim (relative hourly step) are independent simulations with no shared clock."
+      },
+      "cert_event": {
+        "source": "real_cert",
+        "injected": false,
+        "kind": "off_hours_logon",
+        "cert_row_id": "{L0K2-C9NC86KG-2123YGZE}",
+        "timestamp": "2010-04-29 02:43:15",
+        "pc": "PC-7197",
+        "activity": "Logon",
+        "baseline_note": "user's typical weekday logons run 0:00-23:00 (median start 12:00) across 1312 logons",
+        "why_anomalous": "logon at 02:43 is outside the 07:00-19:00 workday"
+      },
+      "paysim_transaction": {
+        "source": "real_paysim",
+        "injected": false,
+        "nameOrig": "C686187434",
+        "step": 13,
+        "type": "CASH_OUT",
+        "amount": 6188514.81,
+        "isFraud": 1
+      }
+    },
+    {
+      "scenario_id": "S2",
+      "entity_id": "E027",
+      "cert_user": "MBA1797",
+      "paysim_account": "C635739031",
+      "role": "operations_analyst",
+      "narrative": "E027 (operations_analyst): weekend logon (real CERT event at 2010-01-02 07:03:00), then ~52 min later a TRANSFER of 1,965,786 on their account (real isFraud=1 PaySim transaction) \u2014 a single privileged actor whose behavioral and transactional signals both spike inside one window.",
+      "incident_window": {
+        "anchor_time": "2010-01-02 07:03:00",
+        "curated_gap_minutes": 52,
+        "paysim_curated_time": "2010-01-02 07:55:00",
+        "curated_alignment": true,
+        "alignment_note": "CERT timestamp and PaySim step are both REAL; the minutes-apart placement is a curated demo bridge because CERT (absolute dates) and PaySim (relative hourly step) are independent simulations with no shared clock."
+      },
+      "cert_event": {
+        "source": "real_cert",
+        "injected": false,
+        "kind": "weekend_logon",
+        "cert_row_id": "{P8G9-J4HP25SR-5398XSPY}",
+        "timestamp": "2010-01-02 07:03:00",
+        "pc": "PC-0470",
+        "activity": "Logon",
+        "baseline_note": "user's typical weekday logons run 7:00-15:00 (median start 11:00) across 294 logons",
+        "why_anomalous": "logon on Saturday is outside the user's weekday pattern"
+      },
+      "paysim_transaction": {
+        "source": "real_paysim",
+        "injected": false,
+        "nameOrig": "C635739031",
+        "step": 449,
+        "type": "TRANSFER",
+        "amount": 1965786.11,
+        "isFraud": 1
+      }
+    },
+    {
+      "scenario_id": "S3",
+      "entity_id": "E029",
+      "cert_user": "JPC2507",
+      "paysim_account": "C812001868",
+      "role": "payments_operator",
+      "narrative": "E029 (payments_operator): weekend logon (real CERT event at 2010-01-02 07:04:00), then ~44 min later a CASH_OUT of 4,445,514 on their account (real isFraud=1 PaySim transaction) \u2014 a single privileged actor whose behavioral and transactional signals both spike inside one window.",
+      "incident_window": {
+        "anchor_time": "2010-01-02 07:04:00",
+        "curated_gap_minutes": 44,
+        "paysim_curated_time": "2010-01-02 07:48:00",
+        "curated_alignment": true,
+        "alignment_note": "CERT timestamp and PaySim step are both REAL; the minutes-apart placement is a curated demo bridge because CERT (absolute dates) and PaySim (relative hourly step) are independent simulations with no shared clock."
+      },
+      "cert_event": {
+        "source": "real_cert",
+        "injected": false,
+        "kind": "weekend_logon",
+        "cert_row_id": "{K1Q3-R3QB95BY-7218BTGO}",
+        "timestamp": "2010-01-02 07:04:00",
+        "pc": "PC-0747",
+        "activity": "Logon",
+        "baseline_note": "user's typical weekday logons run 7:00-15:00 (median start 11:00) across 520 logons",
+        "why_anomalous": "logon on Saturday is outside the user's weekday pattern"
+      },
+      "paysim_transaction": {
+        "source": "real_paysim",
+        "injected": false,
+        "nameOrig": "C812001868",
+        "step": 379,
+        "type": "CASH_OUT",
+        "amount": 4445514.2,
+        "isFraud": 1
+      }
+    }
+  ]
+}
