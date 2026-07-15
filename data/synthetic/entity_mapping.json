@@ -780,6 +780,11 @@
           "ip_addresses": [
             "10.42.0.27"
           ]
+        },
+        "ps1": {
+          "user": "VSC6934",
+          "dataset": "DTAA_sample_logs",
+          "note": "deliberate labeled demo crosswalk to the teammate PS1 dataset (see docs)"
         }
       }
     },
@@ -809,6 +814,11 @@
           "ip_addresses": [
             "10.42.0.28"
           ]
+        },
+        "ps1": {
+          "user": "RET4173",
+          "dataset": "DTAA_sample_logs",
+          "note": "deliberate labeled demo crosswalk to the teammate PS1 dataset (see docs)"
         }
       }
     },
@@ -838,6 +848,11 @@
           "ip_addresses": [
             "10.42.0.29"
           ]
+        },
+        "ps1": {
+          "user": "DGX1939",
+          "dataset": "DTAA_sample_logs",
+          "note": "deliberate labeled demo crosswalk to the teammate PS1 dataset (see docs)"
         }
       }
     },

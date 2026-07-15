@@ -1,27 +1,22 @@
-"""Step 3 — grounded PS1 + PS2 demo scenario builder (the "bridge" layer).
+"""Step 3 (integrated) — grounded PS1 + PS2 demo scenarios (the "bridge" layer).
 
-This does NOT generate a telemetry stream. It CURATES 3 concrete, timed attack
-scenarios from the REAL data we already have, so the correlation engine (Step 6)
-has same-entity, same-window PS1 (CERT behavioral) + PS2 (PaySim transactional)
-signals to join.
+Pairs each demo entity's REAL PS1 behavioral anomaly with their REAL isFraud=1
+PaySim transaction, so the Step 6 correlation engine has same-entity signals from
+both domains to join.
 
-For each of 3 demo entities that have a REAL fraudulent PaySim transaction
-(isFraud=1) on their mapped account, we:
-  1. Read their REAL CERT logon/device rows (by mapped CERT username) and pick a
-     real anomaly relative to their own baseline (priority: off-hours logon ->
-     off-hours device connect -> weekend logon -> weekend device connect). If no
-     natural anomaly exists in the data, ONE synthetic row is injected and
-     clearly labelled `source="injected"` (not passed off as real).
-  2. Pair it with their REAL isFraud=1 PaySim transaction (or, if none, ONE
-     clearly-labelled injected transaction).
-  3. Define an incident window. NOTE: CERT (absolute 2010-2011 timestamps) and
-     PaySim (relative hourly `step`, no absolute date) are independent
-     simulations with no shared clock, so the minutes-apart alignment between the
-     two is a CURATED demo bridge (`curated_alignment=true`). The CERT timestamp
-     is real and the PaySim step is real; only their relative placement is
-     constructed.
+PS1 side: the teammate's Isolation Forest flags an anomaly on a DTAA user; we
+resolve that user to our entity_id via the `ps1` crosswalk in entity_mapping.json
+and take their strongest flagged anomaly from ps1_anomaly_results.json.
+PS2 side: the entity's real fraudulent PaySim transaction.
 
-Output: data/synthetic/demo_scenarios.json.
+Honesty: both the PS1 anomaly and the PaySim transaction are REAL model/data
+outputs. Two things are deliberate, labeled demo constructs: (1) the entity <->
+DTAA-user crosswalk (no dataset naturally links CERT identities to PaySim
+accounts), and (2) the cross-dataset time alignment (`curated_alignment: true`)
+— PS1 dates are absolute, PaySim uses a relative step, so we place the real
+PaySim fraud a plausible gap after the real PS1 anomaly.
+
+Output: data/synthetic/demo_scenarios.json
 Run: python3 ml/data_pipeline/scenario_builder.py [--root .]
 """
 from __future__ import annotations
@@ -31,198 +26,118 @@ import json
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-import pandas as pd
+from backend.app.ps2_correlation.ps1_adapter import normalize_score
 
-CERT_DATE_FMT = "%m/%d/%Y %H:%M:%S"
-
-# Anchors: entities with a REAL isFraud=1 PaySim transaction. Curated gap places
-# that real transaction inside the CERT incident window for the demo.
 ANCHORS = [
     {"entity_id": "E028", "curated_gap_minutes": 37},
     {"entity_id": "E027", "curated_gap_minutes": 52},
     {"entity_id": "E029", "curated_gap_minutes": 44},
 ]
 
-CERT_DIR = "data/raw/cert_insider_threat"
-PAYSIM_DIR = "data/raw/paysim"
 MAPPING_PATH = "data/synthetic/entity_mapping.json"
+PS1_ANOMALIES_PATH = "data/synthetic/ps1_anomaly_results.json"
+PAYSIM_DIR = "data/raw/paysim"
 OUTPUT_PATH = "data/synthetic/demo_scenarios.json"
-
-
-def _off_hours(hour: int) -> bool:
-    return hour < 7 or hour >= 19
 
 
 def load_mapping(root: Path) -> dict[str, dict]:
     payload = json.loads((root / MAPPING_PATH).read_text(encoding="utf-8"))
     out = {}
     for record in payload["entities"]:
-        ent = record["entity"]
-        out[ent["entity_id"]] = {
-            "cert_user": record["source_ids"]["cert"]["user"],
-            "paysim_nameOrig": record["source_ids"]["paysim"]["nameOrig"],
-            "role": ent.get("role"),
-            "entity_type": ent.get("entity_type"),
+        ps1 = record["source_ids"].get("ps1") or {}
+        out[record["entity"]["entity_id"]] = {
+            "role": record["entity"].get("role"),
+            "paysim_account": record["source_ids"]["paysim"]["nameOrig"],
+            "ps1_user": ps1.get("user"),
         }
     return out
 
 
-def load_cert(root: Path, users: set[str]) -> tuple[pd.DataFrame, pd.DataFrame]:
-    def _read(name: str) -> pd.DataFrame:
-        df = pd.read_csv(root / CERT_DIR / name)
-        df.columns = [c.lower() for c in df.columns]
-        df = df[df["user"].isin(users)].copy()
-        df["dt"] = pd.to_datetime(df["date"], format=CERT_DATE_FMT, errors="coerce")
-        df["hour"] = df["dt"].dt.hour
-        df["weekday"] = df["dt"].dt.dayofweek
-        df["activity"] = df["activity"].astype("string")
-        return df.sort_values("dt", kind="mergesort")
+def strongest_ps1_anomaly_by_user(root: Path) -> dict[str, dict]:
+    """Return {ps1_user: strongest (most anomalous) anomaly} from the PS1 output."""
+    payload = json.loads((root / PS1_ANOMALIES_PATH).read_text(encoding="utf-8"))
+    best: dict[str, dict] = {}
+    for anomaly in payload.get("anomalies", []):
+        log = json.loads(anomaly["log"])
+        user = log.get("USER")
+        if user is None:
+            continue
+        rec = {
+            "activity": log["ACTIVITY"],
+            "pc": log["PC"],
+            "timestamp": f"{log['DATE']} {log['HOUR']}:{log['MINUTE']}:{log.get('SECOND', '00')}",
+            "decision_function_score": float(anomaly["score"]),
+            "detector_reason": anomaly["reason"],
+        }
+        if user not in best or rec["decision_function_score"] < best[user]["decision_function_score"]:
+            best[user] = rec
+    return best
 
-    return _read("logon.csv"), _read("device.csv")
 
+def paysim_fraud_by_account(root: Path, accounts: set[str]) -> dict[str, dict]:
+    import pandas as pd
 
-def load_paysim_fraud(root: Path, accounts: set[str]) -> pd.DataFrame:
-    usecols = ["step", "type", "amount", "nameOrig", "isFraud"]
     csv = next((root / PAYSIM_DIR).glob("*.csv"))
-    df = pd.read_csv(csv, usecols=usecols)
-    df = df[df["nameOrig"].isin(accounts)].copy()
-    return df[df["isFraud"] == 1]
+    df = pd.read_csv(csv, usecols=["step", "type", "amount", "nameOrig", "isFraud"])
+    df = df[(df["nameOrig"].isin(accounts)) & (df["isFraud"] == 1)]
+    out = {}
+    for name, grp in df.groupby("nameOrig"):
+        row = grp.sort_values("amount", ascending=False).iloc[0]
+        out[name] = {"step": int(row["step"]), "type": str(row["type"]), "amount": float(row["amount"])}
+    return out
 
 
-def _baseline_note(user_logons: pd.DataFrame) -> str:
-    weekday = user_logons[user_logons["weekday"] < 5]
-    hours = weekday["hour"].dropna()
-    if hours.empty:
-        return "no weekday logon baseline available"
-    return (
-        f"user's typical weekday logons run {int(hours.min())}:00-{int(hours.max())}:00 "
-        f"(median start {int(hours.median())}:00) across {len(user_logons)} logons"
-    )
+def build_scenario(idx: int, anchor: dict, mapping: dict, ps1_by_user: dict, fraud_by_acct: dict) -> dict:
+    eid = anchor["entity_id"]
+    info = mapping[eid]
+    user, account = info["ps1_user"], info["paysim_account"]
 
-
-def pick_cert_anomaly(user: str, logon: pd.DataFrame, device: pd.DataFrame) -> dict:
-    """Pick the strongest REAL anomaly for this user, or inject one if none exists."""
-    u_logon = logon[logon["user"] == user]
-    u_device = device[device["user"] == user]
-    logons = u_logon[u_logon["activity"] == "Logon"]
-    connects = u_device[u_device["activity"] == "Connect"]
-    baseline = _baseline_note(u_logon)
-
-    def real(kind: str, row: pd.Series, why: str) -> dict:
-        return {
-            "source": "real_cert",
-            "injected": False,
-            "kind": kind,
-            "cert_row_id": str(row["id"]),
-            "timestamp": row["dt"].strftime("%Y-%m-%d %H:%M:%S"),
-            "pc": str(row["pc"]),
-            "activity": str(row["activity"]),
-            "baseline_note": baseline,
-            "why_anomalous": why,
-        }
-
-    off_logon = logons[logons["hour"].apply(_off_hours)]
-    if not off_logon.empty:
-        r = off_logon.iloc[0]
-        return real("off_hours_logon", r, f"logon at {r['dt'].strftime('%H:%M')} is outside the 07:00-19:00 workday")
-
-    off_conn = connects[connects["hour"].apply(_off_hours)]
-    if not off_conn.empty:
-        r = off_conn.iloc[0]
-        return real("off_hours_device_connect", r, f"USB/device connect at {r['dt'].strftime('%H:%M')} is off-hours")
-
-    wknd_logon = logons[logons["weekday"] >= 5]
-    if not wknd_logon.empty:
-        r = wknd_logon.iloc[0]
-        return real("weekend_logon", r, f"logon on {r['dt'].strftime('%A')} is outside the user's weekday pattern")
-
-    wknd_conn = connects[connects["weekday"] >= 5]
-    if not wknd_conn.empty:
-        r = wknd_conn.iloc[0]
-        return real("weekend_device_connect", r, f"USB/device connect on {r['dt'].strftime('%A')} is outside the weekday pattern")
-
-    # Fallback: no natural anomaly in the real data -> inject ONE, clearly labelled.
-    anchor = (logons["dt"].max() if not logons.empty else pd.Timestamp("2010-01-04 09:00:00"))
-    injected_ts = (anchor.normalize() + timedelta(hours=2, minutes=17))  # 02:17 off-hours
-    return {
-        "source": "injected",
-        "injected": True,
-        "kind": "off_hours_logon",
-        "cert_row_id": None,
-        "timestamp": injected_ts.strftime("%Y-%m-%d %H:%M:%S"),
-        "pc": "INJECTED",
-        "activity": "Logon",
-        "baseline_note": baseline,
-        "why_anomalous": "no natural CERT anomaly for this user in the data; injected one off-hours logon for the demo",
+    a = ps1_by_user[user]
+    ps1_event = {
+        "source": "real_ps1_isolation_forest",
+        "injected": False,
+        "ps1_user": user,
+        "activity": a["activity"],
+        "pc": a["pc"],
+        "timestamp": a["timestamp"],
+        "decision_function_score": a["decision_function_score"],
+        "normalized_risk": normalize_score(a["decision_function_score"]),
+        "detector_reason": a["detector_reason"],
     }
+    f = fraud_by_acct[account]
+    paysim_txn = {"source": "real_paysim", "injected": False, "nameOrig": account,
+                  "step": f["step"], "type": f["type"], "amount": f["amount"], "isFraud": 1}
 
-
-def pick_paysim_txn(nameOrig: str, fraud_df: pd.DataFrame) -> dict:
-    rows = fraud_df[fraud_df["nameOrig"] == nameOrig]
-    if not rows.empty:
-        r = rows.sort_values("amount", ascending=False).iloc[0]
-        return {
-            "source": "real_paysim",
-            "injected": False,
-            "nameOrig": nameOrig,
-            "step": int(r["step"]),
-            "type": str(r["type"]),
-            "amount": float(r["amount"]),
-            "isFraud": 1,
-        }
-    return {
-        "source": "injected",
-        "injected": True,
-        "nameOrig": nameOrig,
-        "step": None,
-        "type": "TRANSFER",
-        "amount": 500000.0,
-        "isFraud": 1,
-        "note": "no real isFraud=1 transaction for this account; injected a high-risk transfer for the demo",
-    }
-
-
-def build_scenario(idx: int, anchor: dict, mapping: dict, logon, device, fraud_df) -> dict:
-    entity_id = anchor["entity_id"]
-    info = mapping[entity_id]
-    user, account = info["cert_user"], info["paysim_nameOrig"]
-
-    cert_event = pick_cert_anomaly(user, logon, device)
-    paysim_txn = pick_paysim_txn(account, fraud_df)
-
-    anchor_dt = datetime.strptime(cert_event["timestamp"], "%Y-%m-%d %H:%M:%S")
+    anchor_dt = datetime.strptime(ps1_event["timestamp"], "%Y-%m-%d %H:%M:%S")
     gap = anchor["curated_gap_minutes"]
     paysim_time = anchor_dt + timedelta(minutes=gap)
 
-    amount = paysim_txn["amount"]
     narrative = (
-        f"{entity_id} ({info['role']}): {cert_event['kind'].replace('_', ' ')} "
-        f"({'real' if not cert_event['injected'] else 'injected'} CERT event at "
-        f"{cert_event['timestamp']}), then ~{gap} min later a {paysim_txn['type']} of "
-        f"{amount:,.0f} on their account ({'real isFraud=1' if not paysim_txn['injected'] else 'injected'} "
-        f"PaySim transaction) — a single privileged actor whose behavioral and transactional "
-        f"signals both spike inside one window."
+        f"{eid} ({info['role']}): PS1 flags '{a['activity']}' (real Isolation-Forest anomaly, "
+        f"risk {ps1_event['normalized_risk']:.2f}) at {a['timestamp']}, then ~{gap} min later a "
+        f"{f['type']} of {f['amount']:,.0f} on their account (real PaySim isFraud=1) — one actor, "
+        f"a behavioral red flag and a fraudulent transaction inside a single window."
     )
 
     return {
         "scenario_id": f"S{idx}",
-        "entity_id": entity_id,
-        "cert_user": user,
-        "paysim_account": account,
+        "entity_id": eid,
         "role": info["role"],
+        "ps1_user": user,
+        "paysim_account": account,
         "narrative": narrative,
         "incident_window": {
-            "anchor_time": cert_event["timestamp"],
+            "anchor_time": ps1_event["timestamp"],
             "curated_gap_minutes": gap,
             "paysim_curated_time": paysim_time.strftime("%Y-%m-%d %H:%M:%S"),
             "curated_alignment": True,
             "alignment_note": (
-                "CERT timestamp and PaySim step are both REAL; the minutes-apart placement is a "
-                "curated demo bridge because CERT (absolute dates) and PaySim (relative hourly step) "
-                "are independent simulations with no shared clock."
+                "PS1 anomaly and PaySim transaction are both REAL; the minutes-apart placement and the "
+                "entity<->DTAA-user crosswalk are deliberate labeled demo constructs (independent datasets, "
+                "no shared clock or identity)."
             ),
         },
-        "cert_event": cert_event,
+        "ps1_event": ps1_event,
         "paysim_transaction": paysim_txn,
     }
 
@@ -234,45 +149,36 @@ def main() -> None:
     root = Path(args.root).resolve()
 
     mapping = load_mapping(root)
-    users = {mapping[a["entity_id"]]["cert_user"] for a in ANCHORS}
-    accounts = {mapping[a["entity_id"]]["paysim_nameOrig"] for a in ANCHORS}
+    ps1_by_user = strongest_ps1_anomaly_by_user(root)
+    accounts = {mapping[a["entity_id"]]["paysim_account"] for a in ANCHORS}
+    fraud_by_acct = paysim_fraud_by_account(root, accounts)
 
-    print(f"Loading CERT for {len(users)} users and PaySim fraud for {len(accounts)} accounts ...")
-    logon, device = load_cert(root, users)
-    fraud_df = load_paysim_fraud(root, accounts)
+    scenarios = [build_scenario(i, a, mapping, ps1_by_user, fraud_by_acct)
+                 for i, a in enumerate(ANCHORS, start=1)]
 
-    scenarios = [
-        build_scenario(i, anchor, mapping, logon, device, fraud_df)
-        for i, anchor in enumerate(ANCHORS, start=1)
-    ]
-
-    summary = {
-        "scenarios": len(scenarios),
-        "real_cert_events": sum(1 for s in scenarios if not s["cert_event"]["injected"]),
-        "injected_cert_events": sum(1 for s in scenarios if s["cert_event"]["injected"]),
-        "real_paysim_txns": sum(1 for s in scenarios if not s["paysim_transaction"]["injected"]),
-        "injected_paysim_txns": sum(1 for s in scenarios if s["paysim_transaction"]["injected"]),
-    }
     payload = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
-        "purpose": "Grounded PS1(CERT)+PS2(PaySim) demo scenarios for the Step 6 correlation engine.",
+        "purpose": "Grounded PS1(behavioral)+PS2(transactional) demo scenarios for the Step 6 correlation engine.",
         "methodology": (
-            "Each scenario pairs one entity's REAL CERT behavioral anomaly with their REAL isFraud=1 "
-            "PaySim transaction. Cross-dataset time alignment is curated (see incident_window). Any "
-            "synthetic row is labelled source='injected'; nothing injected is presented as real."
+            "Each scenario pairs an entity's REAL PS1 Isolation-Forest anomaly (teammate's DTAA dataset, "
+            "resolved via the ps1 crosswalk) with their REAL isFraud=1 PaySim transaction. The entity<->"
+            "DTAA-user crosswalk and the cross-dataset time alignment are deliberate, labeled demo constructs; "
+            "the anomaly and the transaction are real."
         ),
-        "summary": summary,
+        "summary": {
+            "scenarios": len(scenarios),
+            "real_ps1_anomalies": sum(1 for s in scenarios if not s["ps1_event"]["injected"]),
+            "real_paysim_txns": sum(1 for s in scenarios if not s["paysim_transaction"]["injected"]),
+            "injected": 0,
+        },
         "scenarios": scenarios,
     }
-
-    out = root / OUTPUT_PATH
-    out.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    (root / OUTPUT_PATH).write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     print(f"Wrote {len(scenarios)} scenarios -> {OUTPUT_PATH}")
-    print(f"Summary: {summary}")
     for s in scenarios:
-        print(f"  {s['scenario_id']} {s['entity_id']} | CERT {s['cert_event']['kind']} "
-              f"({s['cert_event']['source']}) | PaySim {s['paysim_transaction']['type']} "
-              f"{s['paysim_transaction']['amount']:,.0f} ({s['paysim_transaction']['source']})")
+        p, f = s["ps1_event"], s["paysim_transaction"]
+        print(f"  {s['scenario_id']} {s['entity_id']} | PS1 {p['ps1_user']}:{p['activity']} "
+              f"(risk {p['normalized_risk']:.2f}) | PS2 {f['type']} {f['amount']:,.0f}")
 
 
 if __name__ == "__main__":
