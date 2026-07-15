@@ -1,0 +1,23 @@
+{
+    "total_logs": 50,
+    "normal_count": 47,
+    "anomalies_count": 3,
+    "anomaly_percentage": 6.0,
+    "anomalies": [
+        {
+            "log": "{\"DATE\": \"2010-04-25\", \"HOUR\": \"08\", \"MINUTE\": \"23\", \"SECOND\": \"00\", \"USER\": \"OGZ7278\", \"PC\": \"1312\", \"ACTIVITY\": \"Multiple Failed Login Attempts\", \"RAW_LOG\": \"SESSION-MULTIPLE-MEDIUM-6856\\t25-04-2010 08:23\\tDTAA/OGZ7278\\tPC-1312\\tMultiple Failed Login Attempts\"}",
+            "score": -0.048560846255284174,
+            "reason": "This log contains unusual features: 1312, failed, multiple, ogz7278, attempts"
+        },
+        {
+            "log": "{\"DATE\": \"2010-04-07\", \"HOUR\": \"10\", \"MINUTE\": \"13\", \"SECOND\": \"00\", \"USER\": \"RET4173\", \"PC\": \"7200\", \"ACTIVITY\": \"Login Successful\", \"RAW_LOG\": \"SESSION-LOGIN-LOW-5707\\t07-04-2010 10:13\\tDTAA/RET4173\\tPC-7200\\tLogin Successful\"}",
+            "score": -0.000992487826368238,
+            "reason": "This log contains unusual features: ret4173, 7200, 13, 10, successful"
+        },
+        {
+            "log": "{\"DATE\": \"2010-04-20\", \"HOUR\": \"10\", \"MINUTE\": \"07\", \"SECOND\": \"00\", \"USER\": \"RET4173\", \"PC\": \"9496\", \"ACTIVITY\": \"Multiple Failed Login Attempts\", \"RAW_LOG\": \"SESSION-MULTIPLE-MEDIUM-3170\\t20-04-2010 10:07\\tDTAA/RET4173\\tPC-9496\\tMultiple Failed Login Attempts\"}",
+            "score": -0.0388736836484504,
+            "reason": "This log contains unusual features: multiple, failed, attempts, ret4173, 9496"
+        }
+    ]
+}
