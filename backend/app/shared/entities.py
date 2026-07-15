@@ -94,4 +94,8 @@ class UnifiedIncident:
     contributing_assessments: list[RiskAssessment] = field(default_factory=list)
     status: IncidentStatus = IncidentStatus.NEW
     access_decision: AccessDecision | None = None
+    # Correlation confidence: "high" when >=2 independent domains corroborate,
+    # else "low" (a lone signal). Set by the correlation engine (Step 6).
+    confidence: str | None = None
+    contributing_domains: list[str] = field(default_factory=list)
     created_at: datetime = field(default_factory=datetime.utcnow)
