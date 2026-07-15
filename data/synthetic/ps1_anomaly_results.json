@@ -1,0 +1,908 @@
+{
+  "total_logs": 3000,
+  "normal_count": 2820,
+  "anomalies_count": 180,
+  "anomaly_percentage": 6.0,
+  "anomalies": [
+    {
+      "log": "{\"DATE\": \"2010-04-08\", \"HOUR\": \"05\", \"MINUTE\": \"39\", \"SECOND\": \"00\", \"USER\": \"XYD5525\", \"PC\": \"8074\", \"ACTIVITY\": \"Login Successful\", \"RAW_LOG\": \"SESSION-LOGIN-LOW-5214\\t08-04-2010 05:39\\tDTAA/XYD5525\\tPC-8074\\tLogin Successful\"}",
+      "score": -0.0002893083982158928,
+      "reason": "This log contains unusual features: 8074, 39, xyd5525, 05, successful"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-02\", \"HOUR\": \"13\", \"MINUTE\": \"11\", \"SECOND\": \"00\", \"USER\": \"OGL4599\", \"PC\": \"1726\", \"ACTIVITY\": \"File Opened\", \"RAW_LOG\": \"SESSION-FILE-LOW-7464\\t02-04-2010 13:11\\tDTAA/OGL4599\\tPC-1726\\tFile Opened\"}",
+      "score": -0.02568907648083979,
+      "reason": "This log contains unusual features: ogl4599, 1726, 11, 13, 7464"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-22\", \"HOUR\": \"23\", \"MINUTE\": \"04\", \"SECOND\": \"00\", \"USER\": \"XYD5525\", \"PC\": \"2630\", \"ACTIVITY\": \"Multiple Failed Login Attempts\", \"RAW_LOG\": \"SESSION-MULTIPLE-MEDIUM-8469\\t22-04-2010 23:04\\tDTAA/XYD5525\\tPC-2630\\tMultiple Failed Login Attempts\"}",
+      "score": -0.05520664884518839,
+      "reason": "This log contains unusual features: multiple, attempts, failed, xyd5525, 2630"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-04\", \"HOUR\": \"01\", \"MINUTE\": \"59\", \"SECOND\": \"00\", \"USER\": \"FIO8317\", \"PC\": \"2630\", \"ACTIVITY\": \"Data Exfiltration Attempt\", \"RAW_LOG\": \"SESSION-DATA-HIGH-9802\\t04-04-2010 01:59\\tDTAA/FIO8317\\tPC-2630\\tData Exfiltration Attempt\"}",
+      "score": -0.0366277932825439,
+      "reason": "This log contains unusual features: attempt, exfiltration, fio8317, data, 2630"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-24\", \"HOUR\": \"20\", \"MINUTE\": \"54\", \"SECOND\": \"00\", \"USER\": \"OGZ7278\", \"PC\": \"6870\", \"ACTIVITY\": \"Multiple Failed Login Attempts\", \"RAW_LOG\": \"SESSION-MULTIPLE-MEDIUM-2237\\t24-04-2010 20:54\\tDTAA/OGZ7278\\tPC-6870\\tMultiple Failed Login Attempts\"}",
+      "score": -0.0021980112523531936,
+      "reason": "This log contains unusual features: failed, attempts, multiple, 6870, ogz7278"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-07\", \"HOUR\": \"10\", \"MINUTE\": \"21\", \"SECOND\": \"00\", \"USER\": \"YYF1218\", \"PC\": \"4096\", \"ACTIVITY\": \"Suspicious Login from Foreign IP\", \"RAW_LOG\": \"SESSION-SUSPICIOUS-MEDIUM-2540\\t07-04-2010 10:21\\tDTAA/YYF1218\\tPC-4096\\tSuspicious Login from Foreign IP\"}",
+      "score": -0.03396169750805905,
+      "reason": "This log contains unusual features: yyf1218, ip, suspicious, foreign, from"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-24\", \"HOUR\": \"16\", \"MINUTE\": \"19\", \"SECOND\": \"00\", \"USER\": \"UAZ9086\", \"PC\": \"4450\", \"ACTIVITY\": \"Suspicious Login from Foreign IP\", \"RAW_LOG\": \"SESSION-SUSPICIOUS-MEDIUM-2442\\t24-04-2010 16:19\\tDTAA/UAZ9086\\tPC-4450\\tSuspicious Login from Foreign IP\"}",
+      "score": -0.03709339908607612,
+      "reason": "This log contains unusual features: ip, suspicious, foreign, from, 19"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-11\", \"HOUR\": \"14\", \"MINUTE\": \"47\", \"SECOND\": \"00\", \"USER\": \"ZLP4084\", \"PC\": \"5221\", \"ACTIVITY\": \"Suspicious Login from Foreign IP\", \"RAW_LOG\": \"SESSION-SUSPICIOUS-MEDIUM-6188\\t11-04-2010 14:47\\tDTAA/ZLP4084\\tPC-5221\\tSuspicious Login from Foreign IP\"}",
+      "score": -0.05836688033144827,
+      "reason": "This log contains unusual features: 47, zlp4084, foreign, from, ip"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-27\", \"HOUR\": \"07\", \"MINUTE\": \"25\", \"SECOND\": \"00\", \"USER\": \"DGX1939\", \"PC\": \"4450\", \"ACTIVITY\": \"Malware Execution Attempt\", \"RAW_LOG\": \"SESSION-MALWARE-HIGH-3184\\t27-04-2010 07:25\\tDTAA/DGX1939\\tPC-4450\\tMalware Execution Attempt\"}",
+      "score": -0.0003490418135269624,
+      "reason": "This log contains unusual features: attempt, execution, malware, dgx1939, 4450"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-08\", \"HOUR\": \"00\", \"MINUTE\": \"57\", \"SECOND\": \"00\", \"USER\": \"ZLP4084\", \"PC\": \"5430\", \"ACTIVITY\": \"Password Changed\", \"RAW_LOG\": \"SESSION-PASSWORD-MEDIUM-4623\\t08-04-2010 00:57\\tDTAA/ZLP4084\\tPC-5430\\tPassword Changed\"}",
+      "score": -0.013916474277660629,
+      "reason": "This log contains unusual features: 57, 5430, zlp4084, password, changed"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-04\", \"HOUR\": \"02\", \"MINUTE\": \"52\", \"SECOND\": \"00\", \"USER\": \"ZLP4084\", \"PC\": \"9556\", \"ACTIVITY\": \"Suspicious Login from Foreign IP\", \"RAW_LOG\": \"SESSION-SUSPICIOUS-MEDIUM-2789\\t04-04-2010 02:52\\tDTAA/ZLP4084\\tPC-9556\\tSuspicious Login from Foreign IP\"}",
+      "score": -0.019366026664352665,
+      "reason": "This log contains unusual features: from, suspicious, ip, foreign, 52"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-08\", \"HOUR\": \"03\", \"MINUTE\": \"54\", \"SECOND\": \"00\", \"USER\": \"VSC6934\", \"PC\": \"5164\", \"ACTIVITY\": \"Password Changed\", \"RAW_LOG\": \"SESSION-PASSWORD-MEDIUM-7671\\t08-04-2010 03:54\\tDTAA/VSC6934\\tPC-5164\\tPassword Changed\"}",
+      "score": -0.0016394419692472573,
+      "reason": "This log contains unusual features: 54, 5164, vsc6934, 03, changed"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-23\", \"HOUR\": \"13\", \"MINUTE\": \"34\", \"SECOND\": \"00\", \"USER\": \"BCF7710\", \"PC\": \"9577\", \"ACTIVITY\": \"File Opened\", \"RAW_LOG\": \"SESSION-FILE-LOW-1681\\t23-04-2010 13:34\\tDTAA/BCF7710\\tPC-9577\\tFile Opened\"}",
+      "score": -0.00021797430244202554,
+      "reason": "This log contains unusual features: bcf7710, 9577, 34, 13, file"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-22\", \"HOUR\": \"07\", \"MINUTE\": \"07\", \"SECOND\": \"00\", \"USER\": \"MYK1298\", \"PC\": \"7638\", \"ACTIVITY\": \"Multiple Failed Login Attempts\", \"RAW_LOG\": \"SESSION-MULTIPLE-MEDIUM-4310\\t22-04-2010 07:07\\tDTAA/MYK1298\\tPC-7638\\tMultiple Failed Login Attempts\"}",
+      "score": -0.05707448751036176,
+      "reason": "This log contains unusual features: 07, multiple, attempts, failed, 7638"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-14\", \"HOUR\": \"01\", \"MINUTE\": \"11\", \"SECOND\": \"00\", \"USER\": \"RET4173\", \"PC\": \"7537\", \"ACTIVITY\": \"Privilege Escalation Detected\", \"RAW_LOG\": \"SESSION-PRIVILEGE-HIGH-4285\\t14-04-2010 01:11\\tDTAA/RET4173\\tPC-7537\\tPrivilege Escalation Detected\"}",
+      "score": -0.03311252718380853,
+      "reason": "This log contains unusual features: detected, escalation, ret4173, privilege, 11"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-30\", \"HOUR\": \"10\", \"MINUTE\": \"04\", \"SECOND\": \"00\", \"USER\": \"FLJ2242\", \"PC\": \"1726\", \"ACTIVITY\": \"File Opened\", \"RAW_LOG\": \"SESSION-FILE-LOW-8251\\t30-04-2010 10:04\\tDTAA/FLJ2242\\tPC-1726\\tFile Opened\"}",
+      "score": -0.0007578210005664832,
+      "reason": "This log contains unusual features: flj2242, 1726, 10, opened, file"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-04\", \"HOUR\": \"07\", \"MINUTE\": \"35\", \"SECOND\": \"00\", \"USER\": \"BCF7710\", \"PC\": \"8301\", \"ACTIVITY\": \"Access to Restricted Folder\", \"RAW_LOG\": \"SESSION-ACCESS-HIGH-6274\\t04-04-2010 07:35\\tDTAA/BCF7710\\tPC-8301\\tAccess to Restricted Folder\"}",
+      "score": -0.07680223121593549,
+      "reason": "This log contains unusual features: to, restricted, access, folder, 35"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-27\", \"HOUR\": \"04\", \"MINUTE\": \"02\", \"SECOND\": \"00\", \"USER\": \"RXQ5807\", \"PC\": \"6335\", \"ACTIVITY\": \"Suspicious Login from Foreign IP\", \"RAW_LOG\": \"SESSION-SUSPICIOUS-MEDIUM-9864\\t27-04-2010 04:02\\tDTAA/RXQ5807\\tPC-6335\\tSuspicious Login from Foreign IP\"}",
+      "score": -0.04995657058334563,
+      "reason": "This log contains unusual features: ip, suspicious, foreign, from, 6335"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-10\", \"HOUR\": \"13\", \"MINUTE\": \"06\", \"SECOND\": \"00\", \"USER\": \"ZLP4084\", \"PC\": \"7353\", \"ACTIVITY\": \"Malware Execution Attempt\", \"RAW_LOG\": \"SESSION-MALWARE-HIGH-9039\\t10-04-2010 13:06\\tDTAA/ZLP4084\\tPC-7353\\tMalware Execution Attempt\"}",
+      "score": -0.009640573777310035,
+      "reason": "This log contains unusual features: execution, malware, attempt, zlp4084, 7353"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-10\", \"HOUR\": \"04\", \"MINUTE\": \"19\", \"SECOND\": \"00\", \"USER\": \"YVH7263\", \"PC\": \"7353\", \"ACTIVITY\": \"Suspicious Login from Foreign IP\", \"RAW_LOG\": \"SESSION-SUSPICIOUS-MEDIUM-4750\\t10-04-2010 04:19\\tDTAA/YVH7263\\tPC-7353\\tSuspicious Login from Foreign IP\"}",
+      "score": -0.004792186249058028,
+      "reason": "This log contains unusual features: yvh7263, foreign, from, ip, suspicious"
+    },
+    {
+      "log": "{\"DATE\": \"2010-05-01\", \"HOUR\": \"00\", \"MINUTE\": \"11\", \"SECOND\": \"00\", \"USER\": \"IEN9832\", \"PC\": \"9493\", \"ACTIVITY\": \"Email Sent\", \"RAW_LOG\": \"SESSION-EMAIL-LOW-1711\\t01-05-2010 00:11\\tDTAA/IEN9832\\tPC-9493\\tEmail Sent\"}",
+      "score": -0.011240752635309381,
+      "reason": "This log contains unusual features: ien9832, 9493, 11, 05, sent"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-25\", \"HOUR\": \"04\", \"MINUTE\": \"11\", \"SECOND\": \"00\", \"USER\": \"VLN8678\", \"PC\": \"4450\", \"ACTIVITY\": \"Email Sent\", \"RAW_LOG\": \"SESSION-EMAIL-LOW-3698\\t25-04-2010 04:11\\tDTAA/VLN8678\\tPC-4450\\tEmail Sent\"}",
+      "score": -3.412326754143047e-05,
+      "reason": "This log contains unusual features: 4450, vln8678, email, sent, 11"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-22\", \"HOUR\": \"11\", \"MINUTE\": \"30\", \"SECOND\": \"00\", \"USER\": \"EHR5221\", \"PC\": \"5164\", \"ACTIVITY\": \"Access to Restricted Folder\", \"RAW_LOG\": \"SESSION-ACCESS-HIGH-6318\\t22-04-2010 11:30\\tDTAA/EHR5221\\tPC-5164\\tAccess to Restricted Folder\"}",
+      "score": -0.006120477946729708,
+      "reason": "This log contains unusual features: ehr5221, restricted, to, access, folder"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-23\", \"HOUR\": \"03\", \"MINUTE\": \"53\", \"SECOND\": \"00\", \"USER\": \"PEV5758\", \"PC\": \"3944\", \"ACTIVITY\": \"Malware Execution Attempt\", \"RAW_LOG\": \"SESSION-MALWARE-HIGH-8958\\t23-04-2010 03:53\\tDTAA/PEV5758\\tPC-3944\\tMalware Execution Attempt\"}",
+      "score": -0.020588504656441464,
+      "reason": "This log contains unusual features: attempt, execution, malware, 53, pev5758"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-15\", \"HOUR\": \"06\", \"MINUTE\": \"53\", \"SECOND\": \"00\", \"USER\": \"ODQ4361\", \"PC\": \"7537\", \"ACTIVITY\": \"Multiple Failed Login Attempts\", \"RAW_LOG\": \"SESSION-MULTIPLE-MEDIUM-6047\\t15-04-2010 06:53\\tDTAA/ODQ4361\\tPC-7537\\tMultiple Failed Login Attempts\"}",
+      "score": -0.010566307990184931,
+      "reason": "This log contains unusual features: failed, attempts, multiple, 53, 7537"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-26\", \"HOUR\": \"09\", \"MINUTE\": \"46\", \"SECOND\": \"00\", \"USER\": \"OGL4599\", \"PC\": \"3090\", \"ACTIVITY\": \"Privilege Escalation Detected\", \"RAW_LOG\": \"SESSION-PRIVILEGE-HIGH-1453\\t26-04-2010 09:46\\tDTAA/OGL4599\\tPC-3090\\tPrivilege Escalation Detected\"}",
+      "score": -0.013333351624647993,
+      "reason": "This log contains unusual features: privilege, detected, escalation, 46, ogl4599"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-25\", \"HOUR\": \"06\", \"MINUTE\": \"13\", \"SECOND\": \"00\", \"USER\": \"HEL9963\", \"PC\": \"3914\", \"ACTIVITY\": \"Suspicious Login from Foreign IP\", \"RAW_LOG\": \"SESSION-SUSPICIOUS-MEDIUM-3521\\t25-04-2010 06:13\\tDTAA/HEL9963\\tPC-3914\\tSuspicious Login from Foreign IP\"}",
+      "score": -0.018000389758300372,
+      "reason": "This log contains unusual features: suspicious, hel9963, from, ip, foreign"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-21\", \"HOUR\": \"08\", \"MINUTE\": \"38\", \"SECOND\": \"00\", \"USER\": \"BHZ1136\", \"PC\": \"9200\", \"ACTIVITY\": \"Data Exfiltration Attempt\", \"RAW_LOG\": \"SESSION-DATA-HIGH-1041\\t21-04-2010 08:38\\tDTAA/BHZ1136\\tPC-9200\\tData Exfiltration Attempt\"}",
+      "score": -0.005498309958684111,
+      "reason": "This log contains unusual features: exfiltration, data, bhz1136, attempt, 38"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-30\", \"HOUR\": \"00\", \"MINUTE\": \"24\", \"SECOND\": \"00\", \"USER\": \"RET4173\", \"PC\": \"7638\", \"ACTIVITY\": \"File Opened\", \"RAW_LOG\": \"SESSION-FILE-LOW-3634\\t30-04-2010 00:24\\tDTAA/RET4173\\tPC-7638\\tFile Opened\"}",
+      "score": -0.01632603242417968,
+      "reason": "This log contains unusual features: ret4173, 7638, 24, opened, file"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-24\", \"HOUR\": \"17\", \"MINUTE\": \"54\", \"SECOND\": \"00\", \"USER\": \"XYD5525\", \"PC\": \"9496\", \"ACTIVITY\": \"Privilege Escalation Detected\", \"RAW_LOG\": \"SESSION-PRIVILEGE-HIGH-8790\\t24-04-2010 17:54\\tDTAA/XYD5525\\tPC-9496\\tPrivilege Escalation Detected\"}",
+      "score": -0.0109908343571532,
+      "reason": "This log contains unusual features: privilege, detected, escalation, 54, xyd5525"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-15\", \"HOUR\": \"19\", \"MINUTE\": \"02\", \"SECOND\": \"00\", \"USER\": \"UAZ9086\", \"PC\": \"2459\", \"ACTIVITY\": \"Suspicious Login from Foreign IP\", \"RAW_LOG\": \"SESSION-SUSPICIOUS-MEDIUM-5388\\t15-04-2010 19:02\\tDTAA/UAZ9086\\tPC-2459\\tSuspicious Login from Foreign IP\"}",
+      "score": -0.008265150005129784,
+      "reason": "This log contains unusual features: suspicious, ip, foreign, from, uaz9086"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-08\", \"HOUR\": \"21\", \"MINUTE\": \"23\", \"SECOND\": \"00\", \"USER\": \"WLN8711\", \"PC\": \"1312\", \"ACTIVITY\": \"Multiple Failed Login Attempts\", \"RAW_LOG\": \"SESSION-MULTIPLE-MEDIUM-6091\\t08-04-2010 21:23\\tDTAA/WLN8711\\tPC-1312\\tMultiple Failed Login Attempts\"}",
+      "score": -0.011509700763802755,
+      "reason": "This log contains unusual features: multiple, failed, attempts, 1312, wln8711"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-29\", \"HOUR\": \"13\", \"MINUTE\": \"22\", \"SECOND\": \"00\", \"USER\": \"XYD5525\", \"PC\": \"5221\", \"ACTIVITY\": \"Password Changed\", \"RAW_LOG\": \"SESSION-PASSWORD-MEDIUM-1906\\t29-04-2010 13:22\\tDTAA/XYD5525\\tPC-5221\\tPassword Changed\"}",
+      "score": -0.003536466531983251,
+      "reason": "This log contains unusual features: 5221, xyd5525, 13, changed, password"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-30\", \"HOUR\": \"08\", \"MINUTE\": \"14\", \"SECOND\": \"00\", \"USER\": \"YYF1218\", \"PC\": \"9090\", \"ACTIVITY\": \"Privilege Escalation Detected\", \"RAW_LOG\": \"SESSION-PRIVILEGE-HIGH-2511\\t30-04-2010 08:14\\tDTAA/YYF1218\\tPC-9090\\tPrivilege Escalation Detected\"}",
+      "score": -0.021646303484406992,
+      "reason": "This log contains unusual features: privilege, escalation, detected, 9090, yyf1218"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-05\", \"HOUR\": \"00\", \"MINUTE\": \"36\", \"SECOND\": \"00\", \"USER\": \"FIO8317\", \"PC\": \"3802\", \"ACTIVITY\": \"File Opened\", \"RAW_LOG\": \"SESSION-FILE-LOW-2020\\t05-04-2010 00:36\\tDTAA/FIO8317\\tPC-3802\\tFile Opened\"}",
+      "score": -0.0008220711941868686,
+      "reason": "This log contains unusual features: 3802, 36, fio8317, opened, file"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-12\", \"HOUR\": \"14\", \"MINUTE\": \"05\", \"SECOND\": \"00\", \"USER\": \"WLN8711\", \"PC\": \"2121\", \"ACTIVITY\": \"Multiple Failed Login Attempts\", \"RAW_LOG\": \"SESSION-MULTIPLE-MEDIUM-6098\\t12-04-2010 14:05\\tDTAA/WLN8711\\tPC-2121\\tMultiple Failed Login Attempts\"}",
+      "score": -0.0386428392106995,
+      "reason": "This log contains unusual features: multiple, failed, attempts, wln8711, 2121"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-30\", \"HOUR\": \"04\", \"MINUTE\": \"22\", \"SECOND\": \"00\", \"USER\": \"LEL4307\", \"PC\": \"6335\", \"ACTIVITY\": \"Password Changed\", \"RAW_LOG\": \"SESSION-PASSWORD-MEDIUM-1393\\t30-04-2010 04:22\\tDTAA/LEL4307\\tPC-6335\\tPassword Changed\"}",
+      "score": -0.005865549306694751,
+      "reason": "This log contains unusual features: lel4307, 6335, 22, password, changed"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-13\", \"HOUR\": \"10\", \"MINUTE\": \"46\", \"SECOND\": \"00\", \"USER\": \"ROB6344\", \"PC\": \"4450\", \"ACTIVITY\": \"Malware Execution Attempt\", \"RAW_LOG\": \"SESSION-MALWARE-HIGH-7521\\t13-04-2010 10:46\\tDTAA/ROB6344\\tPC-4450\\tMalware Execution Attempt\"}",
+      "score": -0.05562219100918131,
+      "reason": "This log contains unusual features: malware, execution, attempt, rob6344, 46"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-25\", \"HOUR\": \"03\", \"MINUTE\": \"36\", \"SECOND\": \"00\", \"USER\": \"DFF5013\", \"PC\": \"5860\", \"ACTIVITY\": \"Access to Restricted Folder\", \"RAW_LOG\": \"SESSION-ACCESS-HIGH-8508\\t25-04-2010 03:36\\tDTAA/DFF5013\\tPC-5860\\tAccess to Restricted Folder\"}",
+      "score": -0.07827009349170322,
+      "reason": "This log contains unusual features: to, folder, dff5013, restricted, 5860"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-20\", \"HOUR\": \"17\", \"MINUTE\": \"53\", \"SECOND\": \"00\", \"USER\": \"FTL9380\", \"PC\": \"8074\", \"ACTIVITY\": \"Privilege Escalation Detected\", \"RAW_LOG\": \"SESSION-PRIVILEGE-HIGH-5512\\t20-04-2010 17:53\\tDTAA/FTL9380\\tPC-8074\\tPrivilege Escalation Detected\"}",
+      "score": -0.014702433211047472,
+      "reason": "This log contains unusual features: escalation, detected, privilege, 53, 17"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-10\", \"HOUR\": \"13\", \"MINUTE\": \"10\", \"SECOND\": \"00\", \"USER\": \"DNA1335\", \"PC\": \"1781\", \"ACTIVITY\": \"Multiple Failed Login Attempts\", \"RAW_LOG\": \"SESSION-MULTIPLE-MEDIUM-1397\\t10-04-2010 13:10\\tDTAA/DNA1335\\tPC-1781\\tMultiple Failed Login Attempts\"}",
+      "score": -0.03915851618619004,
+      "reason": "This log contains unusual features: 10, failed, attempts, dna1335, multiple"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-19\", \"HOUR\": \"15\", \"MINUTE\": \"59\", \"SECOND\": \"00\", \"USER\": \"PYC2207\", \"PC\": \"1059\", \"ACTIVITY\": \"Malware Execution Attempt\", \"RAW_LOG\": \"SESSION-MALWARE-HIGH-4121\\t19-04-2010 15:59\\tDTAA/PYC2207\\tPC-1059\\tMalware Execution Attempt\"}",
+      "score": -0.019096603324307238,
+      "reason": "This log contains unusual features: execution, malware, attempt, 59, 1059"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-27\", \"HOUR\": \"23\", \"MINUTE\": \"56\", \"SECOND\": \"00\", \"USER\": \"YYF1218\", \"PC\": \"3914\", \"ACTIVITY\": \"Privilege Escalation Detected\", \"RAW_LOG\": \"SESSION-PRIVILEGE-HIGH-4666\\t27-04-2010 23:56\\tDTAA/YYF1218\\tPC-3914\\tPrivilege Escalation Detected\"}",
+      "score": -0.03014817791147656,
+      "reason": "This log contains unusual features: yyf1218, privilege, detected, escalation, 56"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-10\", \"HOUR\": \"20\", \"MINUTE\": \"10\", \"SECOND\": \"00\", \"USER\": \"EHR5221\", \"PC\": \"8826\", \"ACTIVITY\": \"Privilege Escalation Detected\", \"RAW_LOG\": \"SESSION-PRIVILEGE-HIGH-3495\\t10-04-2010 20:10\\tDTAA/EHR5221\\tPC-8826\\tPrivilege Escalation Detected\"}",
+      "score": -0.006746665551787101,
+      "reason": "This log contains unusual features: 10, detected, escalation, privilege, 8826"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-12\", \"HOUR\": \"07\", \"MINUTE\": \"48\", \"SECOND\": \"00\", \"USER\": \"PEV5758\", \"PC\": \"2459\", \"ACTIVITY\": \"Data Exfiltration Attempt\", \"RAW_LOG\": \"SESSION-DATA-HIGH-3858\\t12-04-2010 07:48\\tDTAA/PEV5758\\tPC-2459\\tData Exfiltration Attempt\"}",
+      "score": -0.01791432907072449,
+      "reason": "This log contains unusual features: data, pev5758, exfiltration, attempt, 2459"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-09\", \"HOUR\": \"17\", \"MINUTE\": \"58\", \"SECOND\": \"00\", \"USER\": \"XYD5525\", \"PC\": \"9303\", \"ACTIVITY\": \"Suspicious Login from Foreign IP\", \"RAW_LOG\": \"SESSION-SUSPICIOUS-MEDIUM-3127\\t09-04-2010 17:58\\tDTAA/XYD5525\\tPC-9303\\tSuspicious Login from Foreign IP\"}",
+      "score": -0.0076653599523458515,
+      "reason": "This log contains unusual features: xyd5525, 9303, 58, suspicious, foreign"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-11\", \"HOUR\": \"13\", \"MINUTE\": \"48\", \"SECOND\": \"00\", \"USER\": \"MDT8312\", \"PC\": \"8301\", \"ACTIVITY\": \"Suspicious Login from Foreign IP\", \"RAW_LOG\": \"SESSION-SUSPICIOUS-MEDIUM-4163\\t11-04-2010 13:48\\tDTAA/MDT8312\\tPC-8301\\tSuspicious Login from Foreign IP\"}",
+      "score": -0.0197480718556185,
+      "reason": "This log contains unusual features: mdt8312, 48, ip, suspicious, from"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-12\", \"HOUR\": \"16\", \"MINUTE\": \"11\", \"SECOND\": \"00\", \"USER\": \"VSC6934\", \"PC\": \"9577\", \"ACTIVITY\": \"Access to Restricted Folder\", \"RAW_LOG\": \"SESSION-ACCESS-HIGH-8033\\t12-04-2010 16:11\\tDTAA/VSC6934\\tPC-9577\\tAccess to Restricted Folder\"}",
+      "score": -0.013021934107926347,
+      "reason": "This log contains unusual features: vsc6934, to, 9577, access, restricted"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-30\", \"HOUR\": \"23\", \"MINUTE\": \"45\", \"SECOND\": \"00\", \"USER\": \"DFF5013\", \"PC\": \"2459\", \"ACTIVITY\": \"Data Exfiltration Attempt\", \"RAW_LOG\": \"SESSION-DATA-HIGH-6899\\t30-04-2010 23:45\\tDTAA/DFF5013\\tPC-2459\\tData Exfiltration Attempt\"}",
+      "score": -0.027958011779857017,
+      "reason": "This log contains unusual features: attempt, data, dff5013, exfiltration, 45"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-06\", \"HOUR\": \"05\", \"MINUTE\": \"56\", \"SECOND\": \"00\", \"USER\": \"RET4173\", \"PC\": \"6706\", \"ACTIVITY\": \"Access to Restricted Folder\", \"RAW_LOG\": \"SESSION-ACCESS-HIGH-2010\\t06-04-2010 05:56\\tDTAA/RET4173\\tPC-6706\\tAccess to Restricted Folder\"}",
+      "score": -0.01586947649406284,
+      "reason": "This log contains unusual features: to, folder, restricted, access, ret4173"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-05\", \"HOUR\": \"03\", \"MINUTE\": \"15\", \"SECOND\": \"00\", \"USER\": \"MYK1298\", \"PC\": \"6706\", \"ACTIVITY\": \"Multiple Failed Login Attempts\", \"RAW_LOG\": \"SESSION-MULTIPLE-MEDIUM-8367\\t05-04-2010 03:15\\tDTAA/MYK1298\\tPC-6706\\tMultiple Failed Login Attempts\"}",
+      "score": -0.007246872602357846,
+      "reason": "This log contains unusual features: attempts, multiple, myk1298, failed, 6706"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-27\", \"HOUR\": \"17\", \"MINUTE\": \"52\", \"SECOND\": \"00\", \"USER\": \"FTL9380\", \"PC\": \"1312\", \"ACTIVITY\": \"Suspicious Login from Foreign IP\", \"RAW_LOG\": \"SESSION-SUSPICIOUS-MEDIUM-7658\\t27-04-2010 17:52\\tDTAA/FTL9380\\tPC-1312\\tSuspicious Login from Foreign IP\"}",
+      "score": -0.02105661137855619,
+      "reason": "This log contains unusual features: ip, foreign, from, suspicious, 52"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-24\", \"HOUR\": \"07\", \"MINUTE\": \"19\", \"SECOND\": \"00\", \"USER\": \"OGZ7278\", \"PC\": \"3914\", \"ACTIVITY\": \"Privilege Escalation Detected\", \"RAW_LOG\": \"SESSION-PRIVILEGE-HIGH-9744\\t24-04-2010 07:19\\tDTAA/OGZ7278\\tPC-3914\\tPrivilege Escalation Detected\"}",
+      "score": -0.007981900281060939,
+      "reason": "This log contains unusual features: escalation, detected, privilege, ogz7278, 3914"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-08\", \"HOUR\": \"22\", \"MINUTE\": \"24\", \"SECOND\": \"00\", \"USER\": \"IEN9832\", \"PC\": \"1669\", \"ACTIVITY\": \"Access to Restricted Folder\", \"RAW_LOG\": \"SESSION-ACCESS-HIGH-7885\\t08-04-2010 22:24\\tDTAA/IEN9832\\tPC-1669\\tAccess to Restricted Folder\"}",
+      "score": -0.02622361457601552,
+      "reason": "This log contains unusual features: to, access, folder, restricted, ien9832"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-23\", \"HOUR\": \"04\", \"MINUTE\": \"03\", \"SECOND\": \"00\", \"USER\": \"MYK1298\", \"PC\": \"7638\", \"ACTIVITY\": \"Logout\", \"RAW_LOG\": \"SESSION-LOGOUT-LOW-4642\\t23-04-2010 04:03\\tDTAA/MYK1298\\tPC-7638\\tLogout\"}",
+      "score": -0.00025469594544258456,
+      "reason": "This log contains unusual features: 7638, myk1298, 03, logout, 4642"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-01\", \"HOUR\": \"14\", \"MINUTE\": \"31\", \"SECOND\": \"00\", \"USER\": \"BHZ1136\", \"PC\": \"5860\", \"ACTIVITY\": \"Malware Execution Attempt\", \"RAW_LOG\": \"SESSION-MALWARE-HIGH-9456\\t01-04-2010 14:31\\tDTAA/BHZ1136\\tPC-5860\\tMalware Execution Attempt\"}",
+      "score": -0.043492968415698774,
+      "reason": "This log contains unusual features: execution, attempt, malware, 31, 5860"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-07\", \"HOUR\": \"06\", \"MINUTE\": \"30\", \"SECOND\": \"00\", \"USER\": \"BHZ1136\", \"PC\": \"7557\", \"ACTIVITY\": \"Multiple Failed Login Attempts\", \"RAW_LOG\": \"SESSION-MULTIPLE-MEDIUM-2039\\t07-04-2010 06:30\\tDTAA/BHZ1136\\tPC-7557\\tMultiple Failed Login Attempts\"}",
+      "score": -0.02469159605717819,
+      "reason": "This log contains unusual features: failed, attempts, multiple, bhz1136, 7557"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-17\", \"HOUR\": \"02\", \"MINUTE\": \"41\", \"SECOND\": \"00\", \"USER\": \"DGX1939\", \"PC\": \"5860\", \"ACTIVITY\": \"Multiple Failed Login Attempts\", \"RAW_LOG\": \"SESSION-MULTIPLE-MEDIUM-6056\\t17-04-2010 02:41\\tDTAA/DGX1939\\tPC-5860\\tMultiple Failed Login Attempts\"}",
+      "score": -0.00886736412475786,
+      "reason": "This log contains unusual features: attempts, multiple, failed, dgx1939, 41"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-26\", \"HOUR\": \"07\", \"MINUTE\": \"20\", \"SECOND\": \"00\", \"USER\": \"VSC6934\", \"PC\": \"3944\", \"ACTIVITY\": \"Access to Restricted Folder\", \"RAW_LOG\": \"SESSION-ACCESS-HIGH-3556\\t26-04-2010 07:20\\tDTAA/VSC6934\\tPC-3944\\tAccess to Restricted Folder\"}",
+      "score": -0.02794459375595526,
+      "reason": "This log contains unusual features: to, vsc6934, folder, access, restricted"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-26\", \"HOUR\": \"03\", \"MINUTE\": \"01\", \"SECOND\": \"00\", \"USER\": \"MYK1298\", \"PC\": \"7557\", \"ACTIVITY\": \"Malware Execution Attempt\", \"RAW_LOG\": \"SESSION-MALWARE-HIGH-5778\\t26-04-2010 03:01\\tDTAA/MYK1298\\tPC-7557\\tMalware Execution Attempt\"}",
+      "score": -0.025029851437213424,
+      "reason": "This log contains unusual features: attempt, myk1298, malware, execution, 03"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-30\", \"HOUR\": \"12\", \"MINUTE\": \"34\", \"SECOND\": \"00\", \"USER\": \"AUS9343\", \"PC\": \"9200\", \"ACTIVITY\": \"Privilege Escalation Detected\", \"RAW_LOG\": \"SESSION-PRIVILEGE-HIGH-7721\\t30-04-2010 12:34\\tDTAA/AUS9343\\tPC-9200\\tPrivilege Escalation Detected\"}",
+      "score": -0.016725657259854143,
+      "reason": "This log contains unusual features: detected, privilege, escalation, 34, 12"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-01\", \"HOUR\": \"08\", \"MINUTE\": \"47\", \"SECOND\": \"00\", \"USER\": \"ROB6344\", \"PC\": \"9200\", \"ACTIVITY\": \"Access to Restricted Folder\", \"RAW_LOG\": \"SESSION-ACCESS-HIGH-3807\\t01-04-2010 08:47\\tDTAA/ROB6344\\tPC-9200\\tAccess to Restricted Folder\"}",
+      "score": -0.041144868798904166,
+      "reason": "This log contains unusual features: to, restricted, folder, access, rob6344"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-25\", \"HOUR\": \"02\", \"MINUTE\": \"59\", \"SECOND\": \"00\", \"USER\": \"LKF4396\", \"PC\": \"3914\", \"ACTIVITY\": \"Multiple Failed Login Attempts\", \"RAW_LOG\": \"SESSION-MULTIPLE-MEDIUM-4197\\t25-04-2010 02:59\\tDTAA/LKF4396\\tPC-3914\\tMultiple Failed Login Attempts\"}",
+      "score": -0.010983197208530637,
+      "reason": "This log contains unusual features: attempts, failed, multiple, lkf4396, 59"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-29\", \"HOUR\": \"07\", \"MINUTE\": \"18\", \"SECOND\": \"00\", \"USER\": \"MDT8312\", \"PC\": \"1669\", \"ACTIVITY\": \"Data Exfiltration Attempt\", \"RAW_LOG\": \"SESSION-DATA-HIGH-9179\\t29-04-2010 07:18\\tDTAA/MDT8312\\tPC-1669\\tData Exfiltration Attempt\"}",
+      "score": -9.958064327858507e-05,
+      "reason": "This log contains unusual features: exfiltration, data, attempt, mdt8312, 1669"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-03\", \"HOUR\": \"13\", \"MINUTE\": \"26\", \"SECOND\": \"00\", \"USER\": \"WZX7758\", \"PC\": \"9090\", \"ACTIVITY\": \"Multiple Failed Login Attempts\", \"RAW_LOG\": \"SESSION-MULTIPLE-MEDIUM-5617\\t03-04-2010 13:26\\tDTAA/WZX7758\\tPC-9090\\tMultiple Failed Login Attempts\"}",
+      "score": -0.019583383371657048,
+      "reason": "This log contains unusual features: failed, attempts, multiple, wzx7758, 26"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-19\", \"HOUR\": \"19\", \"MINUTE\": \"13\", \"SECOND\": \"00\", \"USER\": \"VSC6934\", \"PC\": \"9090\", \"ACTIVITY\": \"Malware Execution Attempt\", \"RAW_LOG\": \"SESSION-MALWARE-HIGH-8226\\t19-04-2010 19:13\\tDTAA/VSC6934\\tPC-9090\\tMalware Execution Attempt\"}",
+      "score": -0.017539720512933454,
+      "reason": "This log contains unusual features: vsc6934, execution, malware, attempt, 9090"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-17\", \"HOUR\": \"22\", \"MINUTE\": \"16\", \"SECOND\": \"00\", \"USER\": \"IEN9832\", \"PC\": \"1669\", \"ACTIVITY\": \"Suspicious Login from Foreign IP\", \"RAW_LOG\": \"SESSION-SUSPICIOUS-MEDIUM-9747\\t17-04-2010 22:16\\tDTAA/IEN9832\\tPC-1669\\tSuspicious Login from Foreign IP\"}",
+      "score": -0.033176390234287256,
+      "reason": "This log contains unusual features: foreign, suspicious, ien9832, ip, from"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-23\", \"HOUR\": \"17\", \"MINUTE\": \"58\", \"SECOND\": \"00\", \"USER\": \"VLN8678\", \"PC\": \"5860\", \"ACTIVITY\": \"Malware Execution Attempt\", \"RAW_LOG\": \"SESSION-MALWARE-HIGH-8076\\t23-04-2010 17:58\\tDTAA/VLN8678\\tPC-5860\\tMalware Execution Attempt\"}",
+      "score": -0.0013960130315961439,
+      "reason": "This log contains unusual features: execution, attempt, malware, 5860, vln8678"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-10\", \"HOUR\": \"19\", \"MINUTE\": \"25\", \"SECOND\": \"00\", \"USER\": \"MDC5734\", \"PC\": \"5363\", \"ACTIVITY\": \"Login Successful\", \"RAW_LOG\": \"SESSION-LOGIN-LOW-2133\\t10-04-2010 19:25\\tDTAA/MDC5734\\tPC-5363\\tLogin Successful\"}",
+      "score": -0.0011556773891084338,
+      "reason": "This log contains unusual features: mdc5734, 5363, 25, 19, successful"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-01\", \"HOUR\": \"21\", \"MINUTE\": \"42\", \"SECOND\": \"00\", \"USER\": \"RXQ5807\", \"PC\": \"3090\", \"ACTIVITY\": \"Data Exfiltration Attempt\", \"RAW_LOG\": \"SESSION-DATA-HIGH-9757\\t01-04-2010 21:42\\tDTAA/RXQ5807\\tPC-3090\\tData Exfiltration Attempt\"}",
+      "score": -0.04362023374424684,
+      "reason": "This log contains unusual features: data, exfiltration, attempt, 3090, rxq5807"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-27\", \"HOUR\": \"12\", \"MINUTE\": \"02\", \"SECOND\": \"00\", \"USER\": \"JRU9262\", \"PC\": \"3090\", \"ACTIVITY\": \"Access to Restricted Folder\", \"RAW_LOG\": \"SESSION-ACCESS-HIGH-6137\\t27-04-2010 12:02\\tDTAA/JRU9262\\tPC-3090\\tAccess to Restricted Folder\"}",
+      "score": -0.016988685818104865,
+      "reason": "This log contains unusual features: to, folder, jru9262, restricted, access"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-26\", \"HOUR\": \"14\", \"MINUTE\": \"27\", \"SECOND\": \"00\", \"USER\": \"NYI5084\", \"PC\": \"6870\", \"ACTIVITY\": \"Password Changed\", \"RAW_LOG\": \"SESSION-PASSWORD-MEDIUM-3560\\t26-04-2010 14:27\\tDTAA/NYI5084\\tPC-6870\\tPassword Changed\"}",
+      "score": -0.0008056486354487413,
+      "reason": "This log contains unusual features: nyi5084, 6870, 27, password, changed"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-27\", \"HOUR\": \"12\", \"MINUTE\": \"49\", \"SECOND\": \"00\", \"USER\": \"RET4173\", \"PC\": \"7741\", \"ACTIVITY\": \"Password Changed\", \"RAW_LOG\": \"SESSION-PASSWORD-MEDIUM-1411\\t27-04-2010 12:49\\tDTAA/RET4173\\tPC-7741\\tPassword Changed\"}",
+      "score": -0.007191209651574937,
+      "reason": "This log contains unusual features: 49, 7741, ret4173, 12, changed"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-11\", \"HOUR\": \"15\", \"MINUTE\": \"39\", \"SECOND\": \"00\", \"USER\": \"FLJ2242\", \"PC\": \"8826\", \"ACTIVITY\": \"Password Changed\", \"RAW_LOG\": \"SESSION-PASSWORD-MEDIUM-9759\\t11-04-2010 15:39\\tDTAA/FLJ2242\\tPC-8826\\tPassword Changed\"}",
+      "score": -0.007389040603015762,
+      "reason": "This log contains unusual features: flj2242, 8826, 39, password, changed"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-24\", \"HOUR\": \"02\", \"MINUTE\": \"04\", \"SECOND\": \"00\", \"USER\": \"IUR1741\", \"PC\": \"2088\", \"ACTIVITY\": \"Logout\", \"RAW_LOG\": \"SESSION-LOGOUT-LOW-6769\\t24-04-2010 02:04\\tDTAA/IUR1741\\tPC-2088\\tLogout\"}",
+      "score": -0.005617146138849727,
+      "reason": "This log contains unusual features: iur1741, 02, 2088, logout, 6769"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-07\", \"HOUR\": \"07\", \"MINUTE\": \"47\", \"SECOND\": \"00\", \"USER\": \"NYI5084\", \"PC\": \"8295\", \"ACTIVITY\": \"Logout\", \"RAW_LOG\": \"SESSION-LOGOUT-LOW-2858\\t07-04-2010 07:47\\tDTAA/NYI5084\\tPC-8295\\tLogout\"}",
+      "score": -0.017276565855319892,
+      "reason": "This log contains unusual features: 07, 8295, 47, nyi5084, logout"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-13\", \"HOUR\": \"21\", \"MINUTE\": \"42\", \"SECOND\": \"00\", \"USER\": \"DGX1939\", \"PC\": \"1312\", \"ACTIVITY\": \"Suspicious Login from Foreign IP\", \"RAW_LOG\": \"SESSION-SUSPICIOUS-MEDIUM-6185\\t13-04-2010 21:42\\tDTAA/DGX1939\\tPC-1312\\tSuspicious Login from Foreign IP\"}",
+      "score": -0.06042744935746891,
+      "reason": "This log contains unusual features: foreign, suspicious, ip, from, 1312"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-20\", \"HOUR\": \"03\", \"MINUTE\": \"25\", \"SECOND\": \"00\", \"USER\": \"MZY8397\", \"PC\": \"9577\", \"ACTIVITY\": \"Password Changed\", \"RAW_LOG\": \"SESSION-PASSWORD-MEDIUM-6744\\t20-04-2010 03:25\\tDTAA/MZY8397\\tPC-9577\\tPassword Changed\"}",
+      "score": -0.0021493028984828633,
+      "reason": "This log contains unusual features: mzy8397, 9577, 25, 03, changed"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-17\", \"HOUR\": \"13\", \"MINUTE\": \"32\", \"SECOND\": \"00\", \"USER\": \"ELP5990\", \"PC\": \"8826\", \"ACTIVITY\": \"Privilege Escalation Detected\", \"RAW_LOG\": \"SESSION-PRIVILEGE-HIGH-3468\\t17-04-2010 13:32\\tDTAA/ELP5990\\tPC-8826\\tPrivilege Escalation Detected\"}",
+      "score": -0.022267336425089657,
+      "reason": "This log contains unusual features: detected, escalation, privilege, elp5990, 32"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-10\", \"HOUR\": \"00\", \"MINUTE\": \"14\", \"SECOND\": \"00\", \"USER\": \"JRU9262\", \"PC\": \"9493\", \"ACTIVITY\": \"Email Sent\", \"RAW_LOG\": \"SESSION-EMAIL-LOW-6797\\t10-04-2010 00:14\\tDTAA/JRU9262\\tPC-9493\\tEmail Sent\"}",
+      "score": -0.017391023944258288,
+      "reason": "This log contains unusual features: 9493, jru9262, 14, sent, email"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-09\", \"HOUR\": \"07\", \"MINUTE\": \"04\", \"SECOND\": \"00\", \"USER\": \"FLJ2242\", \"PC\": \"1669\", \"ACTIVITY\": \"Data Exfiltration Attempt\", \"RAW_LOG\": \"SESSION-DATA-HIGH-9722\\t09-04-2010 07:04\\tDTAA/FLJ2242\\tPC-1669\\tData Exfiltration Attempt\"}",
+      "score": -0.009291337307269054,
+      "reason": "This log contains unusual features: exfiltration, data, attempt, flj2242, 1669"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-28\", \"HOUR\": \"00\", \"MINUTE\": \"50\", \"SECOND\": \"00\", \"USER\": \"PUV1595\", \"PC\": \"4096\", \"ACTIVITY\": \"Logout\", \"RAW_LOG\": \"SESSION-LOGOUT-LOW-2312\\t28-04-2010 00:50\\tDTAA/PUV1595\\tPC-4096\\tLogout\"}",
+      "score": -0.006298596632890785,
+      "reason": "This log contains unusual features: puv1595, 4096, 50, logout, 2312"
+    },
+    {
+      "log": "{\"DATE\": \"2010-05-01\", \"HOUR\": \"00\", \"MINUTE\": \"44\", \"SECOND\": \"00\", \"USER\": \"VBU5686\", \"PC\": \"4096\", \"ACTIVITY\": \"Multiple Failed Login Attempts\", \"RAW_LOG\": \"SESSION-MULTIPLE-MEDIUM-2826\\t01-05-2010 00:44\\tDTAA/VBU5686\\tPC-4096\\tMultiple Failed Login Attempts\"}",
+      "score": -0.04649484694277872,
+      "reason": "This log contains unusual features: failed, attempts, multiple, 44, vbu5686"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-23\", \"HOUR\": \"20\", \"MINUTE\": \"00\", \"SECOND\": \"00\", \"USER\": \"BHZ1136\", \"PC\": \"1059\", \"ACTIVITY\": \"Login Successful\", \"RAW_LOG\": \"SESSION-LOGIN-LOW-1329\\t23-04-2010 20:00\\tDTAA/BHZ1136\\tPC-1059\\tLogin Successful\"}",
+      "score": -0.0013141346023985423,
+      "reason": "This log contains unusual features: 1059, bhz1136, 20, successful, t23"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-22\", \"HOUR\": \"05\", \"MINUTE\": \"05\", \"SECOND\": \"00\", \"USER\": \"HEL9963\", \"PC\": \"9577\", \"ACTIVITY\": \"Login Successful\", \"RAW_LOG\": \"SESSION-LOGIN-LOW-9959\\t22-04-2010 05:05\\tDTAA/HEL9963\\tPC-9577\\tLogin Successful\"}",
+      "score": -0.0005902095234155968,
+      "reason": "This log contains unusual features: 05, hel9963, 9577, successful, login"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-28\", \"HOUR\": \"15\", \"MINUTE\": \"29\", \"SECOND\": \"00\", \"USER\": \"RET4173\", \"PC\": \"7459\", \"ACTIVITY\": \"Malware Execution Attempt\", \"RAW_LOG\": \"SESSION-MALWARE-HIGH-1089\\t28-04-2010 15:29\\tDTAA/RET4173\\tPC-7459\\tMalware Execution Attempt\"}",
+      "score": -0.016751823008601896,
+      "reason": "This log contains unusual features: execution, attempt, malware, 29, ret4173"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-02\", \"HOUR\": \"07\", \"MINUTE\": \"49\", \"SECOND\": \"00\", \"USER\": \"RXQ5807\", \"PC\": \"7537\", \"ACTIVITY\": \"Access to Restricted Folder\", \"RAW_LOG\": \"SESSION-ACCESS-HIGH-3570\\t02-04-2010 07:49\\tDTAA/RXQ5807\\tPC-7537\\tAccess to Restricted Folder\"}",
+      "score": -0.03776150941789541,
+      "reason": "This log contains unusual features: to, folder, access, restricted, 49"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-05\", \"HOUR\": \"23\", \"MINUTE\": \"14\", \"SECOND\": \"00\", \"USER\": \"JRU9262\", \"PC\": \"5430\", \"ACTIVITY\": \"Password Changed\", \"RAW_LOG\": \"SESSION-PASSWORD-MEDIUM-1367\\t05-04-2010 23:14\\tDTAA/JRU9262\\tPC-5430\\tPassword Changed\"}",
+      "score": -0.001508204927606338,
+      "reason": "This log contains unusual features: jru9262, 5430, 23, 14, changed"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-13\", \"HOUR\": \"07\", \"MINUTE\": \"58\", \"SECOND\": \"00\", \"USER\": \"NYI5084\", \"PC\": \"4240\", \"ACTIVITY\": \"Multiple Failed Login Attempts\", \"RAW_LOG\": \"SESSION-MULTIPLE-MEDIUM-4772\\t13-04-2010 07:58\\tDTAA/NYI5084\\tPC-4240\\tMultiple Failed Login Attempts\"}",
+      "score": -0.03479616095378257,
+      "reason": "This log contains unusual features: nyi5084, 4240, 07, failed, multiple"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-27\", \"HOUR\": \"04\", \"MINUTE\": \"22\", \"SECOND\": \"00\", \"USER\": \"MYK1298\", \"PC\": \"7557\", \"ACTIVITY\": \"Data Exfiltration Attempt\", \"RAW_LOG\": \"SESSION-DATA-HIGH-6407\\t27-04-2010 04:22\\tDTAA/MYK1298\\tPC-7557\\tData Exfiltration Attempt\"}",
+      "score": -0.0005463085029671633,
+      "reason": "This log contains unusual features: exfiltration, data, myk1298, 7557, attempt"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-09\", \"HOUR\": \"14\", \"MINUTE\": \"15\", \"SECOND\": \"00\", \"USER\": \"LEL4307\", \"PC\": \"5164\", \"ACTIVITY\": \"Privilege Escalation Detected\", \"RAW_LOG\": \"SESSION-PRIVILEGE-HIGH-5988\\t09-04-2010 14:15\\tDTAA/LEL4307\\tPC-5164\\tPrivilege Escalation Detected\"}",
+      "score": -0.04313418358050014,
+      "reason": "This log contains unusual features: lel4307, 5164, detected, privilege, escalation"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-24\", \"HOUR\": \"07\", \"MINUTE\": \"54\", \"SECOND\": \"00\", \"USER\": \"LKF4396\", \"PC\": \"6246\", \"ACTIVITY\": \"Password Changed\", \"RAW_LOG\": \"SESSION-PASSWORD-MEDIUM-8563\\t24-04-2010 07:54\\tDTAA/LKF4396\\tPC-6246\\tPassword Changed\"}",
+      "score": -0.0005702438191177994,
+      "reason": "This log contains unusual features: lkf4396, 6246, 54, 07, password"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-27\", \"HOUR\": \"09\", \"MINUTE\": \"00\", \"SECOND\": \"00\", \"USER\": \"FTL9380\", \"PC\": \"6406\", \"ACTIVITY\": \"Privilege Escalation Detected\", \"RAW_LOG\": \"SESSION-PRIVILEGE-HIGH-9003\\t27-04-2010 09:00\\tDTAA/FTL9380\\tPC-6406\\tPrivilege Escalation Detected\"}",
+      "score": -0.007297003649529954,
+      "reason": "This log contains unusual features: privilege, escalation, detected, ftl9380, 6406"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-25\", \"HOUR\": \"21\", \"MINUTE\": \"00\", \"SECOND\": \"00\", \"USER\": \"BHZ1136\", \"PC\": \"6246\", \"ACTIVITY\": \"Password Changed\", \"RAW_LOG\": \"SESSION-PASSWORD-MEDIUM-2956\\t25-04-2010 21:00\\tDTAA/BHZ1136\\tPC-6246\\tPassword Changed\"}",
+      "score": -0.002357696354711447,
+      "reason": "This log contains unusual features: 6246, bhz1136, 21, password, changed"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-26\", \"HOUR\": \"03\", \"MINUTE\": \"03\", \"SECOND\": \"00\", \"USER\": \"SPF8256\", \"PC\": \"3914\", \"ACTIVITY\": \"Email Sent\", \"RAW_LOG\": \"SESSION-EMAIL-LOW-3324\\t26-04-2010 03:03\\tDTAA/SPF8256\\tPC-3914\\tEmail Sent\"}",
+      "score": -0.008367328458883105,
+      "reason": "This log contains unusual features: 03, 3914, spf8256, sent, email"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-08\", \"HOUR\": \"10\", \"MINUTE\": \"10\", \"SECOND\": \"00\", \"USER\": \"AUS9343\", \"PC\": \"6406\", \"ACTIVITY\": \"Email Sent\", \"RAW_LOG\": \"SESSION-EMAIL-LOW-2532\\t08-04-2010 10:10\\tDTAA/AUS9343\\tPC-6406\\tEmail Sent\"}",
+      "score": -0.013306740094509217,
+      "reason": "This log contains unusual features: 10, aus9343, 6406, sent, email"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-20\", \"HOUR\": \"01\", \"MINUTE\": \"17\", \"SECOND\": \"00\", \"USER\": \"PUV1595\", \"PC\": \"6335\", \"ACTIVITY\": \"Logout\", \"RAW_LOG\": \"SESSION-LOGOUT-LOW-1632\\t20-04-2010 01:17\\tDTAA/PUV1595\\tPC-6335\\tLogout\"}",
+      "score": -0.003420969159595555,
+      "reason": "This log contains unusual features: 6335, puv1595, 17, 01, 1632"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-14\", \"HOUR\": \"12\", \"MINUTE\": \"40\", \"SECOND\": \"00\", \"USER\": \"MYK1298\", \"PC\": \"6335\", \"ACTIVITY\": \"Logout\", \"RAW_LOG\": \"SESSION-LOGOUT-LOW-8509\\t14-04-2010 12:40\\tDTAA/MYK1298\\tPC-6335\\tLogout\"}",
+      "score": -0.00047092430644624095,
+      "reason": "This log contains unusual features: myk1298, 6335, 40, 12, 8509"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-12\", \"HOUR\": \"22\", \"MINUTE\": \"42\", \"SECOND\": \"00\", \"USER\": \"OMQ6976\", \"PC\": \"5543\", \"ACTIVITY\": \"File Opened\", \"RAW_LOG\": \"SESSION-FILE-LOW-4668\\t12-04-2010 22:42\\tDTAA/OMQ6976\\tPC-5543\\tFile Opened\"}",
+      "score": -0.006513521683096712,
+      "reason": "This log contains unusual features: omq6976, 42, 5543, 22, file"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-16\", \"HOUR\": \"07\", \"MINUTE\": \"37\", \"SECOND\": \"00\", \"USER\": \"FIO8317\", \"PC\": \"1312\", \"ACTIVITY\": \"Data Exfiltration Attempt\", \"RAW_LOG\": \"SESSION-DATA-HIGH-2912\\t16-04-2010 07:37\\tDTAA/FIO8317\\tPC-1312\\tData Exfiltration Attempt\"}",
+      "score": -0.0069021574393839935,
+      "reason": "This log contains unusual features: data, exfiltration, attempt, 37, fio8317"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-20\", \"HOUR\": \"03\", \"MINUTE\": \"46\", \"SECOND\": \"00\", \"USER\": \"YVH7263\", \"PC\": \"6335\", \"ACTIVITY\": \"Password Changed\", \"RAW_LOG\": \"SESSION-PASSWORD-MEDIUM-2566\\t20-04-2010 03:46\\tDTAA/YVH7263\\tPC-6335\\tPassword Changed\"}",
+      "score": -0.013284024284504647,
+      "reason": "This log contains unusual features: 6335, 46, yvh7263, 03, changed"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-13\", \"HOUR\": \"18\", \"MINUTE\": \"01\", \"SECOND\": \"00\", \"USER\": \"YVH7263\", \"PC\": \"8301\", \"ACTIVITY\": \"Login Successful\", \"RAW_LOG\": \"SESSION-LOGIN-LOW-2976\\t13-04-2010 18:01\\tDTAA/YVH7263\\tPC-8301\\tLogin Successful\"}",
+      "score": -0.0004527791988243046,
+      "reason": "This log contains unusual features: yvh7263, 8301, 01, 18, login"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-23\", \"HOUR\": \"01\", \"MINUTE\": \"16\", \"SECOND\": \"00\", \"USER\": \"HEL9963\", \"PC\": \"2770\", \"ACTIVITY\": \"Suspicious Login from Foreign IP\", \"RAW_LOG\": \"SESSION-SUSPICIOUS-MEDIUM-5572\\t23-04-2010 01:16\\tDTAA/HEL9963\\tPC-2770\\tSuspicious Login from Foreign IP\"}",
+      "score": -0.00369376310928321,
+      "reason": "This log contains unusual features: hel9963, 2770, from, ip, foreign"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-07\", \"HOUR\": \"04\", \"MINUTE\": \"44\", \"SECOND\": \"00\", \"USER\": \"RXQ5807\", \"PC\": \"7459\", \"ACTIVITY\": \"Suspicious Login from Foreign IP\", \"RAW_LOG\": \"SESSION-SUSPICIOUS-MEDIUM-8207\\t07-04-2010 04:44\\tDTAA/RXQ5807\\tPC-7459\\tSuspicious Login from Foreign IP\"}",
+      "score": -0.022599287077972985,
+      "reason": "This log contains unusual features: rxq5807, 7459, 44, from, ip"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-11\", \"HOUR\": \"20\", \"MINUTE\": \"11\", \"SECOND\": \"00\", \"USER\": \"BCF7710\", \"PC\": \"9090\", \"ACTIVITY\": \"Suspicious Login from Foreign IP\", \"RAW_LOG\": \"SESSION-SUSPICIOUS-MEDIUM-6576\\t11-04-2010 20:11\\tDTAA/BCF7710\\tPC-9090\\tSuspicious Login from Foreign IP\"}",
+      "score": -0.014984810611984145,
+      "reason": "This log contains unusual features: 11, bcf7710, 9090, 20, foreign"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-01\", \"HOUR\": \"08\", \"MINUTE\": \"50\", \"SECOND\": \"00\", \"USER\": \"VBU5686\", \"PC\": \"3944\", \"ACTIVITY\": \"Access to Restricted Folder\", \"RAW_LOG\": \"SESSION-ACCESS-HIGH-8201\\t01-04-2010 08:50\\tDTAA/VBU5686\\tPC-3944\\tAccess to Restricted Folder\"}",
+      "score": -0.039269007115948995,
+      "reason": "This log contains unusual features: 50, 3944, folder, to, restricted"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-15\", \"HOUR\": \"08\", \"MINUTE\": \"17\", \"SECOND\": \"00\", \"USER\": \"YMI9044\", \"PC\": \"1059\", \"ACTIVITY\": \"Access to Restricted Folder\", \"RAW_LOG\": \"SESSION-ACCESS-HIGH-1563\\t15-04-2010 08:17\\tDTAA/YMI9044\\tPC-1059\\tAccess to Restricted Folder\"}",
+      "score": -0.0046502669836732125,
+      "reason": "This log contains unusual features: ymi9044, to, folder, access, restricted"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-28\", \"HOUR\": \"15\", \"MINUTE\": \"13\", \"SECOND\": \"00\", \"USER\": \"DNA1335\", \"PC\": \"4096\", \"ACTIVITY\": \"Malware Execution Attempt\", \"RAW_LOG\": \"SESSION-MALWARE-HIGH-6616\\t28-04-2010 15:13\\tDTAA/DNA1335\\tPC-4096\\tMalware Execution Attempt\"}",
+      "score": -0.02377878139887768,
+      "reason": "This log contains unusual features: execution, attempt, malware, dna1335, 4096"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-19\", \"HOUR\": \"13\", \"MINUTE\": \"25\", \"SECOND\": \"00\", \"USER\": \"DNA1335\", \"PC\": \"9090\", \"ACTIVITY\": \"Password Changed\", \"RAW_LOG\": \"SESSION-PASSWORD-MEDIUM-5497\\t19-04-2010 13:25\\tDTAA/DNA1335\\tPC-9090\\tPassword Changed\"}",
+      "score": -0.00337013124163954,
+      "reason": "This log contains unusual features: 25, 9090, dna1335, 13, changed"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-08\", \"HOUR\": \"06\", \"MINUTE\": \"41\", \"SECOND\": \"00\", \"USER\": \"PJF3517\", \"PC\": \"6406\", \"ACTIVITY\": \"Password Changed\", \"RAW_LOG\": \"SESSION-PASSWORD-MEDIUM-5985\\t08-04-2010 06:41\\tDTAA/PJF3517\\tPC-6406\\tPassword Changed\"}",
+      "score": -0.003181198835985777,
+      "reason": "This log contains unusual features: 41, 6406, pjf3517, 06, changed"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-15\", \"HOUR\": \"22\", \"MINUTE\": \"28\", \"SECOND\": \"00\", \"USER\": \"BRH4303\", \"PC\": \"3944\", \"ACTIVITY\": \"Data Exfiltration Attempt\", \"RAW_LOG\": \"SESSION-DATA-HIGH-2914\\t15-04-2010 22:28\\tDTAA/BRH4303\\tPC-3944\\tData Exfiltration Attempt\"}",
+      "score": -0.016322625092246912,
+      "reason": "This log contains unusual features: exfiltration, attempt, data, 3944, 22"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-15\", \"HOUR\": \"02\", \"MINUTE\": \"29\", \"SECOND\": \"00\", \"USER\": \"FIO8317\", \"PC\": \"1312\", \"ACTIVITY\": \"Email Sent\", \"RAW_LOG\": \"SESSION-EMAIL-LOW-4956\\t15-04-2010 02:29\\tDTAA/FIO8317\\tPC-1312\\tEmail Sent\"}",
+      "score": -0.004176909869334944,
+      "reason": "This log contains unusual features: fio8317, 29, 1312, 02, sent"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-15\", \"HOUR\": \"22\", \"MINUTE\": \"12\", \"SECOND\": \"00\", \"USER\": \"VSC6934\", \"PC\": \"1726\", \"ACTIVITY\": \"Data Exfiltration Attempt\", \"RAW_LOG\": \"SESSION-DATA-HIGH-1141\\t15-04-2010 22:12\\tDTAA/VSC6934\\tPC-1726\\tData Exfiltration Attempt\"}",
+      "score": -0.0679222028044364,
+      "reason": "This log contains unusual features: vsc6934, data, exfiltration, 1726, attempt"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-05\", \"HOUR\": \"06\", \"MINUTE\": \"33\", \"SECOND\": \"00\", \"USER\": \"UAZ9086\", \"PC\": \"6335\", \"ACTIVITY\": \"Privilege Escalation Detected\", \"RAW_LOG\": \"SESSION-PRIVILEGE-HIGH-8162\\t05-04-2010 06:33\\tDTAA/UAZ9086\\tPC-6335\\tPrivilege Escalation Detected\"}",
+      "score": -0.04615929345331948,
+      "reason": "This log contains unusual features: uaz9086, detected, privilege, escalation, 33"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-18\", \"HOUR\": \"00\", \"MINUTE\": \"06\", \"SECOND\": \"00\", \"USER\": \"WZX7758\", \"PC\": \"3802\", \"ACTIVITY\": \"File Opened\", \"RAW_LOG\": \"SESSION-FILE-LOW-2131\\t18-04-2010 00:06\\tDTAA/WZX7758\\tPC-3802\\tFile Opened\"}",
+      "score": -0.0005964906474812959,
+      "reason": "This log contains unusual features: wzx7758, 3802, 06, opened, file"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-18\", \"HOUR\": \"23\", \"MINUTE\": \"28\", \"SECOND\": \"00\", \"USER\": \"OGL4599\", \"PC\": \"3025\", \"ACTIVITY\": \"Email Sent\", \"RAW_LOG\": \"SESSION-EMAIL-LOW-2478\\t18-04-2010 23:28\\tDTAA/OGL4599\\tPC-3025\\tEmail Sent\"}",
+      "score": -0.0012183195293477556,
+      "reason": "This log contains unusual features: 3025, 28, 23, ogl4599, email"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-20\", \"HOUR\": \"11\", \"MINUTE\": \"51\", \"SECOND\": \"00\", \"USER\": \"MZY8397\", \"PC\": \"1059\", \"ACTIVITY\": \"Data Exfiltration Attempt\", \"RAW_LOG\": \"SESSION-DATA-HIGH-6444\\t20-04-2010 11:51\\tDTAA/MZY8397\\tPC-1059\\tData Exfiltration Attempt\"}",
+      "score": -0.10650305023161294,
+      "reason": "This log contains unusual features: exfiltration, data, attempt, mzy8397, 1059"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-10\", \"HOUR\": \"22\", \"MINUTE\": \"02\", \"SECOND\": \"00\", \"USER\": \"FTL9380\", \"PC\": \"2770\", \"ACTIVITY\": \"Access to Restricted Folder\", \"RAW_LOG\": \"SESSION-ACCESS-HIGH-6841\\t10-04-2010 22:02\\tDTAA/FTL9380\\tPC-2770\\tAccess to Restricted Folder\"}",
+      "score": -0.04780646661421001,
+      "reason": "This log contains unusual features: to, folder, access, restricted, 2770"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-16\", \"HOUR\": \"16\", \"MINUTE\": \"44\", \"SECOND\": \"00\", \"USER\": \"XYD5525\", \"PC\": \"7353\", \"ACTIVITY\": \"Login Successful\", \"RAW_LOG\": \"SESSION-LOGIN-LOW-7815\\t16-04-2010 16:44\\tDTAA/XYD5525\\tPC-7353\\tLogin Successful\"}",
+      "score": -0.003089214825771125,
+      "reason": "This log contains unusual features: 16, 7353, 44, xyd5525, login"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-01\", \"HOUR\": \"15\", \"MINUTE\": \"25\", \"SECOND\": \"00\", \"USER\": \"JRU9262\", \"PC\": \"7557\", \"ACTIVITY\": \"Login Successful\", \"RAW_LOG\": \"SESSION-LOGIN-LOW-2542\\t01-04-2010 15:25\\tDTAA/JRU9262\\tPC-7557\\tLogin Successful\"}",
+      "score": -0.0002234378784065072,
+      "reason": "This log contains unusual features: jru9262, 25, 7557, 15, login"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-18\", \"HOUR\": \"14\", \"MINUTE\": \"40\", \"SECOND\": \"00\", \"USER\": \"RET4173\", \"PC\": \"5430\", \"ACTIVITY\": \"Data Exfiltration Attempt\", \"RAW_LOG\": \"SESSION-DATA-HIGH-3116\\t18-04-2010 14:40\\tDTAA/RET4173\\tPC-5430\\tData Exfiltration Attempt\"}",
+      "score": -0.01091008448821823,
+      "reason": "This log contains unusual features: attempt, ret4173, exfiltration, data, 40"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-19\", \"HOUR\": \"08\", \"MINUTE\": \"44\", \"SECOND\": \"00\", \"USER\": \"FLJ2242\", \"PC\": \"1726\", \"ACTIVITY\": \"Privilege Escalation Detected\", \"RAW_LOG\": \"SESSION-PRIVILEGE-HIGH-1445\\t19-04-2010 08:44\\tDTAA/FLJ2242\\tPC-1726\\tPrivilege Escalation Detected\"}",
+      "score": -0.017308896492442105,
+      "reason": "This log contains unusual features: detected, privilege, escalation, flj2242, 1726"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-25\", \"HOUR\": \"12\", \"MINUTE\": \"00\", \"SECOND\": \"00\", \"USER\": \"JRU9262\", \"PC\": \"9090\", \"ACTIVITY\": \"Logout\", \"RAW_LOG\": \"SESSION-LOGOUT-LOW-4915\\t25-04-2010 12:00\\tDTAA/JRU9262\\tPC-9090\\tLogout\"}",
+      "score": -0.015408096360896018,
+      "reason": "This log contains unusual features: jru9262, 9090, 12, logout, 4915"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-02\", \"HOUR\": \"10\", \"MINUTE\": \"50\", \"SECOND\": \"00\", \"USER\": \"WLN8711\", \"PC\": \"8301\", \"ACTIVITY\": \"Multiple Failed Login Attempts\", \"RAW_LOG\": \"SESSION-MULTIPLE-MEDIUM-2431\\t02-04-2010 10:50\\tDTAA/WLN8711\\tPC-8301\\tMultiple Failed Login Attempts\"}",
+      "score": -0.03447818321863905,
+      "reason": "This log contains unusual features: multiple, failed, attempts, wln8711, 8301"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-08\", \"HOUR\": \"14\", \"MINUTE\": \"58\", \"SECOND\": \"00\", \"USER\": \"MZY8397\", \"PC\": \"9493\", \"ACTIVITY\": \"Suspicious Login from Foreign IP\", \"RAW_LOG\": \"SESSION-SUSPICIOUS-MEDIUM-3882\\t08-04-2010 14:58\\tDTAA/MZY8397\\tPC-9493\\tSuspicious Login from Foreign IP\"}",
+      "score": -0.02333032306820748,
+      "reason": "This log contains unusual features: 58, foreign, mzy8397, ip, from"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-15\", \"HOUR\": \"02\", \"MINUTE\": \"57\", \"SECOND\": \"00\", \"USER\": \"XTE1549\", \"PC\": \"9493\", \"ACTIVITY\": \"Suspicious Login from Foreign IP\", \"RAW_LOG\": \"SESSION-SUSPICIOUS-MEDIUM-8376\\t15-04-2010 02:57\\tDTAA/XTE1549\\tPC-9493\\tSuspicious Login from Foreign IP\"}",
+      "score": -0.0036779736284736075,
+      "reason": "This log contains unusual features: xte1549, suspicious, ip, from, foreign"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-15\", \"HOUR\": \"20\", \"MINUTE\": \"17\", \"SECOND\": \"00\", \"USER\": \"VSC6934\", \"PC\": \"3914\", \"ACTIVITY\": \"Access to Restricted Folder\", \"RAW_LOG\": \"SESSION-ACCESS-HIGH-9728\\t15-04-2010 20:17\\tDTAA/VSC6934\\tPC-3914\\tAccess to Restricted Folder\"}",
+      "score": -0.012272687504381652,
+      "reason": "This log contains unusual features: vsc6934, to, access, restricted, folder"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-12\", \"HOUR\": \"18\", \"MINUTE\": \"52\", \"SECOND\": \"00\", \"USER\": \"VLN8678\", \"PC\": \"6706\", \"ACTIVITY\": \"Access to Restricted Folder\", \"RAW_LOG\": \"SESSION-ACCESS-HIGH-6434\\t12-04-2010 18:52\\tDTAA/VLN8678\\tPC-6706\\tAccess to Restricted Folder\"}",
+      "score": -0.0032407107054019946,
+      "reason": "This log contains unusual features: 52, 6706, to, folder, access"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-04\", \"HOUR\": \"22\", \"MINUTE\": \"01\", \"SECOND\": \"00\", \"USER\": \"WZX7758\", \"PC\": \"4450\", \"ACTIVITY\": \"Privilege Escalation Detected\", \"RAW_LOG\": \"SESSION-PRIVILEGE-HIGH-2215\\t04-04-2010 22:01\\tDTAA/WZX7758\\tPC-4450\\tPrivilege Escalation Detected\"}",
+      "score": -0.009521634478528607,
+      "reason": "This log contains unusual features: detected, escalation, privilege, 4450, wzx7758"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-14\", \"HOUR\": \"04\", \"MINUTE\": \"33\", \"SECOND\": \"00\", \"USER\": \"OMQ6976\", \"PC\": \"8301\", \"ACTIVITY\": \"Suspicious Login from Foreign IP\", \"RAW_LOG\": \"SESSION-SUSPICIOUS-MEDIUM-1153\\t14-04-2010 04:33\\tDTAA/OMQ6976\\tPC-8301\\tSuspicious Login from Foreign IP\"}",
+      "score": -0.004057523006865182,
+      "reason": "This log contains unusual features: from, foreign, suspicious, ip, 8301"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-17\", \"HOUR\": \"09\", \"MINUTE\": \"46\", \"SECOND\": \"00\", \"USER\": \"LEL4307\", \"PC\": \"9577\", \"ACTIVITY\": \"Malware Execution Attempt\", \"RAW_LOG\": \"SESSION-MALWARE-HIGH-2193\\t17-04-2010 09:46\\tDTAA/LEL4307\\tPC-9577\\tMalware Execution Attempt\"}",
+      "score": -0.0019087108739210268,
+      "reason": "This log contains unusual features: 9577, attempt, execution, lel4307, malware"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-28\", \"HOUR\": \"08\", \"MINUTE\": \"31\", \"SECOND\": \"00\", \"USER\": \"VSC6934\", \"PC\": \"9200\", \"ACTIVITY\": \"Malware Execution Attempt\", \"RAW_LOG\": \"SESSION-MALWARE-HIGH-6909\\t28-04-2010 08:31\\tDTAA/VSC6934\\tPC-9200\\tMalware Execution Attempt\"}",
+      "score": -0.001192113183150434,
+      "reason": "This log contains unusual features: attempt, execution, malware, 31, 9200"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-27\", \"HOUR\": \"14\", \"MINUTE\": \"05\", \"SECOND\": \"00\", \"USER\": \"WLN8711\", \"PC\": \"5221\", \"ACTIVITY\": \"Malware Execution Attempt\", \"RAW_LOG\": \"SESSION-MALWARE-HIGH-5728\\t27-04-2010 14:05\\tDTAA/WLN8711\\tPC-5221\\tMalware Execution Attempt\"}",
+      "score": -0.025743889063687908,
+      "reason": "This log contains unusual features: malware, execution, attempt, wln8711, 5221"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-23\", \"HOUR\": \"01\", \"MINUTE\": \"21\", \"SECOND\": \"00\", \"USER\": \"BRH4303\", \"PC\": \"9200\", \"ACTIVITY\": \"Multiple Failed Login Attempts\", \"RAW_LOG\": \"SESSION-MULTIPLE-MEDIUM-7531\\t23-04-2010 01:21\\tDTAA/BRH4303\\tPC-9200\\tMultiple Failed Login Attempts\"}",
+      "score": -0.055099509770830946,
+      "reason": "This log contains unusual features: multiple, failed, attempts, brh4303, 9200"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-07\", \"HOUR\": \"19\", \"MINUTE\": \"12\", \"SECOND\": \"00\", \"USER\": \"EHR5221\", \"PC\": \"1781\", \"ACTIVITY\": \"Password Changed\", \"RAW_LOG\": \"SESSION-PASSWORD-MEDIUM-5883\\t07-04-2010 19:12\\tDTAA/EHR5221\\tPC-1781\\tPassword Changed\"}",
+      "score": -0.0010252723611046677,
+      "reason": "This log contains unusual features: ehr5221, 19, 12, 1781, changed"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-09\", \"HOUR\": \"09\", \"MINUTE\": \"01\", \"SECOND\": \"00\", \"USER\": \"SPF8256\", \"PC\": \"8295\", \"ACTIVITY\": \"Password Changed\", \"RAW_LOG\": \"SESSION-PASSWORD-MEDIUM-9654\\t09-04-2010 09:01\\tDTAA/SPF8256\\tPC-8295\\tPassword Changed\"}",
+      "score": -0.0006707523512319846,
+      "reason": "This log contains unusual features: 09, 8295, spf8256, 01, changed"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-17\", \"HOUR\": \"03\", \"MINUTE\": \"47\", \"SECOND\": \"00\", \"USER\": \"NYI5084\", \"PC\": \"2088\", \"ACTIVITY\": \"Password Changed\", \"RAW_LOG\": \"SESSION-PASSWORD-MEDIUM-2224\\t17-04-2010 03:47\\tDTAA/NYI5084\\tPC-2088\\tPassword Changed\"}",
+      "score": -0.009035537280674799,
+      "reason": "This log contains unusual features: nyi5084, 47, 2088, 03, changed"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-27\", \"HOUR\": \"01\", \"MINUTE\": \"11\", \"SECOND\": \"00\", \"USER\": \"PJF3517\", \"PC\": \"8826\", \"ACTIVITY\": \"Access to Restricted Folder\", \"RAW_LOG\": \"SESSION-ACCESS-HIGH-8281\\t27-04-2010 01:11\\tDTAA/PJF3517\\tPC-8826\\tAccess to Restricted Folder\"}",
+      "score": -0.026341214542051905,
+      "reason": "This log contains unusual features: to, pjf3517, folder, access, restricted"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-22\", \"HOUR\": \"22\", \"MINUTE\": \"46\", \"SECOND\": \"00\", \"USER\": \"PJF3517\", \"PC\": \"1781\", \"ACTIVITY\": \"Privilege Escalation Detected\", \"RAW_LOG\": \"SESSION-PRIVILEGE-HIGH-4043\\t22-04-2010 22:46\\tDTAA/PJF3517\\tPC-1781\\tPrivilege Escalation Detected\"}",
+      "score": -0.01122570941395945,
+      "reason": "This log contains unusual features: 22, escalation, privilege, detected, 1781"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-25\", \"HOUR\": \"02\", \"MINUTE\": \"52\", \"SECOND\": \"00\", \"USER\": \"SPF8256\", \"PC\": \"1781\", \"ACTIVITY\": \"Malware Execution Attempt\", \"RAW_LOG\": \"SESSION-MALWARE-HIGH-3974\\t25-04-2010 02:52\\tDTAA/SPF8256\\tPC-1781\\tMalware Execution Attempt\"}",
+      "score": -0.0034788419565244255,
+      "reason": "This log contains unusual features: execution, attempt, malware, spf8256, 1781"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-20\", \"HOUR\": \"12\", \"MINUTE\": \"50\", \"SECOND\": \"00\", \"USER\": \"EHR5221\", \"PC\": \"8074\", \"ACTIVITY\": \"Suspicious Login from Foreign IP\", \"RAW_LOG\": \"SESSION-SUSPICIOUS-MEDIUM-3633\\t20-04-2010 12:50\\tDTAA/EHR5221\\tPC-8074\\tSuspicious Login from Foreign IP\"}",
+      "score": -0.03115974968524715,
+      "reason": "This log contains unusual features: ip, from, foreign, suspicious, ehr5221"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-11\", \"HOUR\": \"23\", \"MINUTE\": \"35\", \"SECOND\": \"00\", \"USER\": \"YMI9044\", \"PC\": \"1059\", \"ACTIVITY\": \"Login Successful\", \"RAW_LOG\": \"SESSION-LOGIN-LOW-1356\\t11-04-2010 23:35\\tDTAA/YMI9044\\tPC-1059\\tLogin Successful\"}",
+      "score": -8.853271914777139e-05,
+      "reason": "This log contains unusual features: ymi9044, 35, 1059, 23, login"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-29\", \"HOUR\": \"03\", \"MINUTE\": \"42\", \"SECOND\": \"00\", \"USER\": \"DGX1939\", \"PC\": \"8826\", \"ACTIVITY\": \"Data Exfiltration Attempt\", \"RAW_LOG\": \"SESSION-DATA-HIGH-5225\\t29-04-2010 03:42\\tDTAA/DGX1939\\tPC-8826\\tData Exfiltration Attempt\"}",
+      "score": -0.031245522341877052,
+      "reason": "This log contains unusual features: exfiltration, data, attempt, 42, 8826"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-24\", \"HOUR\": \"22\", \"MINUTE\": \"41\", \"SECOND\": \"00\", \"USER\": \"XTE1549\", \"PC\": \"3025\", \"ACTIVITY\": \"Email Sent\", \"RAW_LOG\": \"SESSION-EMAIL-LOW-3497\\t24-04-2010 22:41\\tDTAA/XTE1549\\tPC-3025\\tEmail Sent\"}",
+      "score": -0.023052028939889224,
+      "reason": "This log contains unusual features: 41, 3025, xte1549, 22, email"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-27\", \"HOUR\": \"16\", \"MINUTE\": \"55\", \"SECOND\": \"00\", \"USER\": \"HEL9963\", \"PC\": \"4900\", \"ACTIVITY\": \"Multiple Failed Login Attempts\", \"RAW_LOG\": \"SESSION-MULTIPLE-MEDIUM-4770\\t27-04-2010 16:55\\tDTAA/HEL9963\\tPC-4900\\tMultiple Failed Login Attempts\"}",
+      "score": -0.07853026823835063,
+      "reason": "This log contains unusual features: 4900, attempts, failed, hel9963, multiple"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-14\", \"HOUR\": \"09\", \"MINUTE\": \"00\", \"SECOND\": \"00\", \"USER\": \"OGL4599\", \"PC\": \"3090\", \"ACTIVITY\": \"Logout\", \"RAW_LOG\": \"SESSION-LOGOUT-LOW-4572\\t14-04-2010 09:00\\tDTAA/OGL4599\\tPC-3090\\tLogout\"}",
+      "score": -0.006355589206433809,
+      "reason": "This log contains unusual features: 3090, ogl4599, 09, logout, 4572"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-16\", \"HOUR\": \"09\", \"MINUTE\": \"04\", \"SECOND\": \"00\", \"USER\": \"HEL9963\", \"PC\": \"1312\", \"ACTIVITY\": \"Multiple Failed Login Attempts\", \"RAW_LOG\": \"SESSION-MULTIPLE-MEDIUM-1262\\t16-04-2010 09:04\\tDTAA/HEL9963\\tPC-1312\\tMultiple Failed Login Attempts\"}",
+      "score": -0.06359988403691957,
+      "reason": "This log contains unusual features: 1312, attempts, failed, hel9963, multiple"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-21\", \"HOUR\": \"10\", \"MINUTE\": \"54\", \"SECOND\": \"00\", \"USER\": \"MCU7598\", \"PC\": \"5164\", \"ACTIVITY\": \"Multiple Failed Login Attempts\", \"RAW_LOG\": \"SESSION-MULTIPLE-MEDIUM-1107\\t21-04-2010 10:54\\tDTAA/MCU7598\\tPC-5164\\tMultiple Failed Login Attempts\"}",
+      "score": -0.035757358015598095,
+      "reason": "This log contains unusual features: attempts, multiple, failed, 5164, mcu7598"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-19\", \"HOUR\": \"11\", \"MINUTE\": \"11\", \"SECOND\": \"00\", \"USER\": \"LEL4307\", \"PC\": \"6246\", \"ACTIVITY\": \"Email Sent\", \"RAW_LOG\": \"SESSION-EMAIL-LOW-5439\\t19-04-2010 11:11\\tDTAA/LEL4307\\tPC-6246\\tEmail Sent\"}",
+      "score": -0.0029588056486116177,
+      "reason": "This log contains unusual features: 11, 6246, lel4307, sent, email"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-21\", \"HOUR\": \"18\", \"MINUTE\": \"59\", \"SECOND\": \"00\", \"USER\": \"HEL9963\", \"PC\": \"9200\", \"ACTIVITY\": \"Password Changed\", \"RAW_LOG\": \"SESSION-PASSWORD-MEDIUM-4724\\t21-04-2010 18:59\\tDTAA/HEL9963\\tPC-9200\\tPassword Changed\"}",
+      "score": -0.003943734235091978,
+      "reason": "This log contains unusual features: hel9963, 9200, 59, 18, changed"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-20\", \"HOUR\": \"10\", \"MINUTE\": \"44\", \"SECOND\": \"00\", \"USER\": \"ELP5990\", \"PC\": \"3944\", \"ACTIVITY\": \"Login Successful\", \"RAW_LOG\": \"SESSION-LOGIN-LOW-2789\\t20-04-2010 10:44\\tDTAA/ELP5990\\tPC-3944\\tLogin Successful\"}",
+      "score": -0.002708885694416574,
+      "reason": "This log contains unusual features: elp5990, 3944, 44, successful, login"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-05\", \"HOUR\": \"08\", \"MINUTE\": \"40\", \"SECOND\": \"00\", \"USER\": \"JRU9262\", \"PC\": \"7741\", \"ACTIVITY\": \"Malware Execution Attempt\", \"RAW_LOG\": \"SESSION-MALWARE-HIGH-3131\\t05-04-2010 08:40\\tDTAA/JRU9262\\tPC-7741\\tMalware Execution Attempt\"}",
+      "score": -0.09036339121881315,
+      "reason": "This log contains unusual features: execution, attempt, malware, 40, 7741"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-26\", \"HOUR\": \"15\", \"MINUTE\": \"22\", \"SECOND\": \"00\", \"USER\": \"WLN8711\", \"PC\": \"1059\", \"ACTIVITY\": \"Privilege Escalation Detected\", \"RAW_LOG\": \"SESSION-PRIVILEGE-HIGH-1709\\t26-04-2010 15:22\\tDTAA/WLN8711\\tPC-1059\\tPrivilege Escalation Detected\"}",
+      "score": -0.04013966336439284,
+      "reason": "This log contains unusual features: privilege, detected, escalation, 1059, wln8711"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-06\", \"HOUR\": \"15\", \"MINUTE\": \"34\", \"SECOND\": \"00\", \"USER\": \"MZY8397\", \"PC\": \"2121\", \"ACTIVITY\": \"Multiple Failed Login Attempts\", \"RAW_LOG\": \"SESSION-MULTIPLE-MEDIUM-2287\\t06-04-2010 15:34\\tDTAA/MZY8397\\tPC-2121\\tMultiple Failed Login Attempts\"}",
+      "score": -0.006155761682322736,
+      "reason": "This log contains unusual features: failed, multiple, attempts, mzy8397, 15"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-10\", \"HOUR\": \"06\", \"MINUTE\": \"48\", \"SECOND\": \"00\", \"USER\": \"OGZ7278\", \"PC\": \"4450\", \"ACTIVITY\": \"Suspicious Login from Foreign IP\", \"RAW_LOG\": \"SESSION-SUSPICIOUS-MEDIUM-8208\\t10-04-2010 06:48\\tDTAA/OGZ7278\\tPC-4450\\tSuspicious Login from Foreign IP\"}",
+      "score": -0.028289985632205472,
+      "reason": "This log contains unusual features: ogz7278, suspicious, ip, from, foreign"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-18\", \"HOUR\": \"08\", \"MINUTE\": \"51\", \"SECOND\": \"00\", \"USER\": \"EHR5221\", \"PC\": \"4450\", \"ACTIVITY\": \"Suspicious Login from Foreign IP\", \"RAW_LOG\": \"SESSION-SUSPICIOUS-MEDIUM-4230\\t18-04-2010 08:51\\tDTAA/EHR5221\\tPC-4450\\tSuspicious Login from Foreign IP\"}",
+      "score": -0.016373602067524917,
+      "reason": "This log contains unusual features: foreign, suspicious, ip, from, ehr5221"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-02\", \"HOUR\": \"01\", \"MINUTE\": \"25\", \"SECOND\": \"00\", \"USER\": \"IUR1741\", \"PC\": \"7741\", \"ACTIVITY\": \"Privilege Escalation Detected\", \"RAW_LOG\": \"SESSION-PRIVILEGE-HIGH-3826\\t02-04-2010 01:25\\tDTAA/IUR1741\\tPC-7741\\tPrivilege Escalation Detected\"}",
+      "score": -0.03301256231393057,
+      "reason": "This log contains unusual features: escalation, detected, privilege, iur1741, 7741"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-27\", \"HOUR\": \"00\", \"MINUTE\": \"59\", \"SECOND\": \"00\", \"USER\": \"DGX1939\", \"PC\": \"7200\", \"ACTIVITY\": \"Suspicious Login from Foreign IP\", \"RAW_LOG\": \"SESSION-SUSPICIOUS-MEDIUM-8468\\t27-04-2010 00:59\\tDTAA/DGX1939\\tPC-7200\\tSuspicious Login from Foreign IP\"}",
+      "score": -0.04008461074519015,
+      "reason": "This log contains unusual features: from, ip, suspicious, foreign, 7200"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-27\", \"HOUR\": \"22\", \"MINUTE\": \"58\", \"SECOND\": \"00\", \"USER\": \"OMQ6976\", \"PC\": \"9493\", \"ACTIVITY\": \"Malware Execution Attempt\", \"RAW_LOG\": \"SESSION-MALWARE-HIGH-5736\\t27-04-2010 22:58\\tDTAA/OMQ6976\\tPC-9493\\tMalware Execution Attempt\"}",
+      "score": -0.0010388313549379302,
+      "reason": "This log contains unusual features: omq6976, malware, execution, 58, attempt"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-14\", \"HOUR\": \"19\", \"MINUTE\": \"43\", \"SECOND\": \"00\", \"USER\": \"AUS9343\", \"PC\": \"5860\", \"ACTIVITY\": \"Data Exfiltration Attempt\", \"RAW_LOG\": \"SESSION-DATA-HIGH-2470\\t14-04-2010 19:43\\tDTAA/AUS9343\\tPC-5860\\tData Exfiltration Attempt\"}",
+      "score": -0.025415400078743655,
+      "reason": "This log contains unusual features: data, attempt, exfiltration, 5860, 43"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-12\", \"HOUR\": \"06\", \"MINUTE\": \"55\", \"SECOND\": \"00\", \"USER\": \"YYF1218\", \"PC\": \"8295\", \"ACTIVITY\": \"Email Sent\", \"RAW_LOG\": \"SESSION-EMAIL-LOW-3415\\t12-04-2010 06:55\\tDTAA/YYF1218\\tPC-8295\\tEmail Sent\"}",
+      "score": -0.0018023518076643041,
+      "reason": "This log contains unusual features: 55, 8295, yyf1218, 06, email"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-23\", \"HOUR\": \"00\", \"MINUTE\": \"02\", \"SECOND\": \"00\", \"USER\": \"RXQ5807\", \"PC\": \"7557\", \"ACTIVITY\": \"Logout\", \"RAW_LOG\": \"SESSION-LOGOUT-LOW-8469\\t23-04-2010 00:02\\tDTAA/RXQ5807\\tPC-7557\\tLogout\"}",
+      "score": -0.006989802944341872,
+      "reason": "This log contains unusual features: rxq5807, 7557, 02, logout, 8469"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-24\", \"HOUR\": \"06\", \"MINUTE\": \"16\", \"SECOND\": \"00\", \"USER\": \"NYI5084\", \"PC\": \"9556\", \"ACTIVITY\": \"Malware Execution Attempt\", \"RAW_LOG\": \"SESSION-MALWARE-HIGH-4389\\t24-04-2010 06:16\\tDTAA/NYI5084\\tPC-9556\\tMalware Execution Attempt\"}",
+      "score": -0.028114411309661413,
+      "reason": "This log contains unusual features: malware, attempt, execution, 9556, nyi5084"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-27\", \"HOUR\": \"06\", \"MINUTE\": \"01\", \"SECOND\": \"00\", \"USER\": \"FTL9380\", \"PC\": \"8301\", \"ACTIVITY\": \"Suspicious Login from Foreign IP\", \"RAW_LOG\": \"SESSION-SUSPICIOUS-MEDIUM-1821\\t27-04-2010 06:01\\tDTAA/FTL9380\\tPC-8301\\tSuspicious Login from Foreign IP\"}",
+      "score": -0.038444972741853156,
+      "reason": "This log contains unusual features: foreign, from, ftl9380, ip, suspicious"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-22\", \"HOUR\": \"04\", \"MINUTE\": \"26\", \"SECOND\": \"00\", \"USER\": \"PYC2207\", \"PC\": \"7638\", \"ACTIVITY\": \"Logout\", \"RAW_LOG\": \"SESSION-LOGOUT-LOW-2503\\t22-04-2010 04:26\\tDTAA/PYC2207\\tPC-7638\\tLogout\"}",
+      "score": -0.005677582318815599,
+      "reason": "This log contains unusual features: 26, 7638, pyc2207, logout, 2503"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-28\", \"HOUR\": \"00\", \"MINUTE\": \"00\", \"SECOND\": \"00\", \"USER\": \"BCF7710\", \"PC\": \"1669\", \"ACTIVITY\": \"File Opened\", \"RAW_LOG\": \"SESSION-FILE-LOW-7516\\t28-04-2010 00:00\\tDTAA/BCF7710\\tPC-1669\\tFile Opened\"}",
+      "score": -0.013000053072535267,
+      "reason": "This log contains unusual features: 1669, bcf7710, opened, file, 00"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-02\", \"HOUR\": \"03\", \"MINUTE\": \"03\", \"SECOND\": \"00\", \"USER\": \"LEL4307\", \"PC\": \"3802\", \"ACTIVITY\": \"Login Successful\", \"RAW_LOG\": \"SESSION-LOGIN-LOW-2489\\t02-04-2010 03:03\\tDTAA/LEL4307\\tPC-3802\\tLogin Successful\"}",
+      "score": -0.00726375160614029,
+      "reason": "This log contains unusual features: 03, 3802, lel4307, successful, login"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-15\", \"HOUR\": \"20\", \"MINUTE\": \"44\", \"SECOND\": \"00\", \"USER\": \"OGZ7278\", \"PC\": \"7026\", \"ACTIVITY\": \"Data Exfiltration Attempt\", \"RAW_LOG\": \"SESSION-DATA-HIGH-3807\\t15-04-2010 20:44\\tDTAA/OGZ7278\\tPC-7026\\tData Exfiltration Attempt\"}",
+      "score": -0.0682463091864311,
+      "reason": "This log contains unusual features: exfiltration, data, attempt, 44, ogz7278"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-22\", \"HOUR\": \"23\", \"MINUTE\": \"41\", \"SECOND\": \"00\", \"USER\": \"RKF2943\", \"PC\": \"5860\", \"ACTIVITY\": \"Access to Restricted Folder\", \"RAW_LOG\": \"SESSION-ACCESS-HIGH-8621\\t22-04-2010 23:41\\tDTAA/RKF2943\\tPC-5860\\tAccess to Restricted Folder\"}",
+      "score": -0.008926812994967892,
+      "reason": "This log contains unusual features: to, folder, access, restricted, 5860"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-19\", \"HOUR\": \"16\", \"MINUTE\": \"08\", \"SECOND\": \"00\", \"USER\": \"ODQ4361\", \"PC\": \"7200\", \"ACTIVITY\": \"Malware Execution Attempt\", \"RAW_LOG\": \"SESSION-MALWARE-HIGH-4867\\t19-04-2010 16:08\\tDTAA/ODQ4361\\tPC-7200\\tMalware Execution Attempt\"}",
+      "score": -0.016216621493466088,
+      "reason": "This log contains unusual features: malware, execution, attempt, 16, 7200"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-27\", \"HOUR\": \"23\", \"MINUTE\": \"26\", \"SECOND\": \"00\", \"USER\": \"YMI9044\", \"PC\": \"2630\", \"ACTIVITY\": \"Multiple Failed Login Attempts\", \"RAW_LOG\": \"SESSION-MULTIPLE-MEDIUM-2768\\t27-04-2010 23:26\\tDTAA/YMI9044\\tPC-2630\\tMultiple Failed Login Attempts\"}",
+      "score": -0.018378591223558782,
+      "reason": "This log contains unusual features: multiple, failed, attempts, ymi9044, 26"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-24\", \"HOUR\": \"21\", \"MINUTE\": \"36\", \"SECOND\": \"00\", \"USER\": \"PUV1595\", \"PC\": \"2121\", \"ACTIVITY\": \"Malware Execution Attempt\", \"RAW_LOG\": \"SESSION-MALWARE-HIGH-8058\\t24-04-2010 21:36\\tDTAA/PUV1595\\tPC-2121\\tMalware Execution Attempt\"}",
+      "score": -0.014717802797743595,
+      "reason": "This log contains unusual features: execution, malware, puv1595, attempt, 36"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-12\", \"HOUR\": \"11\", \"MINUTE\": \"55\", \"SECOND\": \"00\", \"USER\": \"PYC2207\", \"PC\": \"7026\", \"ACTIVITY\": \"Multiple Failed Login Attempts\", \"RAW_LOG\": \"SESSION-MULTIPLE-MEDIUM-9391\\t12-04-2010 11:55\\tDTAA/PYC2207\\tPC-7026\\tMultiple Failed Login Attempts\"}",
+      "score": -0.004737337754231186,
+      "reason": "This log contains unusual features: 55, multiple, failed, attempts, 7026"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-15\", \"HOUR\": \"18\", \"MINUTE\": \"43\", \"SECOND\": \"00\", \"USER\": \"XYD5525\", \"PC\": \"7537\", \"ACTIVITY\": \"Multiple Failed Login Attempts\", \"RAW_LOG\": \"SESSION-MULTIPLE-MEDIUM-1615\\t15-04-2010 18:43\\tDTAA/XYD5525\\tPC-7537\\tMultiple Failed Login Attempts\"}",
+      "score": -0.028070104034346344,
+      "reason": "This log contains unusual features: 7537, 43, xyd5525, multiple, attempts"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-03\", \"HOUR\": \"12\", \"MINUTE\": \"28\", \"SECOND\": \"00\", \"USER\": \"UAZ9086\", \"PC\": \"1059\", \"ACTIVITY\": \"File Opened\", \"RAW_LOG\": \"SESSION-FILE-LOW-1396\\t03-04-2010 12:28\\tDTAA/UAZ9086\\tPC-1059\\tFile Opened\"}",
+      "score": -0.006303823372759365,
+      "reason": "This log contains unusual features: uaz9086, 1059, 12, file, 28"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-27\", \"HOUR\": \"10\", \"MINUTE\": \"33\", \"SECOND\": \"00\", \"USER\": \"NYI5084\", \"PC\": \"4900\", \"ACTIVITY\": \"File Opened\", \"RAW_LOG\": \"SESSION-FILE-LOW-6898\\t27-04-2010 10:33\\tDTAA/NYI5084\\tPC-4900\\tFile Opened\"}",
+      "score": -0.00024496354028086254,
+      "reason": "This log contains unusual features: nyi5084, 33, 4900, opened, file"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-25\", \"HOUR\": \"04\", \"MINUTE\": \"24\", \"SECOND\": \"00\", \"USER\": \"PYC2207\", \"PC\": \"9577\", \"ACTIVITY\": \"Password Changed\", \"RAW_LOG\": \"SESSION-PASSWORD-MEDIUM-4440\\t25-04-2010 04:24\\tDTAA/PYC2207\\tPC-9577\\tPassword Changed\"}",
+      "score": -0.005208710279871076,
+      "reason": "This log contains unusual features: 9577, 24, pyc2207, 4440, password"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-25\", \"HOUR\": \"08\", \"MINUTE\": \"23\", \"SECOND\": \"00\", \"USER\": \"OGZ7278\", \"PC\": \"1312\", \"ACTIVITY\": \"Multiple Failed Login Attempts\", \"RAW_LOG\": \"SESSION-MULTIPLE-MEDIUM-6856\\t25-04-2010 08:23\\tDTAA/OGZ7278\\tPC-1312\\tMultiple Failed Login Attempts\"}",
+      "score": -0.048560846255284174,
+      "reason": "This log contains unusual features: 1312, failed, multiple, ogz7278, attempts"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-07\", \"HOUR\": \"10\", \"MINUTE\": \"13\", \"SECOND\": \"00\", \"USER\": \"RET4173\", \"PC\": \"7200\", \"ACTIVITY\": \"Login Successful\", \"RAW_LOG\": \"SESSION-LOGIN-LOW-5707\\t07-04-2010 10:13\\tDTAA/RET4173\\tPC-7200\\tLogin Successful\"}",
+      "score": -0.000992487826368238,
+      "reason": "This log contains unusual features: ret4173, 7200, 13, 10, successful"
+    },
+    {
+      "log": "{\"DATE\": \"2010-04-20\", \"HOUR\": \"10\", \"MINUTE\": \"07\", \"SECOND\": \"00\", \"USER\": \"RET4173\", \"PC\": \"9496\", \"ACTIVITY\": \"Multiple Failed Login Attempts\", \"RAW_LOG\": \"SESSION-MULTIPLE-MEDIUM-3170\\t20-04-2010 10:07\\tDTAA/RET4173\\tPC-9496\\tMultiple Failed Login Attempts\"}",
+      "score": -0.0388736836484504,
+      "reason": "This log contains unusual features: multiple, failed, attempts, ret4173, 9496"
+    }
+  ]
+}
