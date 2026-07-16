@@ -1,0 +1,171 @@
+{
+  "summary": {
+    "assets": 12,
+    "quantum_vulnerable": 8,
+    "hndl_exposed": 5,
+    "by_tier": {
+      "CRITICAL": 5,
+      "HIGH": 1,
+      "MEDIUM": 3,
+      "LOW": 3
+    }
+  },
+  "migration_priority": [
+    {
+      "system": "Customer PII vault",
+      "data_flow": "field-level encryption at rest",
+      "crypto_algorithm": "RSA-2048",
+      "purpose": "key_exchange",
+      "data_sensitivity": "restricted",
+      "retention_years": 10,
+      "quantum_status": "quantum_vulnerable",
+      "priority_score": 1.0,
+      "priority_tier": "CRITICAL",
+      "hndl_risk": true,
+      "recommended_pqc": "ML-KEM (Kyber)"
+    },
+    {
+      "system": "Inter-bank payment messaging",
+      "data_flow": "message signing (SWIFT-like)",
+      "crypto_algorithm": "RSA-2048",
+      "purpose": "signature",
+      "data_sensitivity": "restricted",
+      "retention_years": 10,
+      "quantum_status": "quantum_vulnerable",
+      "priority_score": 1.0,
+      "priority_tier": "CRITICAL",
+      "hndl_risk": true,
+      "recommended_pqc": "ML-DSA (Dilithium)"
+    },
+    {
+      "system": "Payment authorization service",
+      "data_flow": "transaction signing",
+      "crypto_algorithm": "ECDSA-P256",
+      "purpose": "signature",
+      "data_sensitivity": "restricted",
+      "retention_years": 7,
+      "quantum_status": "quantum_vulnerable",
+      "priority_score": 0.82,
+      "priority_tier": "CRITICAL",
+      "hndl_risk": true,
+      "recommended_pqc": "ML-DSA (Dilithium)"
+    },
+    {
+      "system": "Long-term document archive",
+      "data_flow": "signed contracts / statements",
+      "crypto_algorithm": "RSA-2048",
+      "purpose": "signature",
+      "data_sensitivity": "confidential",
+      "retention_years": 15,
+      "quantum_status": "quantum_vulnerable",
+      "priority_score": 0.7,
+      "priority_tier": "CRITICAL",
+      "hndl_risk": true,
+      "recommended_pqc": "ML-DSA (Dilithium)"
+    },
+    {
+      "system": "Privileged credential vault",
+      "data_flow": "credential key-wrapping",
+      "crypto_algorithm": "RSA-3072",
+      "purpose": "key_exchange",
+      "data_sensitivity": "restricted",
+      "retention_years": 5,
+      "quantum_status": "quantum_vulnerable",
+      "priority_score": 0.7,
+      "priority_tier": "CRITICAL",
+      "hndl_risk": true,
+      "recommended_pqc": "ML-KEM (Kyber)"
+    },
+    {
+      "system": "Offsite backup archive",
+      "data_flow": "encrypted backup tapes",
+      "crypto_algorithm": "3DES",
+      "purpose": "symmetric",
+      "data_sensitivity": "confidential",
+      "retention_years": 15,
+      "quantum_status": "legacy_broken",
+      "priority_score": 0.63,
+      "priority_tier": "HIGH",
+      "hndl_risk": false,
+      "recommended_pqc": "AES-256"
+    },
+    {
+      "system": "Core banking DB",
+      "data_flow": "tablespace encryption at rest",
+      "crypto_algorithm": "AES-128",
+      "purpose": "symmetric",
+      "data_sensitivity": "restricted",
+      "retention_years": 10,
+      "quantum_status": "quantum_weakened",
+      "priority_score": 0.4,
+      "priority_tier": "MEDIUM",
+      "hndl_risk": false,
+      "recommended_pqc": "AES-256"
+    },
+    {
+      "system": "Admin console VPN",
+      "data_flow": "operator remote access",
+      "crypto_algorithm": "ECDH-P256",
+      "purpose": "key_exchange",
+      "data_sensitivity": "confidential",
+      "retention_years": 2,
+      "quantum_status": "quantum_vulnerable",
+      "priority_score": 0.364,
+      "priority_tier": "MEDIUM",
+      "hndl_risk": false,
+      "recommended_pqc": "ML-KEM (Kyber)"
+    },
+    {
+      "system": "Online banking portal",
+      "data_flow": "TLS session (browser)",
+      "crypto_algorithm": "ECDHE-RSA",
+      "purpose": "key_exchange",
+      "data_sensitivity": "confidential",
+      "retention_years": 1,
+      "quantum_status": "quantum_vulnerable",
+      "priority_score": 0.322,
+      "priority_tier": "MEDIUM",
+      "hndl_risk": false,
+      "recommended_pqc": "ML-KEM (Kyber)"
+    },
+    {
+      "system": "Internal service mesh",
+      "data_flow": "mTLS between services",
+      "crypto_algorithm": "ECDHE",
+      "purpose": "key_exchange",
+      "data_sensitivity": "internal",
+      "retention_years": 1,
+      "quantum_status": "quantum_vulnerable",
+      "priority_score": 0.184,
+      "priority_tier": "LOW",
+      "hndl_risk": false,
+      "recommended_pqc": "ML-KEM (Kyber)"
+    },
+    {
+      "system": "Audit log store",
+      "data_flow": "tamper-evident audit trail",
+      "crypto_algorithm": "HMAC-SHA256",
+      "purpose": "integrity",
+      "data_sensitivity": "confidential",
+      "retention_years": 7,
+      "quantum_status": "quantum_adequate",
+      "priority_score": 0.057,
+      "priority_tier": "LOW",
+      "hndl_risk": false,
+      "recommended_pqc": "none (already adequate)"
+    },
+    {
+      "system": "Data-lake at rest (new)",
+      "data_flow": "analytics store encryption",
+      "crypto_algorithm": "AES-256",
+      "purpose": "symmetric",
+      "data_sensitivity": "confidential",
+      "retention_years": 10,
+      "quantum_status": "quantum_safe",
+      "priority_score": 0.035,
+      "priority_tier": "LOW",
+      "hndl_risk": false,
+      "recommended_pqc": "none (already adequate)"
+    }
+  ]
+}
