@@ -1,27 +1,29 @@
 {
-  "note": "CONSTRUCTED single-domain demo incidents. These are deliberately synthetic (NOT real detections) and are added only so the dashboard shows the full decision spectrum (step-up / throttle) alongside the real, corroborated REVOKE incidents (E027/E028/E029). Same honesty discipline as demo_scenarios.json: anything constructed is labeled. Entity IDs E9xx denote constructed demo entities.",
+  "note": "CONSTRUCTED single-domain demo incidents (NOT real detections), added so the dashboard shows the full decision spectrum (step-up / throttle) alongside the real corroborated REVOKE incidents. Same honesty discipline as demo_scenarios.json.",
   "assessments": [
     {
-      "entity_id": "E901",
-      "score": 0.82,
+      "entity_id": "E010",
+      "score": 0.78,
+      "constructed": true,
       "reasons": [
         {
-          "signal_name": "lone_fraud_signal",
+          "signal_name": "suspected_fraud_uncorroborated",
           "domain": "ps2_transaction",
-          "weight": 0.82,
-          "raw_value": "CONSTRUCTED demo incident (not a real detection): a strong transactional fraud score with NO behavioral corroboration. Single domain -> confidence low -> STEP-UP verification, deliberately NOT auto-revoke. Illustrates correlation-based false-positive reduction."
+          "weight": 0.78,
+          "raw_value": "CONSTRUCTED demo (not a real detection): a large legitimate-looking CASH_OUT (isFraud=0) on payments_analyst E010's account C1793991913. Fraud-risk 0.78 is a SET-FOR-DEMO value -- the PaySim model is near-binary (no genuine mid-range score exists), so a moderate score is itself synthetic. No behavioral (PS1) corroboration -> confidence low -> STEP-UP verification, not revoke (realistic false-positive handling)."
         }
       ]
     },
     {
-      "entity_id": "E902",
-      "score": 0.52,
+      "entity_id": "E015",
+      "score": 0.6,
+      "constructed": true,
       "reasons": [
         {
-          "signal_name": "lone_behavioral_flag",
+          "signal_name": "off_hours_logon",
           "domain": "ps1_behavioral",
-          "weight": 0.52,
-          "raw_value": "CONSTRUCTED demo incident (not a real detection): a moderate off-hours behavioral flag with no transactional corroboration. Single domain -> confidence low -> THROTTLE / watch."
+          "weight": 0.6,
+          "raw_value": "CONSTRUCTED demo scenario built on a REAL CERT event: off-hours logon (row {G8L5-G8EA91ZE-0726XMMK}) at 2010-01-02 06:46:00 on PC-4365 by ROR3483 (operations_analyst E015). Behavioral risk 0.6 is a documented heuristic. No transactional (PS2) corroboration -> confidence low -> THROTTLE."
         }
       ]
     }
