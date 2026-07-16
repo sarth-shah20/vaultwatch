@@ -4,7 +4,7 @@ import react from "@vitejs/plugin-react";
 // All API calls are same-origin ("/incidents", "/health", ...) and proxied to the
 // FastAPI backend on :8000 — no CORS changes needed on the backend.
 const proxy = Object.fromEntries(
-  ["/incidents", "/health", "/suppressions"].map((p) => [
+  ["/incidents", "/health", "/suppressions", "/quantum"].map((p) => [
     p,
     { target: "http://localhost:8000", changeOrigin: true },
   ])

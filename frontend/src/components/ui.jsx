@@ -20,27 +20,34 @@ export function useCountUp(target, duration = 900) {
 }
 
 /* ---------- circular score gauge ---------- */
+const GAUGE_TONES = {
+  revoke: ["#8f2f3d", "#5c1a24"],
+  step_up_auth: ["#c98f2a", "#8a5a13"],
+  throttle: ["#4a7bab", "#24507a"],
+  allow: ["#c7d7e6", "#9db8cf"],
+};
+
 export function ScoreGauge({ score, size = 64, stroke = 5, decision }) {
   const animated = useCountUp(score);
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
-  const tone =
-    decision === "revoke"
-      ? "#7a2733"
-      : decision === "step_up_auth"
-      ? "#b07a20"
-      : decision === "throttle"
-      ? "#33628c"
-      : "#c7d7e6";
+  const [from, to] = GAUGE_TONES[decision] || GAUGE_TONES.allow;
+  const gid = `gg-${decision || "allow"}-${size}`;
   return (
     <div className="relative shrink-0" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90">
+        <defs>
+          <linearGradient id={gid} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor={from} />
+            <stop offset="100%" stopColor={to} />
+          </linearGradient>
+        </defs>
         <circle
           cx={size / 2}
           cy={size / 2}
           r={r}
           fill="none"
-          stroke="#e6edf4"
+          stroke="#e9eef5"
           strokeWidth={stroke}
         />
         <circle
@@ -48,15 +55,16 @@ export function ScoreGauge({ score, size = 64, stroke = 5, decision }) {
           cy={size / 2}
           r={r}
           fill="none"
-          stroke={tone}
+          stroke={`url(#${gid})`}
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeDasharray={c}
           strokeDashoffset={c * (1 - animated)}
+          style={{ filter: `drop-shadow(0 1px 2px ${to}33)` }}
         />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="font-mono font-medium text-vault-900" style={{ fontSize: size * 0.26 }}>
+        <span className="font-mono font-semibold tabular-nums text-vault-900" style={{ fontSize: size * 0.25 }}>
           {fmtScore(animated)}
         </span>
       </div>
@@ -138,26 +146,35 @@ export function CorroborationMark() {
 export function DecisionLegend() {
   const tiers = ["allow", "throttle", "step_up_auth", "revoke"];
   return (
-    <div className="rounded-xl border border-vault-100 bg-white px-4 py-3 shadow-card">
-      <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-        <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-vault-500">
+    <div className="rounded-2xl border border-vault-100 bg-white/85 px-5 py-4 shadow-card backdrop-blur-sm">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+        <span className="mr-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-vault-400">
           Response ladder
         </span>
-        {tiers.map((t) => {
+        {tiers.map((t, i) => {
           const d = DECISIONS[t];
           return (
-            <span key={t} className="inline-flex items-center gap-2 text-xs text-vault-700">
-              <span className={`h-2 w-2 rounded-full ${d.bar}`} />
-              <span className="font-semibold">{d.short}</span>
-              <span className="hidden text-vault-500 lg:inline">— {d.trigger.toLowerCase()}</span>
-            </span>
+            <React.Fragment key={t}>
+              {i > 0 && (
+                <svg width="14" height="8" viewBox="0 0 14 8" fill="none" className="text-vault-200" aria-hidden>
+                  <path d="M0 4h11m0 0L8 1m3 3L8 7" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+                </svg>
+              )}
+              <span
+                className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold ${d.chip}`}
+                title={d.trigger}
+              >
+                <span className={`h-1.5 w-1.5 rounded-full ${d.bar}`} />
+                {d.short}
+              </span>
+            </React.Fragment>
           );
         })}
       </div>
-      <p className="mt-2 border-t border-vault-50 pt-2 text-xs leading-relaxed text-vault-500">
-        One domain firing alone is treated cautiously — verify or limit, never lock out.
-        Only when <span className="font-semibold text-vault-700">behavioral and transaction signals corroborate</span>{" "}
-        for the same person does confidence reach high and access get revoked.
+      <p className="mt-2.5 border-t border-vault-50 pt-2.5 text-xs leading-relaxed text-vault-500">
+        One domain firing alone is treated cautiously — <span className="font-medium text-vault-700">verify or limit, never lock out</span>.
+        Only when independent behavioral and transaction signals corroborate for the same person does
+        confidence reach high and access get revoked. That asymmetry is the false-positive defense.
       </p>
     </div>
   );

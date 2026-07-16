@@ -31,6 +31,7 @@ async function request(path, options = {}) {
 export const getHealth = () => request("/health");
 export const getIncidents = () => request("/incidents");
 export const getSuppressions = () => request("/suppressions");
+export const getQuantumReport = () => request("/quantum/report");
 export const sendFeedback = (incidentId, action, reason) =>
   request(`/incidents/${incidentId}/feedback`, {
     method: "POST",

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { getHealth, getIncidents } from "./api.js";
 import IncidentDetail from "./components/IncidentDetail.jsx";
 import IncidentList from "./components/IncidentList.jsx";
+import QuantumView from "./components/QuantumView.jsx";
 import SignalsView from "./components/SignalsView.jsx";
 import { ErrorState, SkeletonCard } from "./components/ui.jsx";
 
@@ -9,6 +10,7 @@ const TABS = [
   { id: "unified", label: "Unified incidents" },
   { id: "ps1", label: "PS1 · Behavioral" },
   { id: "ps2", label: "PS2 · Transactions" },
+  { id: "quantum", label: "Quantum · PQC" },
 ];
 
 function Wordmark() {
@@ -75,8 +77,11 @@ export default function App() {
 
   return (
     <div className="min-h-screen">
+      {/* hairline: the two domains + the vault they feed into */}
+      <div className="h-[3px] bg-gradient-to-r from-[#5b4a8a] via-vault-800 to-[#20706b]" />
+
       {/* header */}
-      <header className="sticky top-0 z-10 border-b border-vault-100/80 bg-[#f8f9fb]/90 backdrop-blur">
+      <header className="sticky top-0 z-10 border-b border-vault-100/80 bg-[#f7f8fb]/85 backdrop-blur">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-5 py-4">
           <Wordmark />
           <HealthPill health={state.health} />
@@ -93,10 +98,10 @@ export default function App() {
                     setTab(t.id);
                     setSelectedId(null);
                   }}
-                  className={`rounded-t-lg border-b-2 px-4 py-2.5 text-sm font-medium transition ${
+                  className={`rounded-t-lg border-b-2 px-4 py-2.5 text-sm font-medium transition-all duration-200 ${
                     active
-                      ? "border-vault-900 text-vault-950"
-                      : "border-transparent text-vault-400 hover:text-vault-700"
+                      ? "border-vault-900 font-semibold text-vault-950"
+                      : "border-transparent text-vault-400 hover:border-vault-200 hover:text-vault-700"
                   }`}
                 >
                   {t.label}
@@ -126,6 +131,8 @@ export default function App() {
             ) : (
               <IncidentList incidents={state.incidents} onOpen={(i) => setSelectedId(i.incident_id)} />
             )
+          ) : tab === "quantum" ? (
+            <QuantumView />
           ) : (
             <SignalsView
               incidents={state.incidents}
