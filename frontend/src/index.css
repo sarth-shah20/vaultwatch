@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply text-vault-900 font-sans;
+    background-color: #f7f8fb;
+    background-image:
+      radial-gradient(1100px 480px at 8% -8%, rgba(36, 80, 122, 0.07), transparent 60%),
+      radial-gradient(900px 420px at 96% -12%, rgba(91, 74, 138, 0.05), transparent 55%),
+      radial-gradient(700px 380px at 55% 115%, rgba(32, 112, 107, 0.04), transparent 60%);
+    background-attachment: fixed;
+  }
+  ::selection {
+    @apply bg-vault-200;
+  }
+}

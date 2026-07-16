@@ -15,6 +15,11 @@ from pydantic import BaseModel
 from backend.app.core.incident_store import DEFAULT_DB, IncidentStore
 from backend.app.core.lifecycle import ACTION_TO_STATUS, InvalidTransition
 from backend.app.ps2_correlation.correlation_engine import build_demo_incidents
+from backend.app.quantum_module.crypto_inventory.inventory import (
+    DEFAULT_INVENTORY_PATH,
+    build_report,
+    load_inventory,
+)
 
 
 class FeedbackIn(BaseModel):
@@ -67,6 +72,18 @@ def create_app(store: Optional[IncidentStore] = None, seed: bool = True, root: s
     @app.get("/suppressions")
     def suppressions() -> dict:
         return {"suppressed_entities": app.state.store.suppressed_entities()}
+
+    @app.get("/quantum/report")
+    def quantum_report() -> dict:
+        """Crypto inventory scored for quantum risk: summary + prioritized
+        PQC-migration list (HNDL-exposed assets flagged). Computed live from
+        the committed inventory so scoring changes are reflected immediately."""
+        from pathlib import Path
+
+        inventory_path = Path(root) / DEFAULT_INVENTORY_PATH
+        if not inventory_path.exists():
+            raise HTTPException(status_code=404, detail="crypto inventory not found")
+        return build_report(load_inventory(inventory_path))
 
     return app
 
