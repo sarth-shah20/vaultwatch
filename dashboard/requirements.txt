@@ -1,0 +1,4 @@
+# VaultWatch analyst dashboard (Streamlit) dependencies.
+streamlit>=1.40
+plotly>=5.22
+httpx>=0.27
