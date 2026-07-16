@@ -21,7 +21,7 @@ def _client() -> IncidentAPIClient:
 def test_list_and_get_incidents() -> None:
     client = _client()
     incidents = client.list_incidents()
-    assert len(incidents) == 3
+    assert len(incidents) == 5  # 3 real REVOKE + 2 constructed (step-up / throttle)
     detail = client.get_incident("INC-E028")
     assert detail["entity_id"] == "E028"
 
@@ -29,9 +29,10 @@ def test_list_and_get_incidents() -> None:
 def test_summarize_counts_decisions() -> None:
     client = _client()
     summary = summarize(client.list_incidents())
-    assert summary["total"] == 3
+    assert summary["total"] == 5
     assert summary["revoke"] >= 1
-    assert summary["by_confidence"].get("high", 0) == 3
+    assert summary["by_confidence"].get("high", 0) == 3   # only the 3 corroborated incidents
+    assert summary["by_confidence"].get("low", 0) == 2    # the 2 constructed single-domain ones
 
 
 def test_reasons_grouped_by_domain() -> None:

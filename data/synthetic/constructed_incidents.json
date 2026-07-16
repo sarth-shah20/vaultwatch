@@ -1,0 +1,29 @@
+{
+  "note": "CONSTRUCTED single-domain demo incidents. These are deliberately synthetic (NOT real detections) and are added only so the dashboard shows the full decision spectrum (step-up / throttle) alongside the real, corroborated REVOKE incidents (E027/E028/E029). Same honesty discipline as demo_scenarios.json: anything constructed is labeled. Entity IDs E9xx denote constructed demo entities.",
+  "assessments": [
+    {
+      "entity_id": "E901",
+      "score": 0.82,
+      "reasons": [
+        {
+          "signal_name": "lone_fraud_signal",
+          "domain": "ps2_transaction",
+          "weight": 0.82,
+          "raw_value": "CONSTRUCTED demo incident (not a real detection): a strong transactional fraud score with NO behavioral corroboration. Single domain -> confidence low -> STEP-UP verification, deliberately NOT auto-revoke. Illustrates correlation-based false-positive reduction."
+        }
+      ]
+    },
+    {
+      "entity_id": "E902",
+      "score": 0.52,
+      "reasons": [
+        {
+          "signal_name": "lone_behavioral_flag",
+          "domain": "ps1_behavioral",
+          "weight": 0.52,
+          "raw_value": "CONSTRUCTED demo incident (not a real detection): a moderate off-hours behavioral flag with no transactional corroboration. Single domain -> confidence low -> THROTTLE / watch."
+        }
+      ]
+    }
+  ]
+}

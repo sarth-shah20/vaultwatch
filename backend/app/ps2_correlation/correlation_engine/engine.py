@@ -112,21 +112,31 @@ def build_demo_incidents(root: str = ".") -> list[UnifiedIncident]:
 
     from backend.app.ps2_correlation.ps1_adapter import load_ps1_assessments
 
+    from backend.app.shared.entities import Reason
+
     root = Path(root)
     ps1 = load_ps1_assessments(root=root)
 
-    ps2_payload = json.loads((root / "data/synthetic/ps2_demo_assessments.json").read_text(encoding="utf-8"))
-    from backend.app.shared.entities import Reason
+    def _load_assessments(rel_path: str) -> list[RiskAssessment]:
+        path = root / rel_path
+        if not path.exists():
+            return []
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        return [
+            RiskAssessment(
+                entity_id=a["entity_id"],
+                score=float(a["score"]),
+                reasons=[Reason(**r) for r in a["reasons"]],
+            )
+            for a in payload["assessments"]
+        ]
 
-    ps2 = [
-        RiskAssessment(
-            entity_id=a["entity_id"],
-            score=float(a["score"]),
-            reasons=[Reason(**r) for r in a["reasons"]],
-        )
-        for a in ps2_payload["assessments"]
-    ]
-    return correlate([*ps1, *ps2])
+    ps2 = _load_assessments("data/synthetic/ps2_demo_assessments.json")
+    # Clearly-labeled CONSTRUCTED single-domain assessments (optional file) so the
+    # dashboard shows the full decision spectrum (step-up / throttle) next to the
+    # real corroborated REVOKE incidents.
+    constructed = _load_assessments("data/synthetic/constructed_incidents.json")
+    return correlate([*ps1, *ps2, *constructed])
 
 
 if __name__ == "__main__":
