@@ -71,3 +71,20 @@ def test_build_demo_incidents_are_corroborated_and_differentiated() -> None:
     # scores are graduated, not all identical (no saturation)
     scores = {round(by_entity[e].combined_score, 4) for e in ("E027", "E028", "E029")}
     assert len(scores) == 3
+
+
+def test_constructed_single_domain_incidents_span_the_decision_spectrum() -> None:
+    by_entity = {i.entity_id: i for i in build_demo_incidents(root=str(ROOT))}
+    # E901: lone strong fraud signal -> low confidence -> step-up (NOT revoke)
+    e901 = by_entity["E901"]
+    assert e901.confidence == "low"
+    assert e901.status == IncidentStatus.NEW
+    assert e901.access_decision == AccessDecision.STEP_UP_AUTH
+    assert e901.contributing_domains == ["ps2_transaction"]
+    # E902: lone moderate behavioral flag -> low confidence -> throttle
+    e902 = by_entity["E902"]
+    assert e902.confidence == "low"
+    assert e902.access_decision == AccessDecision.THROTTLE
+    # full spectrum: REVOKE (real) + STEP_UP + THROTTLE all present
+    decisions = {i.access_decision for i in by_entity.values()}
+    assert {AccessDecision.REVOKE, AccessDecision.STEP_UP_AUTH, AccessDecision.THROTTLE} <= decisions

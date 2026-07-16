@@ -20,12 +20,16 @@ def test_health_and_seeded_incidents() -> None:
     client = _client()
     health = client.get("/health").json()
     assert health["status"] == "ok"
-    assert health["incidents"] == 3  # E027, E028, E029
+    assert health["incidents"] == 5  # 3 real (E027/E028/E029) + 2 constructed (E901/E902)
 
     listing = client.get("/incidents").json()
-    assert listing["count"] == 3
+    assert listing["count"] == 5
     ids = {i["incident_id"] for i in listing["incidents"]}
-    assert ids == {"INC-E027", "INC-E028", "INC-E029"}
+    assert ids == {"INC-E027", "INC-E028", "INC-E029", "INC-E901", "INC-E902"}
+    # constructed single-domain incidents fill out the decision spectrum
+    decisions = {i["incident_id"]: i["access_decision"] for i in listing["incidents"]}
+    assert decisions["INC-E901"] == "step_up_auth"
+    assert decisions["INC-E902"] == "throttle"
 
 
 def test_incident_detail_has_both_domains() -> None:
