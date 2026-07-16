@@ -18,6 +18,7 @@ data/raw/*
 !data/raw/.gitkeep
 data/processed/*
 !data/processed/.gitkeep
+data/*.db
 ml/models/*.pkl
 ml/models/*.pt
 ml/models/*.h5

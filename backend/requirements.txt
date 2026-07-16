@@ -1,0 +1,5 @@
+# VaultWatch backend API dependencies.
+fastapi>=0.110
+uvicorn>=0.27
+httpx>=0.27
+pydantic>=2

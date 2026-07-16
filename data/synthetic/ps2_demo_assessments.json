@@ -1,0 +1,77 @@
+{
+  "generated_by": "FraudScorer on real PaySim isFraud=1 txns",
+  "assessments": [
+    {
+      "entity_id": "E027",
+      "score": 0.9999853372573853,
+      "reasons": [
+        {
+          "signal_name": "error_balance_orig",
+          "domain": "ps2_transaction",
+          "weight": 0.4605,
+          "raw_value": "origin balance does not reconcile after the transaction (error_balance_orig=0); raises fraud risk"
+        },
+        {
+          "signal_name": "oldbalanceOrg",
+          "domain": "ps2_transaction",
+          "weight": 0.1959,
+          "raw_value": "origin balance before the transaction (oldbalanceOrg=1.96579e+06); raises fraud risk"
+        },
+        {
+          "signal_name": "newbalanceDest",
+          "domain": "ps2_transaction",
+          "weight": 0.0739,
+          "raw_value": "destination balance after the transaction (newbalanceDest=0); raises fraud risk"
+        }
+      ]
+    },
+    {
+      "entity_id": "E028",
+      "score": 0.9999531507492065,
+      "reasons": [
+        {
+          "signal_name": "error_balance_orig",
+          "domain": "ps2_transaction",
+          "weight": 0.5416,
+          "raw_value": "origin balance does not reconcile after the transaction (error_balance_orig=0); raises fraud risk"
+        },
+        {
+          "signal_name": "oldbalanceOrg",
+          "domain": "ps2_transaction",
+          "weight": 0.1416,
+          "raw_value": "origin balance before the transaction (oldbalanceOrg=6.18851e+06); raises fraud risk"
+        },
+        {
+          "signal_name": "amount",
+          "domain": "ps2_transaction",
+          "weight": 0.0964,
+          "raw_value": "transaction amount (amount=6.18851e+06); raises fraud risk"
+        }
+      ]
+    },
+    {
+      "entity_id": "E029",
+      "score": 0.9999628067016602,
+      "reasons": [
+        {
+          "signal_name": "error_balance_orig",
+          "domain": "ps2_transaction",
+          "weight": 0.5139,
+          "raw_value": "origin balance does not reconcile after the transaction (error_balance_orig=0); raises fraud risk"
+        },
+        {
+          "signal_name": "oldbalanceOrg",
+          "domain": "ps2_transaction",
+          "weight": 0.1754,
+          "raw_value": "origin balance before the transaction (oldbalanceOrg=4.44551e+06); raises fraud risk"
+        },
+        {
+          "signal_name": "amount",
+          "domain": "ps2_transaction",
+          "weight": 0.0792,
+          "raw_value": "transaction amount (amount=4.44551e+06); raises fraud risk"
+        }
+      ]
+    }
+  ]
+}
