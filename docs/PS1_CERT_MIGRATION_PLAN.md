@@ -34,10 +34,33 @@ data/raw/cert_insider_threat/
 Never mix in `data/raw/r4.2/`.
 
 - Create a versioned data manifest recording schemas, row counts, date ranges,
-  source/release description, and file fingerprints.
-- Obtain the matching CERT malicious-actor/scenario answer key. Pipeline
-  development may proceed without it, but model promotion and performance claims
-  are blocked until it is available.
+  source URL, claimed release, source/release description, and file fingerprints.
+- Treat the Kaggle activity files and the separately downloaded official CMU
+  `answers.tar.bz2` as untrusted with respect to each other until an explicit
+  release-alignment check passes. A matching `r4.2` name or source description is
+  not sufficient evidence of compatibility.
+- Parse `data/answers/insiders.csv` for all r4.2 incidents and build a ground-truth
+  alignment report containing every malicious username, scenario, start/end time,
+  detailed-observables file, and expected event types.
+- Require every r4.2 malicious username to exist in the Kaggle `users.csv` and in
+  at least one local activity file. For each answer-key observable whose source is
+  locally available (`logon`, `device`, `file`, or `email`), require its event ID
+  and user/timestamp tuple to resolve to the corresponding activity CSV. Report
+  unsupported sources such as a missing `http.csv` separately; never count them as
+  successful matches.
+- Verify that every scenario interval falls inside the local activity date range,
+  and report per-scenario/per-source expected, matched, and missing observables.
+  Event-ID mismatches may be investigated with user/timestamp tuple matching, but
+  a fallback match is diagnostic only unless the mirror's documented transformation
+  explains it.
+- Make this alignment report a hard gate: any missing malicious username, an
+  incompatible user population/schema, or unexplained missing observable from an
+  available source fails ground-truth compatibility. On failure, stop before
+  label-based splitting, training, evaluation, or performance claims and obtain
+  either the canonical matching r4.2 activity files or the answer key matching the
+  Kaggle mirror. Never remap answer-key usernames to make the gate pass.
+- Pipeline plumbing may be developed before alignment passes, but the activity
+  data must remain unlabeled and the model experimental/shadow-only.
 - Validate unique event IDs within each file, parseable timestamps, email senders
   present in `users.csv`, and consistent user/PC identifiers.
 - Process CSVs in chunks; never load the full email file into memory.
@@ -217,6 +240,10 @@ Rollout:
 
 - CSV contract tests for every CERT source, including quoted email content,
   `Send/View`, external recipients, and attachment-path parsing.
+- Ground-truth alignment tests covering complete r4.2 username membership,
+  scenario date-range coverage, exact event-ID/user/timestamp matching by source,
+  unsupported-source reporting, and a deliberately mismatched fixture that must
+  fail closed.
 - Chunked and full-fixture processing must produce identical aggregates.
 - Tests proving no raw identifiers or future events enter model features.
 - Deterministic training and risk scoring under a fixed seed.
@@ -238,8 +265,10 @@ Rollout:
 
 - The new `email.csv` belongs to the same population as the larger CERT files;
   full sender-coverage validation remains mandatory.
-- The matching CERT ground truth is a required promotion gate. Without it, CERT
-  remains experimental/shadow and no supervised performance claim is published.
+- The activity files came from a Kaggle mirror while `data/answers/` came directly
+  from CMU SEI. The answer key is usable only if the explicit release-alignment
+  gate passes. Without a passing report, CERT remains experimental/shadow and no
+  supervised performance claim is published.
 - PaySim and PS2 model retraining are outside this migration.
 - The CERT-to-PaySim identity bridge remains synthetic and must stay labeled.
 - Raw event streaming and production bank connectors are future work; this
