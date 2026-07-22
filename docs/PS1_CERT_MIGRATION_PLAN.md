@@ -246,7 +246,9 @@ Rollout:
 - Broader API authorization, production database migration, PS2 calibration, and
   graded statistical confidence remain separate technical-debt projects.
 
-Step 1 status (2026-07-23): complete.
+## Implementation Status
+
+### Step 1 — Complete (2026-07-23)
 
 - Pipeline: `ml/data_pipeline/prepare_cert_data.py`
 - Tracked manifest: `data/manifests/ps1_cert_data_manifest.json`
@@ -258,3 +260,23 @@ Step 1 status (2026-07-23): complete.
   clock hours; change only with documented source-timezone evidence
 - Rebuild command:
   `.venv/bin/python3 -m ml.data_pipeline.prepare_cert_data`
+
+### Step 2 — Complete (2026-07-23)
+
+- Pipeline: `ml/data_pipeline/cert_behavioral_windows.py`
+- Tracked manifest: `data/manifests/ps1_cert_behavioral_features.json`
+- Generated bundle: `data/processed/ps1/cert_behavioral_windows/` (ignored by
+  Git)
+- Output: 6,792,414 active user-hour windows in each variant across 516 UTC
+  dates; 60 base model features and 100 email-enhanced model features
+- Baselines: 30 prior calendar days only, with a seven-day cold-start period,
+  user and role-peer rolling medians, and robust scale from within-day MAD and
+  between-day IQR
+- Stable-zero histories use documented unit-aware scale floors so a later burst
+  is not incorrectly assigned a zero deviation
+- Causal state derives new PCs, device trees, file paths, recipients, senders,
+  primary-PC deviations, and matched logon/device session durations
+- Raw event/PC/path/address/content fields are excluded from both model variants;
+  `user_id` remains an identifier and is explicitly excluded from model columns
+- Rebuild command:
+  `.venv/bin/python3 -m ml.data_pipeline.cert_behavioral_windows`
