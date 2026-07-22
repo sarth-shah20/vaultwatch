@@ -1,0 +1,259 @@
+{
+  "manifest_version": "1.0",
+  "normalized_schema_version": "1.0",
+  "generated_at": "2026-07-22T21:03:01.728608+00:00",
+  "unlabeled": true,
+  "ground_truth_used": false,
+  "source": {
+    "url": "not-recorded",
+    "claimed_release": "unknown-kaggle-mirror",
+    "description": "Kaggle-hosted CERT activity CSV mirror",
+    "simulated_local_timezone": "UTC",
+    "timestamp_normalization": "localized using configured simulated timezone, then converted to UTC"
+  },
+  "raw_root": "data/raw/cert_insider_threat",
+  "normalized_output": "data/processed/ps1/cert_events",
+  "normalization": {
+    "enabled": true,
+    "partition_columns": [
+      "source",
+      "event_date"
+    ],
+    "excluded_raw_columns": [
+      "file.content",
+      "email.content"
+    ],
+    "schema": [
+      {
+        "name": "event_id",
+        "type": "string"
+      },
+      {
+        "name": "event_time",
+        "type": "timestamp[us, tz=UTC]"
+      },
+      {
+        "name": "user_id",
+        "type": "string"
+      },
+      {
+        "name": "pc_id",
+        "type": "string"
+      },
+      {
+        "name": "event_type",
+        "type": "string"
+      },
+      {
+        "name": "source",
+        "type": "string"
+      },
+      {
+        "name": "event_date",
+        "type": "string"
+      },
+      {
+        "name": "device_file_tree",
+        "type": "string"
+      },
+      {
+        "name": "file_name",
+        "type": "string"
+      },
+      {
+        "name": "to_removable_media",
+        "type": "bool"
+      },
+      {
+        "name": "from_removable_media",
+        "type": "bool"
+      },
+      {
+        "name": "email_to",
+        "type": "string"
+      },
+      {
+        "name": "email_cc",
+        "type": "string"
+      },
+      {
+        "name": "email_bcc",
+        "type": "string"
+      },
+      {
+        "name": "email_from",
+        "type": "string"
+      },
+      {
+        "name": "email_size",
+        "type": "int64"
+      },
+      {
+        "name": "email_attachments",
+        "type": "string"
+      }
+    ]
+  },
+  "validation_passed": true,
+  "files": {
+    "users": {
+      "path": "data/raw/cert_insider_threat/users.csv",
+      "size_bytes": 805301,
+      "columns": [
+        "employee_name",
+        "user_id",
+        "email",
+        "role",
+        "projects",
+        "business_unit",
+        "functional_unit",
+        "department",
+        "team",
+        "supervisor",
+        "start_date",
+        "end_date"
+      ],
+      "sha256": "88a5f107fb0d5a7e2a5d4c25340c30d360d31c2b6b7fdc59494925555c6fe579",
+      "validation": {
+        "rows": 4000,
+        "duplicate_user_ids": 0,
+        "missing_user_ids": 0,
+        "invalid_user_ids": [],
+        "passed": true
+      },
+      "passed": true
+    },
+    "logon": {
+      "path": "data/raw/cert_insider_threat/logon.csv",
+      "size_bytes": 241640758,
+      "columns": [
+        "id",
+        "date",
+        "user",
+        "pc",
+        "activity"
+      ],
+      "sha256": "ddc683adaaa2ad49dcf68a15c5c7e817089f0a061d7243c258f9999ec8f59b8a",
+      "validation": {
+        "rows": 3530285,
+        "date_range_utc": {
+          "start": "2010-01-02T02:19:18+00:00",
+          "end": "2011-06-01T07:26:02+00:00"
+        },
+        "duplicate_event_ids": 0,
+        "missing_required_values": 0,
+        "unknown_user_count": 0,
+        "unknown_user_examples": [],
+        "invalid_user_id_count": 0,
+        "invalid_user_id_examples": [],
+        "invalid_pc_id_count": 0,
+        "invalid_pc_id_examples": [],
+        "unexpected_activities": [],
+        "passed": true
+      },
+      "passed": true
+    },
+    "device": {
+      "path": "data/raw/cert_insider_threat/device.csv",
+      "size_bytes": 139541381,
+      "columns": [
+        "id",
+        "date",
+        "user",
+        "pc",
+        "file_tree",
+        "activity"
+      ],
+      "sha256": "99a4e9e702ee53d4235c512044e770e0e4961f47589bef81c623e13f5fac385c",
+      "validation": {
+        "rows": 1551828,
+        "date_range_utc": {
+          "start": "2010-01-02T07:17:18+00:00",
+          "end": "2011-05-31T23:51:13+00:00"
+        },
+        "duplicate_event_ids": 0,
+        "missing_required_values": 0,
+        "unknown_user_count": 0,
+        "unknown_user_examples": [],
+        "invalid_user_id_count": 0,
+        "invalid_user_id_examples": [],
+        "invalid_pc_id_count": 0,
+        "invalid_pc_id_examples": [],
+        "unexpected_activities": [],
+        "passed": true
+      },
+      "passed": true
+    },
+    "file": {
+      "path": "data/raw/cert_insider_threat/file.csv",
+      "size_bytes": 1331296612,
+      "columns": [
+        "id",
+        "date",
+        "user",
+        "pc",
+        "filename",
+        "activity",
+        "to_removable_media",
+        "from_removable_media",
+        "content"
+      ],
+      "sha256": "ed4bf6c609c423167ac7b98ec4a5fdec69e7f7e614b94872bf42097d19313cbc",
+      "validation": {
+        "rows": 2014883,
+        "date_range_utc": {
+          "start": "2010-01-02T07:19:41+00:00",
+          "end": "2011-05-31T23:49:56+00:00"
+        },
+        "duplicate_event_ids": 0,
+        "missing_required_values": 0,
+        "unknown_user_count": 0,
+        "unknown_user_examples": [],
+        "invalid_user_id_count": 0,
+        "invalid_user_id_examples": [],
+        "invalid_pc_id_count": 0,
+        "invalid_pc_id_examples": [],
+        "unexpected_activities": [],
+        "passed": true
+      },
+      "passed": true
+    },
+    "email": {
+      "path": "data/raw/cert_insider_threat/email.csv",
+      "size_bytes": 8084765283,
+      "columns": [
+        "id",
+        "date",
+        "user",
+        "pc",
+        "to",
+        "cc",
+        "bcc",
+        "from",
+        "activity",
+        "size",
+        "attachments",
+        "content"
+      ],
+      "sha256": "a9c5190a01cd5a384f1355dd93bc82ad53f30f2825a52984eed76b1ca5e66ae5",
+      "validation": {
+        "rows": 10994957,
+        "date_range_utc": {
+          "start": "2010-01-02T06:36:41+00:00",
+          "end": "2011-05-31T20:10:19+00:00"
+        },
+        "duplicate_event_ids": 0,
+        "missing_required_values": 0,
+        "unknown_user_count": 0,
+        "unknown_user_examples": [],
+        "invalid_user_id_count": 0,
+        "invalid_user_id_examples": [],
+        "invalid_pc_id_count": 0,
+        "invalid_pc_id_examples": [],
+        "unexpected_activities": [],
+        "passed": true
+      },
+      "passed": true
+    }
+  }
+}

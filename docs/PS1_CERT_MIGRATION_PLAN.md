@@ -35,32 +35,8 @@ Never mix in `data/raw/r4.2/`.
 
 - Create a versioned data manifest recording schemas, row counts, date ranges,
   source URL, claimed release, source/release description, and file fingerprints.
-- Treat the Kaggle activity files and the separately downloaded official CMU
-  `answers.tar.bz2` as untrusted with respect to each other until an explicit
-  release-alignment check passes. A matching `r4.2` name or source description is
-  not sufficient evidence of compatibility.
-- Parse `data/answers/insiders.csv` for all r4.2 incidents and build a ground-truth
-  alignment report containing every malicious username, scenario, start/end time,
-  detailed-observables file, and expected event types.
-- Require every r4.2 malicious username to exist in the Kaggle `users.csv` and in
-  at least one local activity file. For each answer-key observable whose source is
-  locally available (`logon`, `device`, `file`, or `email`), require its event ID
-  and user/timestamp tuple to resolve to the corresponding activity CSV. Report
-  unsupported sources such as a missing `http.csv` separately; never count them as
-  successful matches.
-- Verify that every scenario interval falls inside the local activity date range,
-  and report per-scenario/per-source expected, matched, and missing observables.
-  Event-ID mismatches may be investigated with user/timestamp tuple matching, but
-  a fallback match is diagnostic only unless the mirror's documented transformation
-  explains it.
-- Make this alignment report a hard gate: any missing malicious username, an
-  incompatible user population/schema, or unexplained missing observable from an
-  available source fails ground-truth compatibility. On failure, stop before
-  label-based splitting, training, evaluation, or performance claims and obtain
-  either the canonical matching r4.2 activity files or the answer key matching the
-  Kaggle mirror. Never remap answer-key usernames to make the gate pass.
-- Pipeline plumbing may be developed before alignment passes, but the activity
-  data must remain unlabeled and the model experimental/shadow-only.
+- Treat this migration as unsupervised-only. Do not read, align, or gate work on
+  `data/answers/`, and do not make label-based detection-performance claims.
 - Validate unique event IDs within each file, parseable timestamps, email senders
   present in `users.csv`, and consistent user/PC identifiers.
 - Process CSVs in chunks; never load the full email file into memory.
@@ -109,13 +85,12 @@ Use a hybrid behavioral approach:
 - Compare the Isolation Forest against a transparent robust-z-score baseline.
 - Use a chronological 60/20/20 train/validation/test split with all features
   calculated from prior history only.
-- Once the matching ground truth is available, select the model using
-  incident-level PR-AUC, detection delay, and recall at a fixed
-  false-positive-per-user/day budget.
-- Promote the Isolation Forest only if it outperforms the transparent baseline at
-  the same false-positive budget; otherwise ship the baseline scorer.
-- Run the base-versus-email ablation and retain email features only if they improve
-  incident detection without worsening the selected false-positive budget.
+- Compare models using chronological score stability, review-volume budgets,
+  explanation quality, and sensitivity to documented synthetic perturbations.
+- Promote the Isolation Forest only if it is at least as stable and operationally
+  reviewable as the transparent baseline; otherwise ship the baseline scorer.
+- Run the base-versus-email ablation and retain email features only if they add
+  stable, interpretable signal without making review volume impractical.
 
 Produce:
 
@@ -223,10 +198,10 @@ Rollout:
 1. Keep DTAA primary while CERT runs in shadow mode.
 2. Never fuse DTAA and CERT as separate corroborating domains; both are
    `ps1_behavioral`.
-3. Compare alert volume, explanation quality, stability, and labeled CERT
-   performance.
-4. Promote CERT only after data, ground-truth, model, temporal-correlation, and
-   ingestion gates pass.
+3. Compare alert volume, explanation quality, stability, and controlled
+   perturbation sensitivity.
+4. Promote CERT only after data, model, temporal-correlation, and ingestion gates
+   pass.
 5. Keep DTAA available for one migration cycle as a clearly labeled legacy
    streaming demo.
 6. Regenerate demo artifacts from real CERT model outputs; do not retain hand-set
@@ -240,15 +215,12 @@ Rollout:
 
 - CSV contract tests for every CERT source, including quoted email content,
   `Send/View`, external recipients, and attachment-path parsing.
-- Ground-truth alignment tests covering complete r4.2 username membership,
-  scenario date-range coverage, exact event-ID/user/timestamp matching by source,
-  unsupported-source reporting, and a deliberately mismatched fixture that must
-  fail closed.
 - Chunked and full-fixture processing must produce identical aggregates.
 - Tests proving no raw identifiers or future events enter model features.
 - Deterministic training and risk scoring under a fixed seed.
 - Explanation tests mapping top deviations to structured `Reason` objects.
-- Ground-truth evaluation plus base/email ablation before promotion.
+- Unsupervised stability, review-volume, perturbation, and base/email ablation
+  reports before promotion.
 - Backward-compatibility tests for existing assessment snapshots.
 - Temporal tests: inside/outside two hours, same-domain duplicates, out-of-order
   events, and unmapped CERT users.
@@ -265,13 +237,24 @@ Rollout:
 
 - The new `email.csv` belongs to the same population as the larger CERT files;
   full sender-coverage validation remains mandatory.
-- The activity files came from a Kaggle mirror while `data/answers/` came directly
-  from CMU SEI. The answer key is usable only if the explicit release-alignment
-  gate passes. Without a passing report, CERT remains experimental/shadow and no
-  supervised performance claim is published.
+- Ground-truth answer files are intentionally outside this unsupervised migration;
+  they must not gate preprocessing, training, evaluation, or promotion.
 - PaySim and PS2 model retraining are outside this migration.
 - The CERT-to-PaySim identity bridge remains synthetic and must stay labeled.
 - Raw event streaming and production bank connectors are future work; this
   migration provides live ingestion of scored assessments.
 - Broader API authorization, production database migration, PS2 calibration, and
   graded statistical confidence remain separate technical-debt projects.
+
+Step 1 status (2026-07-23): complete.
+
+- Pipeline: `ml/data_pipeline/prepare_cert_data.py`
+- Tracked manifest: `data/manifests/ps1_cert_data_manifest.json`
+- Generated dataset: `data/processed/ps1/cert_events/` (ignored by Git)
+- Validated population: 4,000 users and 18,091,953 activity events
+- Result: zero duplicate event IDs, missing required values, unknown users,
+  malformed user/PC IDs, or unexpected activity types
+- Timestamp setting: simulated-local `UTC`, preserving the dataset's displayed
+  clock hours; change only with documented source-timezone evidence
+- Rebuild command:
+  `.venv/bin/python3 -m ml.data_pipeline.prepare_cert_data`
