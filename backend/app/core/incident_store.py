@@ -27,6 +27,7 @@ def _now() -> str:
 
 class IncidentStore:
     def __init__(self, db_path: str = ":memory:") -> None:
+        self.db_path = db_path
         if db_path != ":memory:":
             Path(db_path).parent.mkdir(parents=True, exist_ok=True)
         self.conn = sqlite3.connect(db_path, check_same_thread=False)
@@ -70,6 +71,30 @@ class IncidentStore:
                     inc.status.value, inc.access_decision.value if inc.access_decision else None,
                     json.dumps(to_dict(inc)), _now(),
                 ),
+            )
+        self.conn.commit()
+
+    def upsert(self, incidents: list[UnifiedIncident]) -> None:
+        """Refresh correlation projection while preserving analyst lifecycle state."""
+        for inc in incidents:
+            existing = self.conn.execute(
+                "SELECT status, created_at FROM incidents WHERE incident_id=?", (inc.incident_id,)
+            ).fetchone()
+            status = existing["status"] if existing else inc.status.value
+            created_at = existing["created_at"] if existing else _now()
+            self.conn.execute(
+                """INSERT INTO incidents
+                   (incident_id, entity_id, combined_score, confidence, status, access_decision, payload, created_at)
+                   VALUES (?,?,?,?,?,?,?,?)
+                   ON CONFLICT(incident_id) DO UPDATE SET
+                     entity_id=excluded.entity_id,
+                     combined_score=excluded.combined_score,
+                     confidence=excluded.confidence,
+                     access_decision=excluded.access_decision,
+                     payload=excluded.payload""",
+                (inc.incident_id, inc.entity_id, inc.combined_score, inc.confidence, status,
+                 inc.access_decision.value if inc.access_decision else None,
+                 json.dumps(to_dict(inc)), created_at),
             )
         self.conn.commit()
 

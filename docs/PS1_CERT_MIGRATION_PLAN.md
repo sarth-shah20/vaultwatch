@@ -322,6 +322,23 @@ Rollout:
   IDs, timestamp round-trips, and legacy loading.
 - Scope boundary: HTTP/Kafka ingestion remains Step 6.
 
+### Step 6 — Complete (2026-07-23)
+
+- Shared service: `backend/app/core/assessment_ingestion.py`. It validates the
+  versioned envelope per assessment, records accepted/duplicate/rejected
+  outcomes, persists through `TemporalCorrelationStore`, then projects affected
+  incidents into API SQLite store.
+- HTTP: `POST /assessments`, guarded by `VAULTWATCH_INGESTION_API_KEY` through
+  `X-Ingestion-API-Key`. An unset key returns 503; wrong key returns 401.
+- Kafka adapter: `backend/app/ps2_correlation/correlation_engine/kafka_ingestion.py`.
+  Topic/group/DLQ are `vaultwatch.risk-assessments.v1`,
+  `vaultwatch-correlation-v1`, and `vaultwatch.risk-assessments.v1.dlq`.
+  Commit follows successful persistence or successful DLQ publication. Local
+  plaintext and configurable SASL/security fields are supported.
+- Replay: `ml/replay_cert_assessments.py` scores prepared CERT behavioral
+  windows with saved email-enhanced model, emits same envelope over HTTP/Kafka.
+  This is replay of prepared windows, not real-time raw CERT CSV ingestion.
+
 ### Step 5 — Complete (2026-07-23)
 
 - SQLite ledger: `backend/app/ps2_correlation/correlation_engine/store.py`.
