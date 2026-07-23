@@ -259,5 +259,16 @@
       "email.content"
     ],
     "user_id_is_identifier_not_model_feature": true
+  },
+  "known_limitations": {
+    "new_device_tree_count": {
+      "raw_value_counts": {
+        "0": 6791626,
+        "1": 788
+      },
+      "nonzero_fraction": 0.00011601,
+      "finding": "Extremely sparse but not constant: 788 nonzero user-hour windows across 6,792,414.",
+      "handling": "Kept in raw feature schema for completeness. Step 3 must apply a training-split variance filter; exclude this feature if it fails the threshold. Not evidence of a raw aggregation bug."
+    }
   }
 }
