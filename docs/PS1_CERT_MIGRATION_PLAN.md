@@ -325,8 +325,9 @@ Rollout:
 ### Step 7 — Complete (2026-07-23)
 
 - Provider config: `PS1_PRIMARY_PROVIDER=dtaa|cert` and
-  `PS1_SHADOW_PROVIDER=none|dtaa|cert`. Defaults are DTAA primary and CERT
-  shadow; same provider cannot be both.
+  `PS1_SHADOW_PROVIDER=none|dtaa|cert`. Defaults are CERT primary and DTAA
+  shadow; same provider cannot be both. Promotion passed data, temporal, and
+  live-ingestion gates; it does not create a labeled-performance claim.
 - Runtime selection/comparison: `backend/app/ps1_insider_threat/providers.py`.
   It records alert count, entity count, explanation presence, score summary,
   source, and model version as operational comparison—not labeled performance.

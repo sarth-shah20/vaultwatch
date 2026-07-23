@@ -22,13 +22,13 @@ ShadowProviderName = Literal["none", "dtaa", "cert"]
 
 @dataclass(frozen=True)
 class PS1ProviderConfig:
-    primary: ProviderName = "dtaa"
-    shadow: ShadowProviderName = "cert"
+    primary: ProviderName = "cert"
+    shadow: ShadowProviderName = "dtaa"
 
     @classmethod
     def from_env(cls) -> "PS1ProviderConfig":
-        primary = os.getenv("PS1_PRIMARY_PROVIDER", "dtaa").lower()
-        shadow = os.getenv("PS1_SHADOW_PROVIDER", "cert").lower()
+        primary = os.getenv("PS1_PRIMARY_PROVIDER", "cert").lower()
+        shadow = os.getenv("PS1_SHADOW_PROVIDER", "dtaa").lower()
         if primary not in {"dtaa", "cert"}:
             raise ValueError("PS1_PRIMARY_PROVIDER must be dtaa or cert")
         if shadow not in {"none", "dtaa", "cert"}:

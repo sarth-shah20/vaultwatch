@@ -16,13 +16,13 @@ from backend.app.shared.entities import Reason, RiskAssessment
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def test_default_parallel_cutover_keeps_dtaa_primary_and_cert_shadow(monkeypatch) -> None:
+def test_default_parallel_cutover_promotes_cert_and_keeps_dtaa_shadow(monkeypatch) -> None:
     monkeypatch.delenv("PS1_PRIMARY_PROVIDER", raising=False)
     monkeypatch.delenv("PS1_SHADOW_PROVIDER", raising=False)
     config = PS1ProviderConfig.from_env()
-    assert (config.primary, config.shadow) == ("dtaa", "cert")
+    assert (config.primary, config.shadow) == ("cert", "dtaa")
     run = load_parallel_providers(ROOT, config)
-    assert run.primary_provider == "dtaa" and run.shadow_provider == "cert"
+    assert run.primary_provider == "cert" and run.shadow_provider == "dtaa"
     assert run.primary_assessments and run.shadow_assessments
     assert all(item.domain == "ps1_behavioral" for item in [*run.primary_assessments, *run.shadow_assessments])
     assert run.comparison_summary()["caveat"].startswith("Comparison is operational")
