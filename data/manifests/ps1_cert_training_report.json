@@ -1,0 +1,287 @@
+{
+  "report_version": "1.0",
+  "generated_at": "2026-07-23T05:44:07.798222+00:00",
+  "unlabeled": true,
+  "ground_truth_used": false,
+  "input_feature_manifest": "data/manifests/ps1_cert_behavioral_features.json",
+  "variants": {
+    "base": {
+      "variant": "base",
+      "model_path": "ml/models/cert_behavioral_base.joblib",
+      "snapshot_path": "data/processed/ps1/cert_model/cert_base_test_snapshot.json",
+      "feature_counts": {
+        "before_variance_filter": 60,
+        "selected": 60,
+        "dropped": 0
+      },
+      "dropped_features": [],
+      "split": {
+        "strategy": "chronological_date",
+        "train_dates": {
+          "start": "2010-01-02",
+          "end": "2010-11-06",
+          "count": 309
+        },
+        "validation_dates": {
+          "start": "2010-11-07",
+          "end": "2011-02-17",
+          "count": 103
+        },
+        "test_dates": {
+          "start": "2011-02-18",
+          "end": "2011-06-01",
+          "count": 104
+        }
+      },
+      "training_sampling": {
+        "stratified_by": "event_date",
+        "maximum_rows_per_date": 800,
+        "rows_sampled": 247200,
+        "seed": 42
+      },
+      "model": {
+        "type": "IsolationForest",
+        "n_estimators": 150,
+        "max_samples": 50000,
+        "seed": 42
+      },
+      "validation": {
+        "rows_sampled": 172814,
+        "anomaly_score": {
+          "mean": 0.3526716809442985,
+          "std": 0.03861135618336271,
+          "p50": 0.34276561525849214,
+          "p95": 0.4259480019172293,
+          "p99": 0.5170710837683637,
+          "min": 0.3172629447523957,
+          "max": 0.8293483906204087
+        },
+        "risk_score": {
+          "mean": 0.4997742442716352,
+          "std": 0.28861640737191124,
+          "p50": 0.4998198065173992,
+          "p95": 0.9501156723930572,
+          "p99": 0.9898411341756256,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "robust_z_baseline": {
+          "mean": 9.783853191040281,
+          "std": 10.516136732604371,
+          "p50": 3.1168840261865634,
+          "p95": 25.0,
+          "p99": 25.0,
+          "min": 0.0,
+          "max": 25.0
+        },
+        "alert_risk_threshold": 0.99,
+        "alert_rate": 0.009877671947874594,
+        "daily_alert_rate_coefficient_of_variation": 0.3964286600036291,
+        "if_to_z_score_correlation": 0.4675440142250368,
+        "evaluation_sampling": {
+          "stratified_by": "event_date",
+          "maximum_rows_per_date": 2000,
+          "seed": 20042
+        }
+      },
+      "test": {
+        "rows_sampled": 173299,
+        "anomaly_score": {
+          "mean": 0.3715005448851501,
+          "std": 0.04443574128552371,
+          "p50": 0.36242239048164426,
+          "p95": 0.4546613660481955,
+          "p99": 0.5352222773119804,
+          "min": 0.3228070090427605,
+          "max": 0.7666425719271558
+        },
+        "risk_score": {
+          "mean": 0.6669982995593858,
+          "std": 0.264977918521406,
+          "p50": 0.7690018036527753,
+          "p95": 0.9725596786307796,
+          "p99": 0.9925324580308446,
+          "min": 0.13821950722457,
+          "max": 0.9997719421604245
+        },
+        "robust_z_baseline": {
+          "mean": 9.753495076714744,
+          "std": 10.518544468564178,
+          "p50": 3.0,
+          "p95": 25.0,
+          "p99": 25.0,
+          "min": 0.0,
+          "max": 25.0
+        },
+        "alert_risk_threshold": 0.99,
+        "alert_rate": 0.01425859352910288,
+        "daily_alert_rate_coefficient_of_variation": 0.6180218783407128,
+        "if_to_z_score_correlation": 0.41171107475366686,
+        "evaluation_sampling": {
+          "stratified_by": "event_date",
+          "maximum_rows_per_date": 2000,
+          "seed": 30042
+        }
+      },
+      "controlled_perturbation": {
+        "kind": "controlled_feature_perturbation_not_ground_truth_evaluation",
+        "rows": 5000,
+        "changed_features": [
+          "logon_count",
+          "new_logon_pc_count",
+          "file_to_removable_count"
+        ],
+        "median_risk_delta": 0.37077265999608494,
+        "mean_risk_delta": 0.3958911616886361,
+        "fraction_risk_increased": 1.0
+      },
+      "selection_status": "experimental_shadow_only; unlabeled metrics are not detection performance"
+    },
+    "email_enhanced": {
+      "variant": "email_enhanced",
+      "model_path": "ml/models/cert_behavioral_email_enhanced.joblib",
+      "snapshot_path": "data/processed/ps1/cert_model/cert_email_enhanced_test_snapshot.json",
+      "feature_counts": {
+        "before_variance_filter": 100,
+        "selected": 100,
+        "dropped": 0
+      },
+      "dropped_features": [],
+      "split": {
+        "strategy": "chronological_date",
+        "train_dates": {
+          "start": "2010-01-02",
+          "end": "2010-11-06",
+          "count": 309
+        },
+        "validation_dates": {
+          "start": "2010-11-07",
+          "end": "2011-02-17",
+          "count": 103
+        },
+        "test_dates": {
+          "start": "2011-02-18",
+          "end": "2011-06-01",
+          "count": 104
+        }
+      },
+      "training_sampling": {
+        "stratified_by": "event_date",
+        "maximum_rows_per_date": 800,
+        "rows_sampled": 247200,
+        "seed": 42
+      },
+      "model": {
+        "type": "IsolationForest",
+        "n_estimators": 150,
+        "max_samples": 50000,
+        "seed": 42
+      },
+      "validation": {
+        "rows_sampled": 172814,
+        "anomaly_score": {
+          "mean": 0.3446690195561131,
+          "std": 0.0322716904666434,
+          "p50": 0.3348326066437722,
+          "p95": 0.4070425388398903,
+          "p99": 0.4737142907164643,
+          "min": 0.31393103710068826,
+          "max": 0.7585162668994722
+        },
+        "risk_score": {
+          "mean": 0.5004585827151059,
+          "std": 0.2886695547289816,
+          "p50": 0.5005305099011147,
+          "p95": 0.9503129964154114,
+          "p99": 0.9899640716805396,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "robust_z_baseline": {
+          "mean": 15.833850058761172,
+          "std": 10.280821334736254,
+          "p50": 22.116172042691595,
+          "p95": 25.0,
+          "p99": 25.0,
+          "min": 0.0,
+          "max": 25.0
+        },
+        "alert_risk_threshold": 0.99,
+        "alert_rate": 0.009958683902924531,
+        "daily_alert_rate_coefficient_of_variation": 0.3890462516348297,
+        "if_to_z_score_correlation": 0.44605968841943877,
+        "evaluation_sampling": {
+          "stratified_by": "event_date",
+          "maximum_rows_per_date": 2000,
+          "seed": 20042
+        }
+      },
+      "test": {
+        "rows_sampled": 173299,
+        "anomaly_score": {
+          "mean": 0.3535984748108148,
+          "std": 0.03458841839305286,
+          "p50": 0.3443676007781363,
+          "p95": 0.42034150291950806,
+          "p99": 0.48548490520012405,
+          "min": 0.3159141923921078,
+          "max": 0.7403267346862582
+        },
+        "risk_score": {
+          "mean": 0.610928547270529,
+          "std": 0.2685528050289781,
+          "p50": 0.6684153171707127,
+          "p95": 0.9642495644375001,
+          "p99": 0.9922042994459018,
+          "min": 0.026146525528589298,
+          "max": 1.0
+        },
+        "robust_z_baseline": {
+          "mean": 15.992961955530753,
+          "std": 10.306270856498557,
+          "p50": 23.4267578125,
+          "p95": 25.0,
+          "p99": 25.0,
+          "min": 0.0,
+          "max": 25.0
+        },
+        "alert_risk_threshold": 0.99,
+        "alert_rate": 0.013069896537198714,
+        "daily_alert_rate_coefficient_of_variation": 0.5323407248173277,
+        "if_to_z_score_correlation": 0.4218679066167773,
+        "evaluation_sampling": {
+          "stratified_by": "event_date",
+          "maximum_rows_per_date": 2000,
+          "seed": 30042
+        }
+      },
+      "controlled_perturbation": {
+        "kind": "controlled_feature_perturbation_not_ground_truth_evaluation",
+        "rows": 5000,
+        "changed_features": [
+          "logon_count",
+          "new_logon_pc_count",
+          "file_to_removable_count",
+          "email_external_recipient_ratio",
+          "email_attachment_bytes"
+        ],
+        "median_risk_delta": 0.41401592719760827,
+        "mean_risk_delta": 0.4255614635226226,
+        "fraction_risk_increased": 1.0
+      },
+      "selection_status": "experimental_shadow_only; unlabeled metrics are not detection performance"
+    }
+  },
+  "shadow_selection": {
+    "recommended_variant": "email_enhanced",
+    "basis": "lowest sampled test daily alert-rate coefficient of variation",
+    "promotion_status": "shadow-only; unlabeled operational comparison"
+  },
+  "limitations": [
+    "No labels or ground-truth answer key were used.",
+    "Metrics report operational stability and perturbation sensitivity, not recall, precision, PR-AUC, or detection performance.",
+    "Scores are empirical validation-percentile behavioral risk, not probabilities.",
+    "Models remain experimental/shadow-only until later integration gates pass.",
+    "Robust-z baseline may saturate at its configured clip (25); use it as explanation evidence, not independent access-control decision."
+  ]
+}

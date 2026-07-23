@@ -280,3 +280,27 @@ Rollout:
   `user_id` remains an identifier and is explicitly excluded from model columns
 - Rebuild command:
   `.venv/bin/python3 -m ml.data_pipeline.cert_behavioral_windows`
+
+
+### Step 3 — Complete (2026-07-23)
+
+- Pipeline: `ml/models/train_cert_behavioral_model.py`
+- Tracked report: `data/manifests/ps1_cert_training_report.json`
+- Ignored artifacts: `ml/models/cert_behavioral_*.joblib` and
+  `data/processed/ps1/cert_model/*_test_snapshot.json`
+- Chronological split: 309 train, 103 validation, 104 test UTC dates; train and
+  evaluation samples are deterministic and stratified by date
+- Models: 150-tree Isolation Forest over train-only variance-filtered,
+  RobustScaler-transformed features; 60 base and 100 email-enhanced features
+  retained
+- Selection: email-enhanced is shadow candidate because sampled test daily alert
+  rate is lower (1.31% vs 1.43%) and more stable (CV 0.532 vs 0.618)
+- Validation: controlled perturbations raised risk for 100% of 5,000 sampled
+  test windows in both variants; this is sensitivity evidence, not detection
+  performance
+- Caveat: robust-z baseline often reaches clip 25; retain it for explanations,
+  not independent access decisions
+- Status: experimental/shadow-only. No labels, answer key, PR-AUC, recall, or
+  calibrated-probability claim.
+- Rebuild command:
+  `.venv/bin/python3 -m ml.models.train_cert_behavioral_model`

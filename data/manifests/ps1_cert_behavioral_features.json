@@ -268,7 +268,7 @@
       },
       "nonzero_fraction": 0.00011601,
       "finding": "Extremely sparse but not constant: 788 nonzero user-hour windows across 6,792,414.",
-      "handling": "Kept in raw feature schema for completeness. Step 3 must apply a training-split variance filter; exclude this feature if it fails the threshold. Not evidence of a raw aggregation bug."
+      "handling": "Kept in raw schema. Step 3 train-split variance filter retained it because training data contains rare nonzero values; treat as low-signal and monitor feature importance before production use. Not evidence of raw aggregation bug."
     }
   }
 }
