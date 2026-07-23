@@ -1,6 +1,6 @@
 {
   "report_version": "1.0",
-  "generated_at": "2026-07-23T05:44:07.798222+00:00",
+  "generated_at": "2026-07-23T06:18:07.495253+00:00",
   "unlabeled": true,
   "ground_truth_used": false,
   "input_feature_manifest": "data/manifests/ps1_cert_behavioral_features.json",
@@ -282,6 +282,7 @@
     "Metrics report operational stability and perturbation sensitivity, not recall, precision, PR-AUC, or detection performance.",
     "Scores are empirical validation-percentile behavioral risk, not probabilities.",
     "Models remain experimental/shadow-only until later integration gates pass.",
-    "Robust-z baseline may saturate at its configured clip (25); use it as explanation evidence, not independent access-control decision."
+    "Robust-z baseline may saturate at its configured clip (25); use it as explanation evidence, not independent access-control decision.",
+    "The committed alert examples are a deterministic 100-record test snapshot, not the full 173,299-row test population; alert-mix observations from that snapshot must not be generalized without a full-population audit."
   ]
 }

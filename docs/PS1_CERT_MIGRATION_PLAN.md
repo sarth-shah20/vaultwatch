@@ -304,3 +304,21 @@ Rollout:
   calibrated-probability claim.
 - Rebuild command:
   `.venv/bin/python3 -m ml.models.train_cert_behavioral_model`
+
+### Step 4 — Complete (2026-07-23)
+
+- Added backward-compatible, Pydantic-validated `RiskAssessmentTransport` schema.
+- Added explicit `domain`, `assessment_id`, `schema_version`, `event_time`,
+  `window_start`, `window_end`, `source`, and `model_version` fields to
+  `RiskAssessment`.
+- Legacy PS1/PS2 snapshots still load; compatibility boundary ignores only
+  non-contract legacy metadata.
+- PS1 and PS2 producers emit explicit domains, stable replay IDs, and source/model
+  metadata; timestamps propagate when source rows provide them.
+- CERT test snapshots now include latest contributing `event_time` plus scored
+  `window_start`/`window_end`.
+- Pydantic contract tests cover score bounds, reason-domain consistency, stable
+  IDs, timestamp round-trips, and legacy loading.
+- Scope boundary: temporal persistence/correlation and HTTP/Kafka ingestion remain
+  Steps 5–6.
+

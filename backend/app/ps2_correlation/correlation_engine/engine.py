@@ -18,6 +18,7 @@ from __future__ import annotations
 from collections import defaultdict
 from collections.abc import Iterable, Mapping
 
+from backend.app.shared.assessment_schema import RiskAssessmentTransport
 from backend.app.shared.entities import (
     AccessDecision,
     IncidentStatus,
@@ -31,6 +32,8 @@ AGREEMENT_BONUS = 0.3     # lift toward 1 per extra corroborating domain
 
 def assessment_domain(assessment: RiskAssessment) -> str:
     """Infer an assessment's domain from its reasons (they are homogeneous)."""
+    if assessment.domain and assessment.domain != "unknown":
+        return assessment.domain
     domains = [r.domain for r in assessment.reasons if r.domain]
     if not domains:
         return "unknown"
@@ -122,12 +125,9 @@ def build_demo_incidents(root: str = ".") -> list[UnifiedIncident]:
         if not path.exists():
             return []
         payload = json.loads(path.read_text(encoding="utf-8"))
+        fields = set(RiskAssessmentTransport.model_fields)
         return [
-            RiskAssessment(
-                entity_id=a["entity_id"],
-                score=float(a["score"]),
-                reasons=[Reason(**r) for r in a["reasons"]],
-            )
+            RiskAssessmentTransport.model_validate({k: v for k, v in a.items() if k in fields}).to_entity()
             for a in payload["assessments"]
         ]
 

@@ -17,6 +17,7 @@ by ml.data_pipeline.paysim_features.build_feature_set.
 from __future__ import annotations
 
 import json
+from datetime import datetime
 from pathlib import Path
 from typing import Iterable, Mapping
 
@@ -24,11 +25,13 @@ import numpy as np
 import pandas as pd
 import xgboost as xgb
 
+from backend.app.shared.assessment_schema import stable_assessment_id
 from backend.app.shared.entities import Reason, RiskAssessment
 
 DOMAIN = "ps2_transaction"
 DEFAULT_MODEL_PATH = "ml/models/fraud_model.json"
 DEFAULT_META_PATH = "ml/models/fraud_model_meta.json"
+MODEL_VERSION = "paysim-xgb-v1"
 
 # The model is trained only on the transaction types that ever carry fraud in
 # PaySim. Any other type must NOT be scored — the model has no basis to
@@ -73,6 +76,19 @@ def _as_float(value) -> float:
         return float(value)
     except (TypeError, ValueError):
         return 0.0
+
+
+def _coerce_event_time(row: Mapping) -> datetime | None:
+    """Use source timestamp when present; PaySim step alone is not wall-clock time."""
+    value = row.get("event_time", row.get("timestamp")) if hasattr(row, "get") else None
+    if value is None:
+        return None
+    if isinstance(value, datetime):
+        return value
+    try:
+        return datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except ValueError:
+        return None
 
 
 class FraudScorer:
@@ -153,7 +169,13 @@ class FraudScorer:
         reasons = self._reasons(frame.iloc[0], contributions, top_k)
 
         resolved_id = entity_id or str(row.get("entity_id") if hasattr(row, "get") else None) or "unknown"
-        return RiskAssessment(entity_id=resolved_id, score=proba, reasons=reasons)
+        event_time = _coerce_event_time(row)
+        return RiskAssessment(
+            entity_id=resolved_id, score=proba, reasons=reasons,
+            assessment_id=stable_assessment_id("paysim", resolved_id, event_time, MODEL_VERSION),
+            schema_version="1.0", domain=DOMAIN, event_time=event_time,
+            source="paysim", model_version=MODEL_VERSION,
+        )
 
     def score_frame(self, feature_frame: pd.DataFrame, top_k: int = 3) -> list[RiskAssessment]:
         """Score a feature frame, skipping rows whose type is not fraud-eligible."""

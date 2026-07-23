@@ -19,8 +19,10 @@ from __future__ import annotations
 
 import json
 import math
+from datetime import datetime, timezone
 from pathlib import Path
 
+from backend.app.shared.assessment_schema import stable_assessment_id
 from backend.app.shared.entities import Reason, RiskAssessment
 
 DOMAIN = "ps1_behavioral"
@@ -29,6 +31,16 @@ MAPPING_PATH = "data/synthetic/entity_mapping.json"
 
 # Calibration: decision_function ~ -0.05 -> ~0.90 risk, ~ -0.001 -> ~0.51.
 SCORE_SCALE = 45.0
+MODEL_VERSION = "dtaa-legacy-v1"
+
+
+def _event_time(log: dict) -> datetime | None:
+    try:
+        return datetime.fromisoformat(
+            f"{log['DATE']}T{int(log.get('HOUR', 0)):02d}:{int(log.get('MINUTE', 0)):02d}:{int(log.get('SECOND', 0)):02d}+00:00"
+        ).astimezone(timezone.utc)
+    except (KeyError, TypeError, ValueError):
+        return None
 
 
 def normalize_score(decision_function_score: float) -> float:
@@ -96,7 +108,15 @@ def load_ps1_assessments(
                     raw_value=f"PS1 also flagged '{activity}' for user {top_log['USER']}",
                 )
             )
-        assessments.append(RiskAssessment(entity_id=entity_id, score=risk, reasons=reasons))
+        event_time = _event_time(top_log)
+        assessments.append(
+            RiskAssessment(
+                entity_id=entity_id, score=risk, reasons=reasons,
+                assessment_id=stable_assessment_id("dtaa", entity_id, event_time, MODEL_VERSION),
+                schema_version="1.0", domain=DOMAIN, event_time=event_time,
+                source="dtaa_legacy", model_version=MODEL_VERSION,
+            )
+        )
 
     assessments.sort(key=lambda a: a.entity_id)
     return assessments

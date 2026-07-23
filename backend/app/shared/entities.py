@@ -14,6 +14,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
+from uuid import uuid4
 
 
 class EntityType(str, Enum):
@@ -62,6 +63,15 @@ class RiskAssessment:
     entity_id: str
     score: float                     # normalized 0-1 risk score
     reasons: list[Reason] = field(default_factory=list)
+    # Versioned transport fields. Defaults preserve loading of existing snapshots.
+    assessment_id: str = field(default_factory=lambda: str(uuid4()))
+    schema_version: str = "1.0"
+    domain: str = "unknown"
+    event_time: datetime | None = None
+    window_start: datetime | None = None
+    window_end: datetime | None = None
+    source: str = "unknown"
+    model_version: str = "unknown"
     generated_at: datetime = field(default_factory=datetime.utcnow)
 
 

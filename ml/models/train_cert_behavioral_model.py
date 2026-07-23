@@ -120,10 +120,25 @@ def load_partition(
     event_date: str,
     columns: list[str],
 ) -> pd.DataFrame:
-    return pd.concat(
-        [pd.read_parquet(path, columns=columns) for path in _partition_files(variant_root, event_date)],
-        ignore_index=True,
-    )
+    frames: list[pd.DataFrame] = []
+    optional = {"window_end", "event_time"}
+    for path in _partition_files(variant_root, event_date):
+        try:
+            frame = pd.read_parquet(path, columns=columns)
+        except Exception as exc:
+            # Step 2 fixtures may predate timestamp boundary columns. Preserve
+            # training compatibility, then derive conservative window timestamps.
+            if not optional.intersection(columns) or "No match for FieldRef.Name" not in str(exc):
+                raise
+            available = [column for column in columns if column not in optional]
+            frame = pd.read_parquet(path, columns=available)
+        frames.append(frame)
+    result = pd.concat(frames, ignore_index=True)
+    if "window_end" in columns and "window_end" not in result:
+        result["window_end"] = pd.to_datetime(result["window_start"]) + pd.Timedelta(hours=1)
+    if "event_time" in columns and "event_time" not in result:
+        result["event_time"] = result["window_end"]
+    return result
 
 
 def stratified_date_sample(
@@ -267,7 +282,7 @@ def evaluate_split(
     seed: int,
     capture_examples: bool = False,
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
-    requested = ["user_id", "window_start", "event_date", *feature_columns]
+    requested = ["user_id", "window_start", "window_end", "event_time", "event_date", *feature_columns]
     raw_scores: list[np.ndarray] = []
     baseline: list[np.ndarray] = []
     risks: list[np.ndarray] = []
@@ -292,6 +307,8 @@ def evaluate_split(
                 record = {
                     "user_id": str(row["user_id"]),
                     "window_start": pd.Timestamp(row["window_start"]).isoformat(),
+                    "window_end": pd.Timestamp(row["window_end"]).isoformat(),
+                    "event_time": pd.Timestamp(row["event_time"]).isoformat(),
                     "event_date": str(row["event_date"]),
                     "risk_score": float(risk[row_index]),
                     "isolation_forest_anomaly": float(anomaly[row_index]),
@@ -579,6 +596,7 @@ def train_all_variants(
             "Scores are empirical validation-percentile behavioral risk, not probabilities.",
             "Models remain experimental/shadow-only until later integration gates pass.",
             "Robust-z baseline may saturate at its configured clip (25); use it as explanation evidence, not independent access-control decision.",
+            "The committed alert examples are a deterministic 100-record test snapshot, not the full 173,299-row test population; alert-mix observations from that snapshot must not be generalized without a full-population audit.",
         ],
     }
     report_path.parent.mkdir(parents=True, exist_ok=True)
