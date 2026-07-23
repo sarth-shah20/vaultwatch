@@ -6,6 +6,16 @@ Source of truth: `data/synthetic/demo_scenarios.json`. Regenerate with:
 .venv/bin/python3 -m ml.data_pipeline.scenario_builder
 ```
 
+
+## Correlation-engine replay
+
+`build_demo_incidents()` feeds committed CERT and PaySim assessment artifacts into
+`TemporalCorrelationStore` (SQLite) and returns materialized incidents. This is
+engine execution, not scenario-builder discovery. `CERT:CET3786` replay produces
+one incident with `ps1_behavioral` + `ps2_transaction`, `high` corroboration, and
+`revoke`; its two event times remain 57.533 minutes apart. Incident IDs are UUID-backed
+and allocated by store, so consumers must use returned ID rather than derive it from entity.
+
 ## Timing and identity honesty
 
 PaySim has a relative simulated `step`, not an observed transaction timestamp.

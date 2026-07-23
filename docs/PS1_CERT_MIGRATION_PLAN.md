@@ -320,6 +320,24 @@ Rollout:
   `window_start`/`window_end`.
 - Pydantic contract tests cover score bounds, reason-domain consistency, stable
   IDs, timestamp round-trips, and legacy loading.
-- Scope boundary: temporal persistence/correlation and HTTP/Kafka ingestion remain
-  Steps 5–6.
+- Scope boundary: HTTP/Kafka ingestion remains Step 6.
+
+### Step 5 — Complete (2026-07-23)
+
+- SQLite ledger: `backend/app/ps2_correlation/correlation_engine/store.py`.
+  `risk_assessments.assessment_id` is unique, so replay is idempotent.
+- Correlation policy: `backend/app/ps2_correlation/correlation_engine/config.py`.
+  Default window is 120 minutes; thresholds retain legacy operating policy and
+  are explicitly not calibrated probabilities.
+- Temporal rule: only one canonical entity, different domains, and event times
+  inside same fixed window can corroborate. Missing timestamps never corroborate.
+- Same-domain records retain only strongest evidence in each window. Signals
+  outside window become separate UUID-backed incidents.
+- Out-of-order arrival re-windows all stored assessments for affected entity,
+  preserving compatible incident ID where possible.
+- `high` / `low` remain corroboration levels, not statistical confidence.
+- Demo regeneration: `build_demo_incidents()` now inserts committed CERT and
+  PaySim assessments into in-memory SQLite engine, then returns materialized
+  incidents. CET3786 end-to-end regression verifies high corroboration + revoke.
+- Scope boundary: HTTP/Kafka ingestion remains Step 6.
 

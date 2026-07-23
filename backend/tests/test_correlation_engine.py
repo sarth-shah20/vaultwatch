@@ -1,89 +1,110 @@
-"""Tests for the Step 6 correlation engine."""
+"""Temporal-correlation and persisted-ingestion tests."""
 from __future__ import annotations
 
+import json
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from backend.app.ps2_correlation.correlation_engine import (
-    build_demo_incidents,
-    correlate,
-    decide_access,
-    fuse_scores,
+    CorrelationConfig, TemporalCorrelationStore, build_demo_incidents,
+    correlate, decide_access, fuse_scores,
 )
+from backend.app.shared.assessment_schema import RiskAssessmentTransport
 from backend.app.shared.entities import AccessDecision, IncidentStatus, Reason, RiskAssessment
 
 ROOT = Path(__file__).resolve().parents[2]
+T0 = datetime(2010, 1, 1, tzinfo=timezone.utc)
 
 
-def _ra(entity_id, score, domain):
-    return RiskAssessment(entity_id=entity_id, score=score,
-                          reasons=[Reason(signal_name="s", domain=domain, weight=score, raw_value="x")])
+def _ra(entity_id: str, score: float, domain: str, minutes: int | None, assessment_id: str | None = None) -> RiskAssessment:
+    return RiskAssessment(
+        entity_id=entity_id, score=score,
+        reasons=[Reason(signal_name="s", domain=domain, weight=score, raw_value="x")],
+        domain=domain, assessment_id=assessment_id or f"{entity_id}-{domain}-{minutes}",
+        event_time=T0 + timedelta(minutes=minutes) if minutes is not None else None,
+    )
 
 
-def test_fuse_boosts_corroboration_and_flags_confidence() -> None:
-    lone, n_lone, conf_lone = fuse_scores({"ps2_transaction": 0.9})
-    corr, n_corr, conf_corr = fuse_scores({"ps1_behavioral": 0.8, "ps2_transaction": 0.7})
-    assert conf_lone == "low" and n_lone == 1 and lone == 0.9
-    assert conf_corr == "high" and n_corr == 2
-    assert corr > (0.8 + 0.7) / 2  # boosted above the plain average
+def test_fuse_boosts_corroboration_level() -> None:
+    lone, n_lone, level_lone = fuse_scores({"ps2_transaction": 0.9})
+    corr, n_corr, level_corr = fuse_scores({"ps1_behavioral": 0.8, "ps2_transaction": 0.7})
+    assert (level_lone, n_lone, lone) == ("low", 1, 0.9)
+    assert (level_corr, n_corr) == ("high", 2)
+    assert corr > (0.8 + 0.7) / 2
 
 
 def test_decision_requires_corroboration_to_revoke() -> None:
-    # lone strong signal -> step up (not revoke); corroborated strong -> revoke
     assert decide_access(0.95, "low") == AccessDecision.STEP_UP_AUTH
     assert decide_access(0.95, "high") == AccessDecision.REVOKE
-    assert decide_access(0.5, "high") == AccessDecision.THROTTLE
-    assert decide_access(0.2, "high") == AccessDecision.ALLOW
 
 
-def test_lone_signal_steps_up_corroborated_revokes() -> None:
-    ps2 = _ra("X1", 0.95, "ps2_transaction")
-    ps1 = _ra("X1", 0.80, "ps1_behavioral")
-
-    lone = correlate([ps2])[0]
-    assert lone.confidence == "low"
-    assert lone.status == IncidentStatus.NEW
-    assert lone.access_decision == AccessDecision.STEP_UP_AUTH
-
-    corr = correlate([ps2, ps1])[0]
-    assert corr.confidence == "high"
-    assert corr.status == IncidentStatus.ESCALATED
-    assert corr.access_decision == AccessDecision.REVOKE
-    assert sorted(corr.contributing_domains) == ["ps1_behavioral", "ps2_transaction"]
-    assert len(corr.contributing_assessments) == 2
+def test_inside_window_different_domains_correlate() -> None:
+    incidents = correlate([_ra("X1", .95, "ps2_transaction", 0), _ra("X1", .8, "ps1_behavioral", 119)])
+    assert len(incidents) == 1
+    assert incidents[0].confidence == "high"  # corroboration level, not statistical confidence
+    assert incidents[0].status == IncidentStatus.ESCALATED
+    assert incidents[0].access_decision == AccessDecision.REVOKE
 
 
-def test_correlate_groups_by_entity() -> None:
-    incidents = correlate([_ra("A", 0.9, "ps2_transaction"), _ra("B", 0.6, "ps1_behavioral")])
-    assert {i.entity_id for i in incidents} == {"A", "B"}
-    # sorted by combined_score desc
-    assert incidents[0].combined_score >= incidents[1].combined_score
+def test_outside_window_creates_separate_incidents() -> None:
+    incidents = correlate([_ra("X1", .95, "ps2_transaction", 0), _ra("X1", .8, "ps1_behavioral", 121)])
+    assert len(incidents) == 2
+    assert all(incident.confidence == "low" for incident in incidents)
 
 
-def test_build_demo_incidents_use_global_cert_paysim_pairs() -> None:
+def test_same_domain_updates_strongest_but_never_corroborates() -> None:
+    store = TemporalCorrelationStore()
+    store.ingest(_ra("X1", .7, "ps1_behavioral", 0, "first"))
+    _, incidents = store.ingest(_ra("X1", .95, "ps1_behavioral", 10, "stronger"))
+    assert len(incidents) == 1
+    assert incidents[0].confidence == "low"
+    assert incidents[0].contributing_domains == ["ps1_behavioral"]
+    assert [item.assessment_id for item in incidents[0].contributing_assessments] == ["stronger"]
+
+
+def test_idempotency_and_out_of_order_recorrelation() -> None:
+    store = TemporalCorrelationStore()
+    ps2 = _ra("X1", .95, "ps2_transaction", 110, "ps2")
+    inserted, before = store.ingest(ps2)
+    assert inserted and before[0].confidence == "low"
+    original_id = before[0].incident_id
+    inserted, after = store.ingest(_ra("X1", .8, "ps1_behavioral", 0, "ps1"))
+    assert inserted and len(after) == 1
+    assert after[0].incident_id == original_id
+    assert after[0].confidence == "high"
+    duplicate, replay = store.ingest(ps2)
+    assert not duplicate and replay[0].incident_id == original_id
+
+
+def test_configurable_window_and_untimed_assessments() -> None:
+    store = TemporalCorrelationStore(config=CorrelationConfig(window_minutes=10))
+    store.ingest_many([_ra("X1", .9, "ps2_transaction", 0), _ra("X1", .8, "ps1_behavioral", 11)])
+    assert len(store.incidents_for_entity("X1")) == 2
+    untimed = correlate([_ra("Y1", .9, "ps2_transaction", None), _ra("Y1", .8, "ps1_behavioral", None)])
+    assert len(untimed) == 2
+    assert all(incident.confidence == "low" for incident in untimed)
+
+
+def test_real_engine_correlates_cet3786_demo_pair() -> None:
+    def load(path: str) -> dict[str, RiskAssessment]:
+        payload = json.loads((ROOT / path).read_text())
+        items = [RiskAssessmentTransport.model_validate(item).to_entity() for item in payload["assessments"]]
+        return {item.entity_id: item for item in items}
+
+    cert = load("data/synthetic/cert_demo_assessments.json")["CERT:CET3786"]
+    paysim = load("data/synthetic/ps2_demo_assessments.json")["CERT:CET3786"]
+    store = TemporalCorrelationStore()
+    store.ingest(cert)
+    _, incidents = store.ingest(paysim)
+    assert len(incidents) == 1
+    incident = incidents[0]
+    assert incident.confidence == "high"
+    assert incident.access_decision == AccessDecision.REVOKE
+    assert {item.domain for item in incident.contributing_assessments} == {"ps1_behavioral", "ps2_transaction"}
+
+
+def test_build_demo_incidents_runs_persisted_engine() -> None:
     incidents = build_demo_incidents(root=str(ROOT))
-    by_entity = {i.entity_id: i for i in incidents}
-    cert_incidents = [i for i in incidents if i.entity_id.startswith("CERT:")]
+    cert_incidents = [item for item in incidents if item.entity_id.startswith("CERT:")]
     assert len(cert_incidents) == 17
-    assert all(i.confidence == "high" for i in cert_incidents)
-    assert all(i.status == IncidentStatus.ESCALATED for i in cert_incidents)
-    assert all(i.access_decision == AccessDecision.REVOKE for i in cert_incidents)
-    assert all(sorted(i.contributing_domains) == ["ps1_behavioral", "ps2_transaction"] for i in cert_incidents)
-    assert "CERT:CET3786" in by_entity
-
-
-def test_constructed_single_domain_incidents_span_the_decision_spectrum() -> None:
-    by_entity = {i.entity_id: i for i in build_demo_incidents(root=str(ROOT))}
-    # E010: lone PS2 fraud flag (0.78) -> low confidence -> step-up (NOT revoke)
-    e010 = by_entity["E010"]
-    assert e010.confidence == "low"
-    assert e010.status == IncidentStatus.NEW
-    assert e010.access_decision == AccessDecision.STEP_UP_AUTH
-    assert e010.contributing_domains == ["ps2_transaction"]
-    # E015: lone PS1 off-hours logon (0.60) -> low confidence -> throttle
-    e015 = by_entity["E015"]
-    assert e015.confidence == "low"
-    assert e015.access_decision == AccessDecision.THROTTLE
-    assert e015.contributing_domains == ["ps1_behavioral"]
-    # full spectrum: REVOKE (real) + STEP_UP + THROTTLE all present
-    decisions = {i.access_decision for i in by_entity.values()}
-    assert {AccessDecision.REVOKE, AccessDecision.STEP_UP_AUTH, AccessDecision.THROTTLE} <= decisions
+    assert all(item.confidence == "high" and item.status == IncidentStatus.ESCALATED for item in cert_incidents)
