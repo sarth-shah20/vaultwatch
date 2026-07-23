@@ -1,55 +1,46 @@
-"""Tests for the integrated PS1+PS2 demo scenarios (Step 3, Option 1)."""
+"""Tests for globally timed, model-derived CERT + PaySim demo scenarios."""
 from __future__ import annotations
 
 import json
+from datetime import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 SCENARIOS_PATH = ROOT / "data/synthetic/demo_scenarios.json"
-MAPPING_PATH = ROOT / "data/synthetic/entity_mapping.json"
+BRIDGE_PATH = ROOT / "data/synthetic/cert_paysim_global_demo_crosswalk.json"
 
 
 def _load(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def test_demo_scenarios_parses_and_has_three() -> None:
+def test_demo_scenarios_are_global_clock_model_pairs() -> None:
     payload = _load(SCENARIOS_PATH)
-    assert isinstance(payload, dict)
-    assert isinstance(payload.get("scenarios"), list)
-    assert len(payload["scenarios"]) == 3
+    assert payload["time_basis"] == "synthetic_step_mapping"
+    assert payload["correlation_window_minutes"] == 120
+    assert len(payload["scenarios"]) == 17
 
 
-def test_all_entity_ids_exist_in_entity_mapping() -> None:
-    payload = _load(SCENARIOS_PATH)
-    known_ids = {e["entity"]["entity_id"] for e in _load(MAPPING_PATH)["entities"]}
-    for scenario in payload["scenarios"]:
-        assert scenario["entity_id"] in known_ids
-
-
-def test_ps1_user_and_paysim_account_match_the_mapping() -> None:
-    mapping = {e["entity"]["entity_id"]: e for e in _load(MAPPING_PATH)["entities"]}
+def test_scenario_identities_come_from_explicit_synthetic_bridge() -> None:
+    bridge = _load(BRIDGE_PATH)
+    pairs = {(item["entity_id"], item["cert_user"], item["paysim_nameOrig"]) for item in bridge["pairs"]}
     for scenario in _load(SCENARIOS_PATH)["scenarios"]:
-        record = mapping[scenario["entity_id"]]
-        assert scenario["ps1_user"] == record["source_ids"]["ps1"]["user"]
-        assert scenario["paysim_account"] == record["source_ids"]["paysim"]["nameOrig"]
+        assert (scenario["entity_id"], scenario["cert_user"], scenario["paysim_account"]) in pairs
 
 
-def test_every_scenario_pairs_real_ps1_and_real_paysim() -> None:
+def test_every_scenario_is_real_model_alert_and_real_fraud_inside_global_window() -> None:
     for scenario in _load(SCENARIOS_PATH)["scenarios"]:
-        ps1 = scenario["ps1_event"]
+        cert = scenario["cert_assessment"]
         txn = scenario["paysim_transaction"]
-        assert ps1["source"] == "real_ps1_isolation_forest" and ps1["injected"] is False
-        assert 0.0 <= ps1["normalized_risk"] <= 1.0
-        assert txn["source"] == "real_paysim" and txn["injected"] is False and txn["isFraud"] == 1
-        assert scenario["incident_window"]["curated_alignment"] is True
+        assert scenario["selection"].startswith("model-scored CERT alert")
+        assert cert["risk_score"] >= 0.99
+        assert txn["isFraud"] == 1
+        assert txn["time_basis"] == "synthetic_step_mapping"
+        cert_time = datetime.fromisoformat(cert["event_time"])
+        paysim_time = datetime.fromisoformat(txn["event_time"])
+        assert abs((cert_time - paysim_time).total_seconds()) <= 120 * 60
 
 
-def test_summary_reports_zero_injected() -> None:
+def test_summary_reports_generated_scenario_count() -> None:
     payload = _load(SCENARIOS_PATH)
-    scenarios = payload["scenarios"]
-    summary = payload["summary"]
-    assert summary["scenarios"] == len(scenarios)
-    assert summary["real_ps1_anomalies"] == sum(1 for s in scenarios if not s["ps1_event"]["injected"])
-    assert summary["real_paysim_txns"] == sum(1 for s in scenarios if not s["paysim_transaction"]["injected"])
-    assert summary["injected"] == 0
+    assert payload["summary"]["scenarios"] == len(payload["scenarios"])

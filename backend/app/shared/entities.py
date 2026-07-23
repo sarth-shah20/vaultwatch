@@ -68,6 +68,7 @@ class RiskAssessment:
     schema_version: str = "1.0"
     domain: str = "unknown"
     event_time: datetime | None = None
+    time_basis: str = "unknown"
     window_start: datetime | None = None
     window_end: datetime | None = None
     source: str = "unknown"

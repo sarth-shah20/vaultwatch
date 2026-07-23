@@ -1,118 +1,595 @@
 {
-  "generated_at": "2026-07-15T18:33:31.977593+00:00",
-  "purpose": "Grounded PS1(behavioral)+PS2(transactional) demo scenarios for the Step 6 correlation engine.",
-  "methodology": "Each scenario pairs an entity's REAL PS1 Isolation-Forest anomaly (teammate's DTAA dataset, resolved via the ps1 crosswalk) with their REAL isFraud=1 PaySim transaction. The entity<->DTAA-user crosswalk and the cross-dataset time alignment are deliberate, labeled demo constructs; the anomaly and the transaction are real.",
+  "generated_by": "global CERT/PaySim model correlation candidate builder",
+  "time_basis": "synthetic_step_mapping",
+  "time_mapping": "PaySim step 0 is mapped to 2010-01-01T00:00:00+00:00; each integer step adds one hour. This is a VaultWatch synthetic clock, not an observed banking timestamp.",
+  "correlation_window_minutes": 120,
+  "bridge": "deterministic synthetic cross-dataset bridge; independent of timestamps and model scores",
   "summary": {
-    "scenarios": 3,
-    "real_ps1_anomalies": 3,
-    "real_paysim_txns": 3,
-    "injected": 0
+    "scenarios": 17
   },
   "scenarios": [
     {
-      "scenario_id": "S1",
-      "entity_id": "E028",
-      "role": "finance_analyst",
-      "ps1_user": "RET4173",
-      "paysim_account": "C686187434",
-      "narrative": "E028 (finance_analyst): PS1 flags 'Multiple Failed Login Attempts' (real Isolation-Forest anomaly, risk 0.85) at 2010-04-20 10:07:00, then ~37 min later a CASH_OUT of 6,188,515 on their account (real PaySim isFraud=1) \u2014 one actor, a behavioral red flag and a fraudulent transaction inside a single window.",
-      "incident_window": {
-        "anchor_time": "2010-04-20 10:07:00",
-        "curated_gap_minutes": 37,
-        "paysim_curated_time": "2010-04-20 10:44:00",
-        "curated_alignment": true,
-        "alignment_note": "PS1 anomaly and PaySim transaction are both REAL; the minutes-apart placement and the entity<->DTAA-user crosswalk are deliberate labeled demo constructs (independent datasets, no shared clock or identity)."
-      },
-      "ps1_event": {
-        "source": "real_ps1_isolation_forest",
-        "injected": false,
-        "ps1_user": "RET4173",
-        "activity": "Multiple Failed Login Attempts",
-        "pc": "9496",
-        "timestamp": "2010-04-20 10:07:00",
-        "decision_function_score": -0.0388736836484504,
-        "normalized_risk": 0.8519,
-        "detector_reason": "This log contains unusual features: multiple, failed, attempts, ret4173, 9496"
-      },
-      "paysim_transaction": {
-        "source": "real_paysim",
-        "injected": false,
-        "nameOrig": "C686187434",
-        "step": 13,
-        "type": "CASH_OUT",
-        "amount": 6188514.81,
-        "isFraud": 1
-      }
-    },
-    {
-      "scenario_id": "S2",
-      "entity_id": "E027",
-      "role": "operations_analyst",
-      "ps1_user": "VSC6934",
-      "paysim_account": "C635739031",
-      "narrative": "E027 (operations_analyst): PS1 flags 'Data Exfiltration Attempt' (real Isolation-Forest anomaly, risk 0.96) at 2010-04-15 22:12:00, then ~52 min later a TRANSFER of 1,965,786 on their account (real PaySim isFraud=1) \u2014 one actor, a behavioral red flag and a fraudulent transaction inside a single window.",
-      "incident_window": {
-        "anchor_time": "2010-04-15 22:12:00",
-        "curated_gap_minutes": 52,
-        "paysim_curated_time": "2010-04-15 23:04:00",
-        "curated_alignment": true,
-        "alignment_note": "PS1 anomaly and PaySim transaction are both REAL; the minutes-apart placement and the entity<->DTAA-user crosswalk are deliberate labeled demo constructs (independent datasets, no shared clock or identity)."
-      },
-      "ps1_event": {
-        "source": "real_ps1_isolation_forest",
-        "injected": false,
-        "ps1_user": "VSC6934",
-        "activity": "Data Exfiltration Attempt",
-        "pc": "1726",
-        "timestamp": "2010-04-15 22:12:00",
-        "decision_function_score": -0.0679222028044364,
-        "normalized_risk": 0.9551,
-        "detector_reason": "This log contains unusual features: vsc6934, data, exfiltration, 1726, attempt"
+      "scenario_id": "GLOBAL-01",
+      "entity_id": "CERT:CET3786",
+      "cert_user": "CET3786",
+      "paysim_account": "C1112249638",
+      "selection": "model-scored CERT alert + real PaySim fraud transaction within global 120-minute window",
+      "cert_assessment": {
+        "event_time": "2010-01-18T17:57:32+00:00",
+        "window_start": "2010-01-18T17:00:00+00:00",
+        "window_end": "2010-01-18T18:00:00+00:00",
+        "risk_score": 0.9993551186305962,
+        "top_deviations": [
+          {
+            "feature": "login_hour_surprise_mean",
+            "baseline": "user",
+            "robust_z": 25.0
+          },
+          {
+            "feature": "login_hour_surprise_mean",
+            "baseline": "role",
+            "robust_z": 25.0
+          },
+          {
+            "feature": "email_size_sum",
+            "baseline": "user",
+            "robust_z": 25.0
+          }
+        ]
       },
       "paysim_transaction": {
-        "source": "real_paysim",
-        "injected": false,
-        "nameOrig": "C635739031",
-        "step": 449,
+        "event_time": "2010-01-18T17:00:00+00:00",
+        "time_basis": "synthetic_step_mapping",
+        "step": 425,
         "type": "TRANSFER",
-        "amount": 1965786.11,
+        "amount": 204030.2,
         "isFraud": 1
-      }
+      },
+      "gap_minutes": 57.533
     },
     {
-      "scenario_id": "S3",
-      "entity_id": "E029",
-      "role": "payments_operator",
-      "ps1_user": "DGX1939",
-      "paysim_account": "C812001868",
-      "narrative": "E029 (payments_operator): PS1 flags 'Suspicious Login from Foreign IP' (real Isolation-Forest anomaly, risk 0.94) at 2010-04-13 21:42:00, then ~44 min later a CASH_OUT of 4,445,514 on their account (real PaySim isFraud=1) \u2014 one actor, a behavioral red flag and a fraudulent transaction inside a single window.",
-      "incident_window": {
-        "anchor_time": "2010-04-13 21:42:00",
-        "curated_gap_minutes": 44,
-        "paysim_curated_time": "2010-04-13 22:26:00",
-        "curated_alignment": true,
-        "alignment_note": "PS1 anomaly and PaySim transaction are both REAL; the minutes-apart placement and the entity<->DTAA-user crosswalk are deliberate labeled demo constructs (independent datasets, no shared clock or identity)."
-      },
-      "ps1_event": {
-        "source": "real_ps1_isolation_forest",
-        "injected": false,
-        "ps1_user": "DGX1939",
-        "activity": "Suspicious Login from Foreign IP",
-        "pc": "1312",
-        "timestamp": "2010-04-13 21:42:00",
-        "decision_function_score": -0.06042744935746891,
-        "normalized_risk": 0.9382,
-        "detector_reason": "This log contains unusual features: foreign, suspicious, ip, from, 1312"
+      "scenario_id": "GLOBAL-02",
+      "entity_id": "CERT:LSL0001",
+      "cert_user": "LSL0001",
+      "paysim_account": "C1263272342",
+      "selection": "model-scored CERT alert + real PaySim fraud transaction within global 120-minute window",
+      "cert_assessment": {
+        "event_time": "2010-01-11T09:48:05+00:00",
+        "window_start": "2010-01-11T09:00:00+00:00",
+        "window_end": "2010-01-11T10:00:00+00:00",
+        "risk_score": 0.9991019776661435,
+        "top_deviations": []
       },
       "paysim_transaction": {
-        "source": "real_paysim",
-        "injected": false,
-        "nameOrig": "C812001868",
-        "step": 379,
+        "event_time": "2010-01-11T10:00:00+00:00",
+        "time_basis": "synthetic_step_mapping",
+        "step": 250,
         "type": "CASH_OUT",
-        "amount": 4445514.2,
+        "amount": 213463.32,
         "isFraud": 1
-      }
+      },
+      "gap_minutes": 11.917
+    },
+    {
+      "scenario_id": "GLOBAL-03",
+      "entity_id": "CERT:CFL0156",
+      "cert_user": "CFL0156",
+      "paysim_account": "C1952829902",
+      "selection": "model-scored CERT alert + real PaySim fraud transaction within global 120-minute window",
+      "cert_assessment": {
+        "event_time": "2010-01-27T08:59:43+00:00",
+        "window_start": "2010-01-27T08:00:00+00:00",
+        "window_end": "2010-01-27T09:00:00+00:00",
+        "risk_score": 0.9987739119220714,
+        "top_deviations": [
+          {
+            "feature": "email_size_sum",
+            "baseline": "user",
+            "robust_z": 25.0
+          },
+          {
+            "feature": "email_size_sum",
+            "baseline": "role",
+            "robust_z": 25.0
+          },
+          {
+            "feature": "email_attachment_bytes",
+            "baseline": "user",
+            "robust_z": 25.0
+          }
+        ]
+      },
+      "paysim_transaction": {
+        "event_time": "2010-01-27T07:00:00+00:00",
+        "time_basis": "synthetic_step_mapping",
+        "step": 631,
+        "type": "TRANSFER",
+        "amount": 341.3,
+        "isFraud": 1
+      },
+      "gap_minutes": 119.717
+    },
+    {
+      "scenario_id": "GLOBAL-04",
+      "entity_id": "CERT:DER0400",
+      "cert_user": "DER0400",
+      "paysim_account": "C725405279",
+      "selection": "model-scored CERT alert + real PaySim fraud transaction within global 120-minute window",
+      "cert_assessment": {
+        "event_time": "2010-01-12T17:30:00+00:00",
+        "window_start": "2010-01-12T17:00:00+00:00",
+        "window_end": "2010-01-12T18:00:00+00:00",
+        "risk_score": 0.9978977536539183,
+        "top_deviations": [
+          {
+            "feature": "logon_session_minutes_mean",
+            "baseline": "role",
+            "robust_z": 25.0
+          },
+          {
+            "feature": "email_size_sum",
+            "baseline": "role",
+            "robust_z": 25.0
+          },
+          {
+            "feature": "email_attachment_bytes",
+            "baseline": "role",
+            "robust_z": 25.0
+          }
+        ]
+      },
+      "paysim_transaction": {
+        "event_time": "2010-01-12T17:00:00+00:00",
+        "time_basis": "synthetic_step_mapping",
+        "step": 281,
+        "type": "TRANSFER",
+        "amount": 54235.7,
+        "isFraud": 1
+      },
+      "gap_minutes": 30.0
+    },
+    {
+      "scenario_id": "GLOBAL-05",
+      "entity_id": "CERT:SJT0698",
+      "cert_user": "SJT0698",
+      "paysim_account": "C136426142",
+      "selection": "model-scored CERT alert + real PaySim fraud transaction within global 120-minute window",
+      "cert_assessment": {
+        "event_time": "2010-01-12T10:45:35+00:00",
+        "window_start": "2010-01-12T10:00:00+00:00",
+        "window_end": "2010-01-12T11:00:00+00:00",
+        "risk_score": 0.9974227295691952,
+        "top_deviations": [
+          {
+            "feature": "login_hour_surprise_mean",
+            "baseline": "role",
+            "robust_z": 25.0
+          },
+          {
+            "feature": "email_size_sum",
+            "baseline": "role",
+            "robust_z": 25.0
+          },
+          {
+            "feature": "email_attachment_bytes",
+            "baseline": "role",
+            "robust_z": 25.0
+          }
+        ]
+      },
+      "paysim_transaction": {
+        "event_time": "2010-01-12T09:00:00+00:00",
+        "time_basis": "synthetic_step_mapping",
+        "step": 273,
+        "type": "CASH_OUT",
+        "amount": 159106.12,
+        "isFraud": 1
+      },
+      "gap_minutes": 105.583
+    },
+    {
+      "scenario_id": "GLOBAL-06",
+      "entity_id": "CERT:KNW1321",
+      "cert_user": "KNW1321",
+      "paysim_account": "C832863308",
+      "selection": "model-scored CERT alert + real PaySim fraud transaction within global 120-minute window",
+      "cert_assessment": {
+        "event_time": "2010-01-14T07:54:47+00:00",
+        "window_start": "2010-01-14T07:00:00+00:00",
+        "window_end": "2010-01-14T08:00:00+00:00",
+        "risk_score": 0.9970602395214498,
+        "top_deviations": [
+          {
+            "feature": "email_size_sum",
+            "baseline": "user",
+            "robust_z": 25.0
+          },
+          {
+            "feature": "email_size_sum",
+            "baseline": "role",
+            "robust_z": 25.0
+          },
+          {
+            "feature": "email_attachment_bytes",
+            "baseline": "user",
+            "robust_z": 25.0
+          }
+        ]
+      },
+      "paysim_transaction": {
+        "event_time": "2010-01-14T06:00:00+00:00",
+        "time_basis": "synthetic_step_mapping",
+        "step": 318,
+        "type": "CASH_OUT",
+        "amount": 247455.25,
+        "isFraud": 1
+      },
+      "gap_minutes": 114.783
+    },
+    {
+      "scenario_id": "GLOBAL-07",
+      "entity_id": "CERT:DNS1768",
+      "cert_user": "DNS1768",
+      "paysim_account": "C171722567",
+      "selection": "model-scored CERT alert + real PaySim fraud transaction within global 120-minute window",
+      "cert_assessment": {
+        "event_time": "2010-01-18T04:53:52+00:00",
+        "window_start": "2010-01-18T04:00:00+00:00",
+        "window_end": "2010-01-18T05:00:00+00:00",
+        "risk_score": 0.9970480681750195,
+        "top_deviations": [
+          {
+            "feature": "logon_session_minutes_mean",
+            "baseline": "role",
+            "robust_z": 5.222222222222222
+          },
+          {
+            "feature": "login_hour_surprise_mean",
+            "baseline": "role",
+            "robust_z": 3.7757378102800003
+          },
+          {
+            "feature": "new_logon_pc_count",
+            "baseline": "user",
+            "robust_z": 3.0
+          }
+        ]
+      },
+      "paysim_transaction": {
+        "event_time": "2010-01-18T04:00:00+00:00",
+        "time_basis": "synthetic_step_mapping",
+        "step": 412,
+        "type": "CASH_OUT",
+        "amount": 87438.83,
+        "isFraud": 1
+      },
+      "gap_minutes": 53.867
+    },
+    {
+      "scenario_id": "GLOBAL-08",
+      "entity_id": "CERT:LMB1077",
+      "cert_user": "LMB1077",
+      "paysim_account": "C1231531045",
+      "selection": "model-scored CERT alert + real PaySim fraud transaction within global 120-minute window",
+      "cert_assessment": {
+        "event_time": "2010-01-15T12:49:07+00:00",
+        "window_start": "2010-01-15T12:00:00+00:00",
+        "window_end": "2010-01-15T13:00:00+00:00",
+        "risk_score": 0.9966908533897677,
+        "top_deviations": [
+          {
+            "feature": "login_hour_surprise_mean",
+            "baseline": "user",
+            "robust_z": 25.0
+          },
+          {
+            "feature": "login_hour_surprise_mean",
+            "baseline": "role",
+            "robust_z": 25.0
+          },
+          {
+            "feature": "email_size_sum",
+            "baseline": "user",
+            "robust_z": 25.0
+          }
+        ]
+      },
+      "paysim_transaction": {
+        "event_time": "2010-01-15T14:00:00+00:00",
+        "time_basis": "synthetic_step_mapping",
+        "step": 350,
+        "type": "TRANSFER",
+        "amount": 640648.06,
+        "isFraud": 1
+      },
+      "gap_minutes": 70.883
+    },
+    {
+      "scenario_id": "GLOBAL-09",
+      "entity_id": "CERT:DTL2891",
+      "cert_user": "DTL2891",
+      "paysim_account": "C730675323",
+      "selection": "model-scored CERT alert + real PaySim fraud transaction within global 120-minute window",
+      "cert_assessment": {
+        "event_time": "2010-01-12T17:57:00+00:00",
+        "window_start": "2010-01-12T17:00:00+00:00",
+        "window_end": "2010-01-12T18:00:00+00:00",
+        "risk_score": 0.9953864625774097,
+        "top_deviations": [
+          {
+            "feature": "logon_session_minutes_mean",
+            "baseline": "role",
+            "robust_z": 25.0
+          },
+          {
+            "feature": "device_connect_count",
+            "baseline": "role",
+            "robust_z": 9.0
+          },
+          {
+            "feature": "file_activity_count",
+            "baseline": "role",
+            "robust_z": 3.0
+          }
+        ]
+      },
+      "paysim_transaction": {
+        "event_time": "2010-01-12T18:00:00+00:00",
+        "time_basis": "synthetic_step_mapping",
+        "step": 282,
+        "type": "TRANSFER",
+        "amount": 140523.4,
+        "isFraud": 1
+      },
+      "gap_minutes": 3.0
+    },
+    {
+      "scenario_id": "GLOBAL-10",
+      "entity_id": "CERT:GSC0530",
+      "cert_user": "GSC0530",
+      "paysim_account": "C1418109615",
+      "selection": "model-scored CERT alert + real PaySim fraud transaction within global 120-minute window",
+      "cert_assessment": {
+        "event_time": "2010-01-06T10:59:44+00:00",
+        "window_start": "2010-01-06T10:00:00+00:00",
+        "window_end": "2010-01-06T11:00:00+00:00",
+        "risk_score": 0.9929756523229649,
+        "top_deviations": []
+      },
+      "paysim_transaction": {
+        "event_time": "2010-01-06T09:00:00+00:00",
+        "time_basis": "synthetic_step_mapping",
+        "step": 129,
+        "type": "CASH_OUT",
+        "amount": 139210.23,
+        "isFraud": 1
+      },
+      "gap_minutes": 119.733
+    },
+    {
+      "scenario_id": "GLOBAL-11",
+      "entity_id": "CERT:HIP0148",
+      "cert_user": "HIP0148",
+      "paysim_account": "C1866696919",
+      "selection": "model-scored CERT alert + real PaySim fraud transaction within global 120-minute window",
+      "cert_assessment": {
+        "event_time": "2010-01-05T09:37:35+00:00",
+        "window_start": "2010-01-05T09:00:00+00:00",
+        "window_end": "2010-01-05T10:00:00+00:00",
+        "risk_score": 0.9927407086677832,
+        "top_deviations": []
+      },
+      "paysim_transaction": {
+        "event_time": "2010-01-05T11:00:00+00:00",
+        "time_basis": "synthetic_step_mapping",
+        "step": 107,
+        "type": "TRANSFER",
+        "amount": 570649.33,
+        "isFraud": 1
+      },
+      "gap_minutes": 82.417
+    },
+    {
+      "scenario_id": "GLOBAL-12",
+      "entity_id": "CERT:BPN3051",
+      "cert_user": "BPN3051",
+      "paysim_account": "C568175103",
+      "selection": "model-scored CERT alert + real PaySim fraud transaction within global 120-minute window",
+      "cert_assessment": {
+        "event_time": "2010-01-04T04:56:00+00:00",
+        "window_start": "2010-01-04T04:00:00+00:00",
+        "window_end": "2010-01-04T05:00:00+00:00",
+        "risk_score": 0.991720987029596,
+        "top_deviations": []
+      },
+      "paysim_transaction": {
+        "event_time": "2010-01-04T03:00:00+00:00",
+        "time_basis": "synthetic_step_mapping",
+        "step": 75,
+        "type": "CASH_OUT",
+        "amount": 460436.43,
+        "isFraud": 1
+      },
+      "gap_minutes": 116.0
+    },
+    {
+      "scenario_id": "GLOBAL-13",
+      "entity_id": "CERT:LGR3119",
+      "cert_user": "LGR3119",
+      "paysim_account": "C492478003",
+      "selection": "model-scored CERT alert + real PaySim fraud transaction within global 120-minute window",
+      "cert_assessment": {
+        "event_time": "2010-01-27T08:57:39+00:00",
+        "window_start": "2010-01-27T08:00:00+00:00",
+        "window_end": "2010-01-27T09:00:00+00:00",
+        "risk_score": 0.9910662657413688,
+        "top_deviations": [
+          {
+            "feature": "login_hour_surprise_mean",
+            "baseline": "user",
+            "robust_z": 25.0
+          },
+          {
+            "feature": "login_hour_surprise_mean",
+            "baseline": "role",
+            "robust_z": 25.0
+          },
+          {
+            "feature": "email_size_sum",
+            "baseline": "role",
+            "robust_z": 25.0
+          }
+        ]
+      },
+      "paysim_transaction": {
+        "event_time": "2010-01-27T07:00:00+00:00",
+        "time_basis": "synthetic_step_mapping",
+        "step": 631,
+        "type": "TRANSFER",
+        "amount": 696575.46,
+        "isFraud": 1
+      },
+      "gap_minutes": 117.65
+    },
+    {
+      "scenario_id": "GLOBAL-14",
+      "entity_id": "CERT:TVS0520",
+      "cert_user": "TVS0520",
+      "paysim_account": "C2093534108",
+      "selection": "model-scored CERT alert + real PaySim fraud transaction within global 120-minute window",
+      "cert_assessment": {
+        "event_time": "2010-01-18T17:58:00+00:00",
+        "window_start": "2010-01-18T17:00:00+00:00",
+        "window_end": "2010-01-18T18:00:00+00:00",
+        "risk_score": 0.9908406233254561,
+        "top_deviations": [
+          {
+            "feature": "logon_session_minutes_mean",
+            "baseline": "user",
+            "robust_z": 25.0
+          },
+          {
+            "feature": "logon_session_minutes_mean",
+            "baseline": "role",
+            "robust_z": 25.0
+          },
+          {
+            "feature": "device_session_minutes_mean",
+            "baseline": "role",
+            "robust_z": 10.366666666666667
+          }
+        ]
+      },
+      "paysim_transaction": {
+        "event_time": "2010-01-18T17:00:00+00:00",
+        "time_basis": "synthetic_step_mapping",
+        "step": 425,
+        "type": "TRANSFER",
+        "amount": 462452.87,
+        "isFraud": 1
+      },
+      "gap_minutes": 58.0
+    },
+    {
+      "scenario_id": "GLOBAL-15",
+      "entity_id": "CERT:GJS3352",
+      "cert_user": "GJS3352",
+      "paysim_account": "C1113922193",
+      "selection": "model-scored CERT alert + real PaySim fraud transaction within global 120-minute window",
+      "cert_assessment": {
+        "event_time": "2010-01-11T08:58:49+00:00",
+        "window_start": "2010-01-11T08:00:00+00:00",
+        "window_end": "2010-01-11T09:00:00+00:00",
+        "risk_score": 0.990716743806823,
+        "top_deviations": [
+          {
+            "feature": "login_hour_surprise_mean",
+            "baseline": "role",
+            "robust_z": 23.353749158170366
+          },
+          {
+            "feature": "email_unique_recipient_count",
+            "baseline": "role",
+            "robust_z": 7.0
+          },
+          {
+            "feature": "email_new_sender_count",
+            "baseline": "role",
+            "robust_z": 4.0
+          }
+        ]
+      },
+      "paysim_transaction": {
+        "event_time": "2010-01-11T10:00:00+00:00",
+        "time_basis": "synthetic_step_mapping",
+        "step": 250,
+        "type": "CASH_OUT",
+        "amount": 2374490.77,
+        "isFraud": 1
+      },
+      "gap_minutes": 61.183
+    },
+    {
+      "scenario_id": "GLOBAL-16",
+      "entity_id": "CERT:JAY3851",
+      "cert_user": "JAY3851",
+      "paysim_account": "C1749493036",
+      "selection": "model-scored CERT alert + real PaySim fraud transaction within global 120-minute window",
+      "cert_assessment": {
+        "event_time": "2010-01-27T08:04:27+00:00",
+        "window_start": "2010-01-27T08:00:00+00:00",
+        "window_end": "2010-01-27T09:00:00+00:00",
+        "risk_score": 0.9901960836535606,
+        "top_deviations": [
+          {
+            "feature": "email_size_sum",
+            "baseline": "user",
+            "robust_z": 25.0
+          },
+          {
+            "feature": "email_size_sum",
+            "baseline": "role",
+            "robust_z": 25.0
+          },
+          {
+            "feature": "email_attachment_bytes",
+            "baseline": "user",
+            "robust_z": 25.0
+          }
+        ]
+      },
+      "paysim_transaction": {
+        "event_time": "2010-01-27T09:00:00+00:00",
+        "time_basis": "synthetic_step_mapping",
+        "step": 633,
+        "type": "TRANSFER",
+        "amount": 75480.15,
+        "isFraud": 1
+      },
+      "gap_minutes": 55.55
+    },
+    {
+      "scenario_id": "GLOBAL-17",
+      "entity_id": "CERT:DJA0740",
+      "cert_user": "DJA0740",
+      "paysim_account": "C1060391149",
+      "selection": "model-scored CERT alert + real PaySim fraud transaction within global 120-minute window",
+      "cert_assessment": {
+        "event_time": "2010-01-07T16:18:00+00:00",
+        "window_start": "2010-01-07T16:00:00+00:00",
+        "window_end": "2010-01-07T17:00:00+00:00",
+        "risk_score": 0.990178774345056,
+        "top_deviations": []
+      },
+      "paysim_transaction": {
+        "event_time": "2010-01-07T15:00:00+00:00",
+        "time_basis": "synthetic_step_mapping",
+        "step": 159,
+        "type": "TRANSFER",
+        "amount": 474052.54,
+        "isFraud": 1
+      },
+      "gap_minutes": 78.0
     }
   ]
 }

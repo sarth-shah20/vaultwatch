@@ -1,145 +1,246 @@
-"""Step 3 (integrated) — grounded PS1 + PS2 demo scenarios (the "bridge" layer).
+"""Build globally-timed CERT + PaySim correlation demo artifacts.
 
-Pairs each demo entity's REAL PS1 behavioral anomaly with their REAL isFraud=1
-PaySim transaction, so the Step 6 correlation engine has same-entity signals from
-both domains to join.
-
-PS1 side: the teammate's Isolation Forest flags an anomaly on a DTAA user; we
-resolve that user to our entity_id via the `ps1` crosswalk in entity_mapping.json
-and take their strongest flagged anomaly from ps1_anomaly_results.json.
-PS2 side: the entity's real fraudulent PaySim transaction.
-
-Honesty: both the PS1 anomaly and the PaySim transaction are REAL model/data
-outputs. Two things are deliberate, labeled demo constructs: (1) the entity <->
-DTAA-user crosswalk (no dataset naturally links CERT identities to PaySim
-accounts), and (2) the cross-dataset time alignment (`curated_alignment: true`)
-— PS1 dates are absolute, PaySim uses a relative step, so we place the real
-PaySim fraud a plausible gap after the real PS1 anomaly.
-
-Output: data/synthetic/demo_scenarios.json
-Run: python3 ml/data_pipeline/scenario_builder.py [--root .]
+PaySim has no observed wall-clock timestamp. VaultWatch maps step 0 to
+2010-01-01T00:00:00Z and adds one hour per step. A deterministic, explicitly
+synthetic CERT-user -> PaySim-account bridge is built independently of event
+times; scenarios are only pairs that the model finds inside the 120-minute
+window under that single clock.
 """
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
-from datetime import datetime, timedelta, timezone
+from datetime import timedelta
 from pathlib import Path
+from typing import Any
 
-from backend.app.ps2_correlation.ps1_adapter import normalize_score
+import joblib
+import numpy as np
+import pandas as pd
 
-ANCHORS = [
-    {"entity_id": "E028", "curated_gap_minutes": 37},
-    {"entity_id": "E027", "curated_gap_minutes": 52},
-    {"entity_id": "E029", "curated_gap_minutes": 44},
-]
+from backend.app.api.serialize import to_dict
+from backend.app.ps2_correlation.fraud_detection import FraudScorer
+from backend.app.shared.assessment_schema import stable_assessment_id
+from backend.app.shared.entities import Reason, RiskAssessment
+from backend.app.shared.time_mapping import (
+    PAYSIM_STEP_ZERO_UTC,
+    PAYSIM_TIME_BASIS,
+    PAYSIM_TIME_MAPPING_DESCRIPTION,
+)
+from ml.data_pipeline.paysim_features import REQUIRED_COLUMNS, build_feature_set
+from ml.models.train_cert_behavioral_model import _top_deviations, calibrated_risk
 
-MAPPING_PATH = "data/synthetic/entity_mapping.json"
-PS1_ANOMALIES_PATH = "data/synthetic/ps1_anomaly_results.json"
-PAYSIM_DIR = "data/raw/paysim"
-OUTPUT_PATH = "data/synthetic/demo_scenarios.json"
+CERT_USERS_PATH = Path("data/raw/cert_insider_threat/users.csv")
+PAYSIM_DIR = Path("data/raw/paysim")
+CERT_WINDOW_ROOT = Path("data/processed/ps1/cert_behavioral_windows/email_enhanced")
+CERT_MODEL_PATH = Path("ml/models/cert_behavioral_email_enhanced.joblib")
+BRIDGE_PATH = Path("data/synthetic/cert_paysim_global_demo_crosswalk.json")
+SCENARIOS_PATH = Path("data/synthetic/demo_scenarios.json")
+CERT_ASSESSMENTS_PATH = Path("data/synthetic/cert_demo_assessments.json")
+PS2_ASSESSMENTS_PATH = Path("data/synthetic/ps2_demo_assessments.json")
 
-
-def load_mapping(root: Path) -> dict[str, dict]:
-    payload = json.loads((root / MAPPING_PATH).read_text(encoding="utf-8"))
-    out = {}
-    for record in payload["entities"]:
-        ps1 = record["source_ids"].get("ps1") or {}
-        out[record["entity"]["entity_id"]] = {
-            "role": record["entity"].get("role"),
-            "paysim_account": record["source_ids"]["paysim"]["nameOrig"],
-            "ps1_user": ps1.get("user"),
-        }
-    return out
-
-
-def strongest_ps1_anomaly_by_user(root: Path) -> dict[str, dict]:
-    """Return {ps1_user: strongest (most anomalous) anomaly} from the PS1 output."""
-    payload = json.loads((root / PS1_ANOMALIES_PATH).read_text(encoding="utf-8"))
-    best: dict[str, dict] = {}
-    for anomaly in payload.get("anomalies", []):
-        log = json.loads(anomaly["log"])
-        user = log.get("USER")
-        if user is None:
-            continue
-        rec = {
-            "activity": log["ACTIVITY"],
-            "pc": log["PC"],
-            "timestamp": f"{log['DATE']} {log['HOUR']}:{log['MINUTE']}:{log.get('SECOND', '00')}",
-            "decision_function_score": float(anomaly["score"]),
-            "detector_reason": anomaly["reason"],
-        }
-        if user not in best or rec["decision_function_score"] < best[user]["decision_function_score"]:
-            best[user] = rec
-    return best
+BRIDGE_VERSION = "global-demo-bridge-v1"
+CERT_MODEL_VERSION = "cert-iforest-email-enhanced-v1"
+ALERT_RISK_THRESHOLD = 0.99
+CORRELATION_WINDOW_MINUTES = 120
 
 
-def paysim_fraud_by_account(root: Path, accounts: set[str]) -> dict[str, dict]:
-    import pandas as pd
-
-    csv = next((root / PAYSIM_DIR).glob("*.csv"))
-    df = pd.read_csv(csv, usecols=["step", "type", "amount", "nameOrig", "isFraud"])
-    df = df[(df["nameOrig"].isin(accounts)) & (df["isFraud"] == 1)]
-    out = {}
-    for name, grp in df.groupby("nameOrig"):
-        row = grp.sort_values("amount", ascending=False).iloc[0]
-        out[name] = {"step": int(row["step"]), "type": str(row["type"]), "amount": float(row["amount"])}
-    return out
-
-
-def build_scenario(idx: int, anchor: dict, mapping: dict, ps1_by_user: dict, fraud_by_acct: dict) -> dict:
-    eid = anchor["entity_id"]
-    info = mapping[eid]
-    user, account = info["ps1_user"], info["paysim_account"]
-
-    a = ps1_by_user[user]
-    ps1_event = {
-        "source": "real_ps1_isolation_forest",
-        "injected": False,
-        "ps1_user": user,
-        "activity": a["activity"],
-        "pc": a["pc"],
-        "timestamp": a["timestamp"],
-        "decision_function_score": a["decision_function_score"],
-        "normalized_risk": normalize_score(a["decision_function_score"]),
-        "detector_reason": a["detector_reason"],
-    }
-    f = fraud_by_acct[account]
-    paysim_txn = {"source": "real_paysim", "injected": False, "nameOrig": account,
-                  "step": f["step"], "type": f["type"], "amount": f["amount"], "isFraud": 1}
-
-    anchor_dt = datetime.strptime(ps1_event["timestamp"], "%Y-%m-%d %H:%M:%S")
-    gap = anchor["curated_gap_minutes"]
-    paysim_time = anchor_dt + timedelta(minutes=gap)
-
-    narrative = (
-        f"{eid} ({info['role']}): PS1 flags '{a['activity']}' (real Isolation-Forest anomaly, "
-        f"risk {ps1_event['normalized_risk']:.2f}) at {a['timestamp']}, then ~{gap} min later a "
-        f"{f['type']} of {f['amount']:,.0f} on their account (real PaySim isFraud=1) — one actor, "
-        f"a behavioral red flag and a fraudulent transaction inside a single window."
+def _stable_order(values: list[str]) -> list[str]:
+    return sorted(
+        values,
+        key=lambda value: hashlib.sha256(
+            f"{BRIDGE_VERSION}:{value}".encode("utf-8")
+        ).hexdigest(),
     )
 
-    return {
-        "scenario_id": f"S{idx}",
-        "entity_id": eid,
-        "role": info["role"],
-        "ps1_user": user,
-        "paysim_account": account,
-        "narrative": narrative,
-        "incident_window": {
-            "anchor_time": ps1_event["timestamp"],
-            "curated_gap_minutes": gap,
-            "paysim_curated_time": paysim_time.strftime("%Y-%m-%d %H:%M:%S"),
-            "curated_alignment": True,
-            "alignment_note": (
-                "PS1 anomaly and PaySim transaction are both REAL; the minutes-apart placement and the "
-                "entity<->DTAA-user crosswalk are deliberate labeled demo constructs (independent datasets, "
-                "no shared clock or identity)."
-            ),
-        },
-        "ps1_event": ps1_event,
-        "paysim_transaction": paysim_txn,
+
+def _paysim_csv(root: Path) -> Path:
+    files = sorted((root / PAYSIM_DIR).glob("*.csv"))
+    if not files:
+        raise FileNotFoundError(f"No PaySim CSV under {root / PAYSIM_DIR}")
+    return files[0]
+
+
+def load_earliest_fraud_by_account(root: Path) -> pd.DataFrame:
+    rows: list[pd.DataFrame] = []
+    for chunk in pd.read_csv(
+        _paysim_csv(root),
+        usecols=["step", "type", "amount", "nameOrig", "isFraud"],
+        chunksize=250_000,
+    ):
+        fraud = chunk[chunk["isFraud"] == 1]
+        if not fraud.empty:
+            rows.append(fraud)
+    if not rows:
+        raise ValueError("PaySim source contains no fraud transactions")
+    fraud = pd.concat(rows, ignore_index=True)
+    fraud = fraud.sort_values(["nameOrig", "step", "amount"], kind="mergesort")
+    return fraud.drop_duplicates("nameOrig", keep="first").reset_index(drop=True)
+
+
+def build_global_bridge(root: Path, fraud: pd.DataFrame) -> dict[str, str]:
+    users = pd.read_csv(root / CERT_USERS_PATH, usecols=["user_id"])["user_id"].astype(str).tolist()
+    accounts = fraud["nameOrig"].astype(str).tolist()
+    if len(accounts) < len(users):
+        raise ValueError("Not enough distinct PaySim fraud accounts for deterministic demo bridge")
+    bridge = dict(zip(_stable_order(users), _stable_order(accounts)[: len(users)], strict=True))
+    payload = {
+        "bridge_version": BRIDGE_VERSION,
+        "kind": "synthetic_deterministic_cross_dataset_bridge",
+        "warning": (
+            "CERT users and PaySim accounts have no natural shared identity. This bridge is a deterministic "
+            "demo construct independent of timestamps, scores, labels, and transaction amounts."
+        ),
+        "time_basis": PAYSIM_TIME_BASIS,
+        "time_mapping": PAYSIM_TIME_MAPPING_DESCRIPTION,
+        "pairs": [
+            {"entity_id": f"CERT:{user}", "cert_user": user, "paysim_nameOrig": account}
+            for user, account in sorted(bridge.items())
+        ],
     }
+    (root / BRIDGE_PATH).write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    return bridge
+
+
+def score_cert_alerts(root: Path, bridge: dict[str, str], latest_step: int) -> pd.DataFrame:
+    bundle = joblib.load(root / CERT_MODEL_PATH)
+    columns = list(bundle["selected_feature_columns"])
+    z_columns = [c for c in columns if c.endswith("_robust_z")]
+    last_date = (pd.Timestamp(PAYSIM_STEP_ZERO_UTC) + pd.Timedelta(hours=int(latest_step))).date()
+    frames: list[pd.DataFrame] = []
+    for partition in sorted((root / CERT_WINDOW_ROOT).glob("event_date=*")):
+        event_date = pd.Timestamp(partition.name.removeprefix("event_date=")).date()
+        if event_date > last_date:
+            continue
+        for file in sorted(partition.glob("*.parquet")):
+            frame = pd.read_parquet(
+                file, columns=["user_id", "event_time", "window_start", "window_end", *columns]
+            )
+            frame = frame[frame["user_id"].isin(bridge)]
+            if frame.empty:
+                continue
+            transformed = bundle["scaler"].transform(bundle["selector"].transform(frame[columns]))
+            anomaly = -bundle["model"].score_samples(transformed)
+            risk = calibrated_risk(anomaly, bundle["calibration_knots"], bundle["calibration_percentiles"])
+            alert_mask = risk >= ALERT_RISK_THRESHOLD
+            if not alert_mask.any():
+                continue
+            alerts = frame.loc[alert_mask, ["user_id", "event_time", "window_start", "window_end"]].copy()
+            alerts["risk_score"] = risk[alert_mask]
+            alerts["top_deviations"] = [
+                _top_deviations(row, z_columns)
+                for _, row in frame.loc[alert_mask].iterrows()
+            ]
+            frames.append(alerts)
+    if not frames:
+        return pd.DataFrame()
+    return pd.concat(frames, ignore_index=True)
+
+
+def match_global_pairs(alerts: pd.DataFrame, fraud: pd.DataFrame, bridge: dict[str, str]) -> pd.DataFrame:
+    fraud = fraud.copy()
+    fraud["event_time"] = pd.Timestamp(PAYSIM_STEP_ZERO_UTC) + pd.to_timedelta(fraud["step"], unit="h")
+    alert = alerts.copy()
+    alert["nameOrig"] = alert["user_id"].map(bridge)
+    pairs = alert.merge(fraud, on="nameOrig", suffixes=("_cert", "_paysim"))
+    pairs["gap_minutes"] = (
+        (pairs["event_time_cert"] - pairs["event_time_paysim"]).abs().dt.total_seconds() / 60
+    )
+    pairs = pairs[pairs["gap_minutes"] <= CORRELATION_WINDOW_MINUTES]
+    pairs = pairs.sort_values(["user_id", "gap_minutes", "risk_score"], ascending=[True, True, False])
+    return pairs.drop_duplicates("user_id", keep="first").reset_index(drop=True)
+
+
+def _selected_raw_transactions(root: Path, pairs: pd.DataFrame) -> pd.DataFrame:
+    accounts = set(pairs["nameOrig"].astype(str))
+    frames: list[pd.DataFrame] = []
+    row_offset = 0
+    for chunk in pd.read_csv(_paysim_csv(root), usecols=list(REQUIRED_COLUMNS), chunksize=250_000):
+        chunk["_source_row"] = np.arange(row_offset, row_offset + len(chunk), dtype=np.int64)
+        row_offset += len(chunk)
+        selected = chunk[chunk["nameOrig"].isin(accounts)]
+        if not selected.empty:
+            frames.append(selected)
+    raw = pd.concat(frames, ignore_index=True)
+    selected_keys = pairs[["nameOrig", "step", "amount"]].drop_duplicates()
+    raw = raw.merge(selected_keys, on=["nameOrig", "step", "amount"], how="inner")
+    return raw
+
+
+def build_assessments(root: Path, pairs: pd.DataFrame) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    cert_assessments: list[dict[str, Any]] = []
+    for row in pairs.itertuples(index=False):
+        entity_id = f"CERT:{row.user_id}"
+        reasons = [
+            Reason(
+                signal_name=f"behavioral_deviation:{item['feature']}",
+                domain="ps1_behavioral",
+                weight=round(min(1.0, float(row.risk_score) / max(1, len(row.top_deviations))), 4),
+                raw_value=(
+                    f"{item['baseline']} robust-z={item['robust_z']:.3f} in CERT user-hour window"
+                ),
+            )
+            for item in row.top_deviations
+        ]
+        if not reasons:
+            reasons = [
+                Reason(
+                    signal_name="isolation_forest_behavioral_anomaly",
+                    domain="ps1_behavioral",
+                    weight=round(float(row.risk_score), 4),
+                    raw_value="Isolation Forest exceeded the operational alert threshold; no non-zero robust-z feature was available.",
+                )
+            ]
+        assessment = RiskAssessment(
+            entity_id=entity_id, score=float(row.risk_score), reasons=reasons,
+            assessment_id=stable_assessment_id("cert", entity_id, row.event_time_cert.to_pydatetime(), CERT_MODEL_VERSION),
+            schema_version="1.0", domain="ps1_behavioral",
+            event_time=row.event_time_cert.to_pydatetime(),
+            window_start=row.window_start.to_pydatetime(), window_end=row.window_end.to_pydatetime(),
+            time_basis="cert_simulated_local_utc", source="cert_r4.2", model_version=CERT_MODEL_VERSION,
+        )
+        cert_assessments.append(to_dict(assessment))
+
+    raw = _selected_raw_transactions(root, pairs)
+    entity_map = {str(row.nameOrig): f"CERT:{row.user_id}" for row in pairs.itertuples(index=False)}
+    features = build_feature_set(raw, entity_map=entity_map)
+    scorer = FraudScorer(root=root)
+    ps2_assessments: list[dict[str, Any]] = []
+    for row in pairs.itertuples(index=False):
+        selected = features[(features["nameOrig"] == row.nameOrig) & (features["step"] == row.step) & (features["amount"] == row.amount)]
+        if len(selected) != 1:
+            raise ValueError(f"Expected one selected PaySim transaction for {row.user_id}; got {len(selected)}")
+        assessment = scorer.score_row(selected.iloc[0].to_dict(), entity_id=f"CERT:{row.user_id}")
+        if assessment is None:
+            raise ValueError(f"Selected fraud transaction was not scoreable for {row.user_id}")
+        ps2_assessments.append(to_dict(assessment))
+    return cert_assessments, ps2_assessments
+
+
+def build_scenarios(pairs: pd.DataFrame) -> list[dict[str, Any]]:
+    scenarios: list[dict[str, Any]] = []
+    for index, row in enumerate(
+        pairs.sort_values(["risk_score", "gap_minutes"], ascending=[False, True]).itertuples(index=False), start=1
+    ):
+        scenarios.append({
+            "scenario_id": f"GLOBAL-{index:02d}",
+            "entity_id": f"CERT:{row.user_id}",
+            "cert_user": row.user_id,
+            "paysim_account": row.nameOrig,
+            "selection": "model-scored CERT alert + real PaySim fraud transaction within global 120-minute window",
+            "cert_assessment": {
+                "event_time": row.event_time_cert.isoformat(), "window_start": row.window_start.isoformat(),
+                "window_end": row.window_end.isoformat(), "risk_score": float(row.risk_score),
+                "top_deviations": row.top_deviations,
+            },
+            "paysim_transaction": {
+                "event_time": row.event_time_paysim.isoformat(), "time_basis": PAYSIM_TIME_BASIS,
+                "step": int(row.step), "type": row.type, "amount": float(row.amount), "isFraud": 1,
+            },
+            "gap_minutes": round(float(row.gap_minutes), 3),
+        })
+    return scenarios
 
 
 def main() -> None:
@@ -147,38 +248,25 @@ def main() -> None:
     parser.add_argument("--root", default=".")
     args = parser.parse_args()
     root = Path(args.root).resolve()
-
-    mapping = load_mapping(root)
-    ps1_by_user = strongest_ps1_anomaly_by_user(root)
-    accounts = {mapping[a["entity_id"]]["paysim_account"] for a in ANCHORS}
-    fraud_by_acct = paysim_fraud_by_account(root, accounts)
-
-    scenarios = [build_scenario(i, a, mapping, ps1_by_user, fraud_by_acct)
-                 for i, a in enumerate(ANCHORS, start=1)]
-
-    payload = {
-        "generated_at": datetime.now(timezone.utc).isoformat(),
-        "purpose": "Grounded PS1(behavioral)+PS2(transactional) demo scenarios for the Step 6 correlation engine.",
-        "methodology": (
-            "Each scenario pairs an entity's REAL PS1 Isolation-Forest anomaly (teammate's DTAA dataset, "
-            "resolved via the ps1 crosswalk) with their REAL isFraud=1 PaySim transaction. The entity<->"
-            "DTAA-user crosswalk and the cross-dataset time alignment are deliberate, labeled demo constructs; "
-            "the anomaly and the transaction are real."
-        ),
-        "summary": {
-            "scenarios": len(scenarios),
-            "real_ps1_anomalies": sum(1 for s in scenarios if not s["ps1_event"]["injected"]),
-            "real_paysim_txns": sum(1 for s in scenarios if not s["paysim_transaction"]["injected"]),
-            "injected": 0,
-        },
-        "scenarios": scenarios,
+    fraud = load_earliest_fraud_by_account(root)
+    bridge = build_global_bridge(root, fraud)
+    alerts = score_cert_alerts(root, bridge, int(fraud["step"].max()))
+    pairs = match_global_pairs(alerts, fraud, bridge)
+    cert_assessments, ps2_assessments = build_assessments(root, pairs)
+    scenarios = build_scenarios(pairs)
+    metadata = {
+        "generated_by": "global CERT/PaySim model correlation candidate builder",
+        "time_basis": PAYSIM_TIME_BASIS,
+        "time_mapping": PAYSIM_TIME_MAPPING_DESCRIPTION,
+        "correlation_window_minutes": CORRELATION_WINDOW_MINUTES,
+        "bridge": "deterministic synthetic cross-dataset bridge; independent of timestamps and model scores",
     }
-    (root / OUTPUT_PATH).write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
-    print(f"Wrote {len(scenarios)} scenarios -> {OUTPUT_PATH}")
-    for s in scenarios:
-        p, f = s["ps1_event"], s["paysim_transaction"]
-        print(f"  {s['scenario_id']} {s['entity_id']} | PS1 {p['ps1_user']}:{p['activity']} "
-              f"(risk {p['normalized_risk']:.2f}) | PS2 {f['type']} {f['amount']:,.0f}")
+    (root / CERT_ASSESSMENTS_PATH).write_text(json.dumps({**metadata, "assessments": cert_assessments}, indent=2) + "\n", encoding="utf-8")
+    (root / PS2_ASSESSMENTS_PATH).write_text(json.dumps({**metadata, "assessments": ps2_assessments}, indent=2) + "\n", encoding="utf-8")
+    (root / SCENARIOS_PATH).write_text(json.dumps({**metadata, "summary": {"scenarios": len(scenarios)}, "scenarios": scenarios}, indent=2) + "\n", encoding="utf-8")
+    print(f"Wrote {len(scenarios)} global-clock scenarios")
+    for scenario in scenarios:
+        print(f"  {scenario['scenario_id']} {scenario['entity_id']} gap={scenario['gap_minutes']}m")
 
 
 if __name__ == "__main__":

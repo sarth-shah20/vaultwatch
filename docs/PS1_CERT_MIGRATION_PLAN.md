@@ -309,12 +309,13 @@ Rollout:
 
 - Added backward-compatible, Pydantic-validated `RiskAssessmentTransport` schema.
 - Added explicit `domain`, `assessment_id`, `schema_version`, `event_time`,
-  `window_start`, `window_end`, `source`, and `model_version` fields to
+  `time_basis`, `window_start`, `window_end`, `source`, and `model_version` fields to
   `RiskAssessment`.
 - Legacy PS1/PS2 snapshots still load; compatibility boundary ignores only
   non-contract legacy metadata.
 - PS1 and PS2 producers emit explicit domains, stable replay IDs, and source/model
-  metadata; timestamps propagate when source rows provide them.
+  metadata. PaySim always derives timestamps from one fixed step-to-UTC mapping
+  and marks them `synthetic_step_mapping`.
 - CERT test snapshots now include latest contributing `event_time` plus scored
   `window_start`/`window_end`.
 - Pydantic contract tests cover score bounds, reason-domain consistency, stable

@@ -115,10 +115,7 @@ def build_demo_incidents(root: str = ".") -> list[UnifiedIncident]:
 
     from backend.app.ps2_correlation.ps1_adapter import load_ps1_assessments
 
-    from backend.app.shared.entities import Reason
-
     root = Path(root)
-    ps1 = load_ps1_assessments(root=root)
 
     def _load_assessments(rel_path: str) -> list[RiskAssessment]:
         path = root / rel_path
@@ -131,6 +128,10 @@ def build_demo_incidents(root: str = ".") -> list[UnifiedIncident]:
             for a in payload["assessments"]
         ]
 
+    cert_demo = _load_assessments("data/synthetic/cert_demo_assessments.json")
+    # Prefer globally timed CERT model outputs when present; keep legacy DTAA
+    # adapter as compatibility fallback for repositories without migration artifacts.
+    ps1 = cert_demo or load_ps1_assessments(root=root)
     ps2 = _load_assessments("data/synthetic/ps2_demo_assessments.json")
     # Clearly-labeled CONSTRUCTED single-domain assessments (optional file) so the
     # dashboard shows the full decision spectrum (step-up / throttle) next to the

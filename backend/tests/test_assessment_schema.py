@@ -38,5 +38,6 @@ def test_stable_id_and_event_fields() -> None:
     )
     b = RiskAssessmentTransport.from_entity(a)
     assert b.event_time == event_time
+    assert b.time_basis == "unknown"
     assert b.assessment_id == a.assessment_id
     assert b.assessment_id == stable_assessment_id("cert", "E1", event_time, "cert-v1")

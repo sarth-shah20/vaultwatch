@@ -40,6 +40,7 @@ class RiskAssessmentTransport(BaseModel):
     score: float
     reasons: list[ReasonTransport] = Field(default_factory=list)
     event_time: datetime | None = None
+    time_basis: str = "unknown"
     window_start: datetime | None = None
     window_end: datetime | None = None
     source: str = "unknown"
@@ -72,6 +73,7 @@ class RiskAssessmentTransport(BaseModel):
             "score": assessment.score,
             "reasons": [ReasonTransport.model_validate(r.__dict__) for r in assessment.reasons],
             "event_time": assessment.event_time,
+            "time_basis": assessment.time_basis,
             "window_start": assessment.window_start,
             "window_end": assessment.window_end,
             "source": assessment.source,
@@ -85,7 +87,7 @@ class RiskAssessmentTransport(BaseModel):
             entity_id=self.entity_id, score=self.score,
             reasons=[Reason(**r.model_dump()) for r in self.reasons],
             assessment_id=self.assessment_id, schema_version=self.schema_version,
-            domain=self.domain, event_time=self.event_time,
+            domain=self.domain, event_time=self.event_time, time_basis=self.time_basis,
             window_start=self.window_start, window_end=self.window_end,
             source=self.source, model_version=self.model_version,
             generated_at=self.generated_at,

@@ -59,18 +59,16 @@ def test_correlate_groups_by_entity() -> None:
     assert incidents[0].combined_score >= incidents[1].combined_score
 
 
-def test_build_demo_incidents_are_corroborated_and_differentiated() -> None:
+def test_build_demo_incidents_use_global_cert_paysim_pairs() -> None:
     incidents = build_demo_incidents(root=str(ROOT))
     by_entity = {i.entity_id: i for i in incidents}
-    for eid in ("E027", "E028", "E029"):
-        inc = by_entity[eid]
-        assert inc.confidence == "high"
-        assert inc.status == IncidentStatus.ESCALATED
-        assert inc.access_decision == AccessDecision.REVOKE
-        assert sorted(inc.contributing_domains) == ["ps1_behavioral", "ps2_transaction"]
-    # scores are graduated, not all identical (no saturation)
-    scores = {round(by_entity[e].combined_score, 4) for e in ("E027", "E028", "E029")}
-    assert len(scores) == 3
+    cert_incidents = [i for i in incidents if i.entity_id.startswith("CERT:")]
+    assert len(cert_incidents) == 17
+    assert all(i.confidence == "high" for i in cert_incidents)
+    assert all(i.status == IncidentStatus.ESCALATED for i in cert_incidents)
+    assert all(i.access_decision == AccessDecision.REVOKE for i in cert_incidents)
+    assert all(sorted(i.contributing_domains) == ["ps1_behavioral", "ps2_transaction"] for i in cert_incidents)
+    assert "CERT:CET3786" in by_entity
 
 
 def test_constructed_single_domain_incidents_span_the_decision_spectrum() -> None:

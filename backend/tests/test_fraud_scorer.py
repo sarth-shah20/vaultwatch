@@ -112,3 +112,13 @@ def test_score_frame_skips_ineligible_rows(scorer_root) -> None:
 
     assert len(assessments) == 2
     assert {a.entity_id for a in assessments} == {"E027", "E011"}
+
+def test_score_row_derives_global_synthetic_event_time_from_step(scorer_root) -> None:
+    scorer = FraudScorer(root=scorer_root)
+    assessment = scorer.score_row(_row(step=13), entity_id="E027")
+    assert assessment is not None
+    assert assessment.event_time is not None
+    assert assessment.event_time.isoformat() == "2010-01-01T13:00:00+00:00"
+    assert assessment.time_basis == "synthetic_step_mapping"
+    assert assessment.domain == DOMAIN
+    assert assessment.source == "paysim"

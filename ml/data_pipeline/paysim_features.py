@@ -10,6 +10,8 @@ from typing import Any, Iterable
 import numpy as np
 import pandas as pd
 
+from backend.app.shared.time_mapping import PAYSIM_STEP_ZERO_UTC, PAYSIM_TIME_BASIS
+
 REQUIRED_COLUMNS: tuple[str, ...] = (
     "step",
     "type",
@@ -203,6 +205,10 @@ def add_transaction_features(df: pd.DataFrame) -> pd.DataFrame:
     features["is_merchant_dest"] = features["nameDest"].astype("string").str.startswith("M").fillna(False)
     features["hour_of_day"] = (features["step"] % 24).astype("int64")
     features["day_index"] = (features["step"] // 24).astype("int64")
+    features["event_time"] = pd.Timestamp(PAYSIM_STEP_ZERO_UTC) + pd.to_timedelta(
+        features["step"], unit="h"
+    )
+    features["time_basis"] = PAYSIM_TIME_BASIS
     return features
 
 

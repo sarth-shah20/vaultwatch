@@ -114,7 +114,7 @@ def load_ps1_assessments(
                 entity_id=entity_id, score=risk, reasons=reasons,
                 assessment_id=stable_assessment_id("dtaa", entity_id, event_time, MODEL_VERSION),
                 schema_version="1.0", domain=DOMAIN, event_time=event_time,
-                source="dtaa_legacy", model_version=MODEL_VERSION,
+                time_basis="source_dataset_utc", source="dtaa_legacy", model_version=MODEL_VERSION,
             )
         )
 

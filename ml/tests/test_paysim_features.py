@@ -48,6 +48,8 @@ def test_transaction_features_and_type_encoding() -> None:
     assert features.loc[5, "hour_of_day"] == 4
     assert features.loc[5, "day_index"] == 1
     assert features.loc[2, "type_CASH_OUT"] == 1
+    assert features.loc[0, "event_time"].isoformat() == "2010-01-01T01:00:00+00:00"
+    assert features.loc[0, "time_basis"] == "synthetic_step_mapping"
     assert features.loc[2, "type_PAYMENT"] == 0
     assert "nameOrig" in features.columns
     assert "nameDest" in features.columns

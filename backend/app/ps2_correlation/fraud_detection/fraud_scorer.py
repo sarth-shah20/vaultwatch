@@ -26,6 +26,7 @@ import pandas as pd
 import xgboost as xgb
 
 from backend.app.shared.assessment_schema import stable_assessment_id
+from backend.app.shared.time_mapping import PAYSIM_TIME_BASIS, paysim_step_to_event_time
 from backend.app.shared.entities import Reason, RiskAssessment
 
 DOMAIN = "ps2_transaction"
@@ -78,17 +79,22 @@ def _as_float(value) -> float:
         return 0.0
 
 
-def _coerce_event_time(row: Mapping) -> datetime | None:
-    """Use source timestamp when present; PaySim step alone is not wall-clock time."""
+def _event_time_and_basis(row: Mapping) -> tuple[datetime | None, str]:
+    """Prefer the pipeline timestamp; otherwise derive from the single PaySim clock."""
     value = row.get("event_time", row.get("timestamp")) if hasattr(row, "get") else None
-    if value is None:
-        return None
-    if isinstance(value, datetime):
-        return value
-    try:
-        return datetime.fromisoformat(str(value).replace("Z", "+00:00"))
-    except ValueError:
-        return None
+    if value is not None:
+        if isinstance(value, datetime):
+            return value, str(row.get("time_basis", PAYSIM_TIME_BASIS))
+        try:
+            return datetime.fromisoformat(str(value).replace("Z", "+00:00")), str(
+                row.get("time_basis", PAYSIM_TIME_BASIS)
+            )
+        except ValueError:
+            pass
+    step = row.get("step") if hasattr(row, "get") else None
+    if step is not None and not pd.isna(step):
+        return paysim_step_to_event_time(int(step)), PAYSIM_TIME_BASIS
+    return None, "unknown"
 
 
 class FraudScorer:
@@ -169,12 +175,12 @@ class FraudScorer:
         reasons = self._reasons(frame.iloc[0], contributions, top_k)
 
         resolved_id = entity_id or str(row.get("entity_id") if hasattr(row, "get") else None) or "unknown"
-        event_time = _coerce_event_time(row)
+        event_time, time_basis = _event_time_and_basis(row)
         return RiskAssessment(
             entity_id=resolved_id, score=proba, reasons=reasons,
             assessment_id=stable_assessment_id("paysim", resolved_id, event_time, MODEL_VERSION),
             schema_version="1.0", domain=DOMAIN, event_time=event_time,
-            source="paysim", model_version=MODEL_VERSION,
+            time_basis=time_basis, source="paysim", model_version=MODEL_VERSION,
         )
 
     def score_frame(self, feature_frame: pd.DataFrame, top_k: int = 3) -> list[RiskAssessment]:

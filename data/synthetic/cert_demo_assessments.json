@@ -1,0 +1,527 @@
+{
+  "generated_by": "global CERT/PaySim model correlation candidate builder",
+  "time_basis": "synthetic_step_mapping",
+  "time_mapping": "PaySim step 0 is mapped to 2010-01-01T00:00:00+00:00; each integer step adds one hour. This is a VaultWatch synthetic clock, not an observed banking timestamp.",
+  "correlation_window_minutes": 120,
+  "bridge": "deterministic synthetic cross-dataset bridge; independent of timestamps and model scores",
+  "assessments": [
+    {
+      "entity_id": "CERT:BPN3051",
+      "score": 0.991720987029596,
+      "reasons": [
+        {
+          "signal_name": "isolation_forest_behavioral_anomaly",
+          "domain": "ps1_behavioral",
+          "weight": 0.9917,
+          "raw_value": "Isolation Forest exceeded the operational alert threshold; no non-zero robust-z feature was available."
+        }
+      ],
+      "assessment_id": "ef1a75e7-738a-5f8a-92d8-fc84756f974b",
+      "schema_version": "1.0",
+      "domain": "ps1_behavioral",
+      "event_time": "2010-01-04T04:56:00+00:00",
+      "time_basis": "cert_simulated_local_utc",
+      "window_start": "2010-01-04T04:00:00+00:00",
+      "window_end": "2010-01-04T05:00:00+00:00",
+      "source": "cert_r4.2",
+      "model_version": "cert-iforest-email-enhanced-v1",
+      "generated_at": "2026-07-23T09:02:51.132184"
+    },
+    {
+      "entity_id": "CERT:CET3786",
+      "score": 0.9993551186305962,
+      "reasons": [
+        {
+          "signal_name": "behavioral_deviation:login_hour_surprise_mean",
+          "domain": "ps1_behavioral",
+          "weight": 0.3331,
+          "raw_value": "user robust-z=25.000 in CERT user-hour window"
+        },
+        {
+          "signal_name": "behavioral_deviation:login_hour_surprise_mean",
+          "domain": "ps1_behavioral",
+          "weight": 0.3331,
+          "raw_value": "role robust-z=25.000 in CERT user-hour window"
+        },
+        {
+          "signal_name": "behavioral_deviation:email_size_sum",
+          "domain": "ps1_behavioral",
+          "weight": 0.3331,
+          "raw_value": "user robust-z=25.000 in CERT user-hour window"
+        }
+      ],
+      "assessment_id": "3dcc53ae-b3c3-5d03-ad81-fc7083d8f9ef",
+      "schema_version": "1.0",
+      "domain": "ps1_behavioral",
+      "event_time": "2010-01-18T17:57:32+00:00",
+      "time_basis": "cert_simulated_local_utc",
+      "window_start": "2010-01-18T17:00:00+00:00",
+      "window_end": "2010-01-18T18:00:00+00:00",
+      "source": "cert_r4.2",
+      "model_version": "cert-iforest-email-enhanced-v1",
+      "generated_at": "2026-07-23T09:02:51.132480"
+    },
+    {
+      "entity_id": "CERT:CFL0156",
+      "score": 0.9987739119220714,
+      "reasons": [
+        {
+          "signal_name": "behavioral_deviation:email_size_sum",
+          "domain": "ps1_behavioral",
+          "weight": 0.3329,
+          "raw_value": "user robust-z=25.000 in CERT user-hour window"
+        },
+        {
+          "signal_name": "behavioral_deviation:email_size_sum",
+          "domain": "ps1_behavioral",
+          "weight": 0.3329,
+          "raw_value": "role robust-z=25.000 in CERT user-hour window"
+        },
+        {
+          "signal_name": "behavioral_deviation:email_attachment_bytes",
+          "domain": "ps1_behavioral",
+          "weight": 0.3329,
+          "raw_value": "user robust-z=25.000 in CERT user-hour window"
+        }
+      ],
+      "assessment_id": "f5322f42-dfd3-5404-9669-9e3e8dd91fe8",
+      "schema_version": "1.0",
+      "domain": "ps1_behavioral",
+      "event_time": "2010-01-27T08:59:43+00:00",
+      "time_basis": "cert_simulated_local_utc",
+      "window_start": "2010-01-27T08:00:00+00:00",
+      "window_end": "2010-01-27T09:00:00+00:00",
+      "source": "cert_r4.2",
+      "model_version": "cert-iforest-email-enhanced-v1",
+      "generated_at": "2026-07-23T09:02:51.132663"
+    },
+    {
+      "entity_id": "CERT:DER0400",
+      "score": 0.9978977536539183,
+      "reasons": [
+        {
+          "signal_name": "behavioral_deviation:logon_session_minutes_mean",
+          "domain": "ps1_behavioral",
+          "weight": 0.3326,
+          "raw_value": "role robust-z=25.000 in CERT user-hour window"
+        },
+        {
+          "signal_name": "behavioral_deviation:email_size_sum",
+          "domain": "ps1_behavioral",
+          "weight": 0.3326,
+          "raw_value": "role robust-z=25.000 in CERT user-hour window"
+        },
+        {
+          "signal_name": "behavioral_deviation:email_attachment_bytes",
+          "domain": "ps1_behavioral",
+          "weight": 0.3326,
+          "raw_value": "role robust-z=25.000 in CERT user-hour window"
+        }
+      ],
+      "assessment_id": "a7823da1-ce64-5193-96f5-9349fe9424a3",
+      "schema_version": "1.0",
+      "domain": "ps1_behavioral",
+      "event_time": "2010-01-12T17:30:00+00:00",
+      "time_basis": "cert_simulated_local_utc",
+      "window_start": "2010-01-12T17:00:00+00:00",
+      "window_end": "2010-01-12T18:00:00+00:00",
+      "source": "cert_r4.2",
+      "model_version": "cert-iforest-email-enhanced-v1",
+      "generated_at": "2026-07-23T09:02:51.132823"
+    },
+    {
+      "entity_id": "CERT:DJA0740",
+      "score": 0.990178774345056,
+      "reasons": [
+        {
+          "signal_name": "isolation_forest_behavioral_anomaly",
+          "domain": "ps1_behavioral",
+          "weight": 0.9902,
+          "raw_value": "Isolation Forest exceeded the operational alert threshold; no non-zero robust-z feature was available."
+        }
+      ],
+      "assessment_id": "d215bb66-49a2-503a-9b8f-7f725e6c1cdd",
+      "schema_version": "1.0",
+      "domain": "ps1_behavioral",
+      "event_time": "2010-01-07T16:18:00+00:00",
+      "time_basis": "cert_simulated_local_utc",
+      "window_start": "2010-01-07T16:00:00+00:00",
+      "window_end": "2010-01-07T17:00:00+00:00",
+      "source": "cert_r4.2",
+      "model_version": "cert-iforest-email-enhanced-v1",
+      "generated_at": "2026-07-23T09:02:51.132968"
+    },
+    {
+      "entity_id": "CERT:DNS1768",
+      "score": 0.9970480681750195,
+      "reasons": [
+        {
+          "signal_name": "behavioral_deviation:logon_session_minutes_mean",
+          "domain": "ps1_behavioral",
+          "weight": 0.3323,
+          "raw_value": "role robust-z=5.222 in CERT user-hour window"
+        },
+        {
+          "signal_name": "behavioral_deviation:login_hour_surprise_mean",
+          "domain": "ps1_behavioral",
+          "weight": 0.3323,
+          "raw_value": "role robust-z=3.776 in CERT user-hour window"
+        },
+        {
+          "signal_name": "behavioral_deviation:new_logon_pc_count",
+          "domain": "ps1_behavioral",
+          "weight": 0.3323,
+          "raw_value": "user robust-z=3.000 in CERT user-hour window"
+        }
+      ],
+      "assessment_id": "02161da6-db62-529d-b877-9f343b5adfad",
+      "schema_version": "1.0",
+      "domain": "ps1_behavioral",
+      "event_time": "2010-01-18T04:53:52+00:00",
+      "time_basis": "cert_simulated_local_utc",
+      "window_start": "2010-01-18T04:00:00+00:00",
+      "window_end": "2010-01-18T05:00:00+00:00",
+      "source": "cert_r4.2",
+      "model_version": "cert-iforest-email-enhanced-v1",
+      "generated_at": "2026-07-23T09:02:51.133113"
+    },
+    {
+      "entity_id": "CERT:DTL2891",
+      "score": 0.9953864625774097,
+      "reasons": [
+        {
+          "signal_name": "behavioral_deviation:logon_session_minutes_mean",
+          "domain": "ps1_behavioral",
+          "weight": 0.3318,
+          "raw_value": "role robust-z=25.000 in CERT user-hour window"
+        },
+        {
+          "signal_name": "behavioral_deviation:device_connect_count",
+          "domain": "ps1_behavioral",
+          "weight": 0.3318,
+          "raw_value": "role robust-z=9.000 in CERT user-hour window"
+        },
+        {
+          "signal_name": "behavioral_deviation:file_activity_count",
+          "domain": "ps1_behavioral",
+          "weight": 0.3318,
+          "raw_value": "role robust-z=3.000 in CERT user-hour window"
+        }
+      ],
+      "assessment_id": "625e9fda-fe7b-50ee-9184-a635777e68a8",
+      "schema_version": "1.0",
+      "domain": "ps1_behavioral",
+      "event_time": "2010-01-12T17:57:00+00:00",
+      "time_basis": "cert_simulated_local_utc",
+      "window_start": "2010-01-12T17:00:00+00:00",
+      "window_end": "2010-01-12T18:00:00+00:00",
+      "source": "cert_r4.2",
+      "model_version": "cert-iforest-email-enhanced-v1",
+      "generated_at": "2026-07-23T09:02:51.133435"
+    },
+    {
+      "entity_id": "CERT:GJS3352",
+      "score": 0.990716743806823,
+      "reasons": [
+        {
+          "signal_name": "behavioral_deviation:login_hour_surprise_mean",
+          "domain": "ps1_behavioral",
+          "weight": 0.3302,
+          "raw_value": "role robust-z=23.354 in CERT user-hour window"
+        },
+        {
+          "signal_name": "behavioral_deviation:email_unique_recipient_count",
+          "domain": "ps1_behavioral",
+          "weight": 0.3302,
+          "raw_value": "role robust-z=7.000 in CERT user-hour window"
+        },
+        {
+          "signal_name": "behavioral_deviation:email_new_sender_count",
+          "domain": "ps1_behavioral",
+          "weight": 0.3302,
+          "raw_value": "role robust-z=4.000 in CERT user-hour window"
+        }
+      ],
+      "assessment_id": "7ca0993e-7e5e-5c42-9aa1-2d21d9b7a7c2",
+      "schema_version": "1.0",
+      "domain": "ps1_behavioral",
+      "event_time": "2010-01-11T08:58:49+00:00",
+      "time_basis": "cert_simulated_local_utc",
+      "window_start": "2010-01-11T08:00:00+00:00",
+      "window_end": "2010-01-11T09:00:00+00:00",
+      "source": "cert_r4.2",
+      "model_version": "cert-iforest-email-enhanced-v1",
+      "generated_at": "2026-07-23T09:02:51.133601"
+    },
+    {
+      "entity_id": "CERT:GSC0530",
+      "score": 0.9929756523229649,
+      "reasons": [
+        {
+          "signal_name": "isolation_forest_behavioral_anomaly",
+          "domain": "ps1_behavioral",
+          "weight": 0.993,
+          "raw_value": "Isolation Forest exceeded the operational alert threshold; no non-zero robust-z feature was available."
+        }
+      ],
+      "assessment_id": "ff724428-aa7b-5387-a12a-537e315ba42d",
+      "schema_version": "1.0",
+      "domain": "ps1_behavioral",
+      "event_time": "2010-01-06T10:59:44+00:00",
+      "time_basis": "cert_simulated_local_utc",
+      "window_start": "2010-01-06T10:00:00+00:00",
+      "window_end": "2010-01-06T11:00:00+00:00",
+      "source": "cert_r4.2",
+      "model_version": "cert-iforest-email-enhanced-v1",
+      "generated_at": "2026-07-23T09:02:51.133733"
+    },
+    {
+      "entity_id": "CERT:HIP0148",
+      "score": 0.9927407086677832,
+      "reasons": [
+        {
+          "signal_name": "isolation_forest_behavioral_anomaly",
+          "domain": "ps1_behavioral",
+          "weight": 0.9927,
+          "raw_value": "Isolation Forest exceeded the operational alert threshold; no non-zero robust-z feature was available."
+        }
+      ],
+      "assessment_id": "a425bc42-0ab7-59b1-a05e-216c4171e43a",
+      "schema_version": "1.0",
+      "domain": "ps1_behavioral",
+      "event_time": "2010-01-05T09:37:35+00:00",
+      "time_basis": "cert_simulated_local_utc",
+      "window_start": "2010-01-05T09:00:00+00:00",
+      "window_end": "2010-01-05T10:00:00+00:00",
+      "source": "cert_r4.2",
+      "model_version": "cert-iforest-email-enhanced-v1",
+      "generated_at": "2026-07-23T09:02:51.133856"
+    },
+    {
+      "entity_id": "CERT:JAY3851",
+      "score": 0.9901960836535606,
+      "reasons": [
+        {
+          "signal_name": "behavioral_deviation:email_size_sum",
+          "domain": "ps1_behavioral",
+          "weight": 0.3301,
+          "raw_value": "user robust-z=25.000 in CERT user-hour window"
+        },
+        {
+          "signal_name": "behavioral_deviation:email_size_sum",
+          "domain": "ps1_behavioral",
+          "weight": 0.3301,
+          "raw_value": "role robust-z=25.000 in CERT user-hour window"
+        },
+        {
+          "signal_name": "behavioral_deviation:email_attachment_bytes",
+          "domain": "ps1_behavioral",
+          "weight": 0.3301,
+          "raw_value": "user robust-z=25.000 in CERT user-hour window"
+        }
+      ],
+      "assessment_id": "2b2f428e-1cc3-52b9-b26c-1326d6f6bd25",
+      "schema_version": "1.0",
+      "domain": "ps1_behavioral",
+      "event_time": "2010-01-27T08:04:27+00:00",
+      "time_basis": "cert_simulated_local_utc",
+      "window_start": "2010-01-27T08:00:00+00:00",
+      "window_end": "2010-01-27T09:00:00+00:00",
+      "source": "cert_r4.2",
+      "model_version": "cert-iforest-email-enhanced-v1",
+      "generated_at": "2026-07-23T09:02:51.133977"
+    },
+    {
+      "entity_id": "CERT:KNW1321",
+      "score": 0.9970602395214498,
+      "reasons": [
+        {
+          "signal_name": "behavioral_deviation:email_size_sum",
+          "domain": "ps1_behavioral",
+          "weight": 0.3324,
+          "raw_value": "user robust-z=25.000 in CERT user-hour window"
+        },
+        {
+          "signal_name": "behavioral_deviation:email_size_sum",
+          "domain": "ps1_behavioral",
+          "weight": 0.3324,
+          "raw_value": "role robust-z=25.000 in CERT user-hour window"
+        },
+        {
+          "signal_name": "behavioral_deviation:email_attachment_bytes",
+          "domain": "ps1_behavioral",
+          "weight": 0.3324,
+          "raw_value": "user robust-z=25.000 in CERT user-hour window"
+        }
+      ],
+      "assessment_id": "695a5e96-2b7b-55dc-9eff-4b662b1ddb4b",
+      "schema_version": "1.0",
+      "domain": "ps1_behavioral",
+      "event_time": "2010-01-14T07:54:47+00:00",
+      "time_basis": "cert_simulated_local_utc",
+      "window_start": "2010-01-14T07:00:00+00:00",
+      "window_end": "2010-01-14T08:00:00+00:00",
+      "source": "cert_r4.2",
+      "model_version": "cert-iforest-email-enhanced-v1",
+      "generated_at": "2026-07-23T09:02:51.134110"
+    },
+    {
+      "entity_id": "CERT:LGR3119",
+      "score": 0.9910662657413688,
+      "reasons": [
+        {
+          "signal_name": "behavioral_deviation:login_hour_surprise_mean",
+          "domain": "ps1_behavioral",
+          "weight": 0.3304,
+          "raw_value": "user robust-z=25.000 in CERT user-hour window"
+        },
+        {
+          "signal_name": "behavioral_deviation:login_hour_surprise_mean",
+          "domain": "ps1_behavioral",
+          "weight": 0.3304,
+          "raw_value": "role robust-z=25.000 in CERT user-hour window"
+        },
+        {
+          "signal_name": "behavioral_deviation:email_size_sum",
+          "domain": "ps1_behavioral",
+          "weight": 0.3304,
+          "raw_value": "role robust-z=25.000 in CERT user-hour window"
+        }
+      ],
+      "assessment_id": "6a6763cc-fa6f-5c1a-8377-a74758ee9a2d",
+      "schema_version": "1.0",
+      "domain": "ps1_behavioral",
+      "event_time": "2010-01-27T08:57:39+00:00",
+      "time_basis": "cert_simulated_local_utc",
+      "window_start": "2010-01-27T08:00:00+00:00",
+      "window_end": "2010-01-27T09:00:00+00:00",
+      "source": "cert_r4.2",
+      "model_version": "cert-iforest-email-enhanced-v1",
+      "generated_at": "2026-07-23T09:02:51.134240"
+    },
+    {
+      "entity_id": "CERT:LMB1077",
+      "score": 0.9966908533897677,
+      "reasons": [
+        {
+          "signal_name": "behavioral_deviation:login_hour_surprise_mean",
+          "domain": "ps1_behavioral",
+          "weight": 0.3322,
+          "raw_value": "user robust-z=25.000 in CERT user-hour window"
+        },
+        {
+          "signal_name": "behavioral_deviation:login_hour_surprise_mean",
+          "domain": "ps1_behavioral",
+          "weight": 0.3322,
+          "raw_value": "role robust-z=25.000 in CERT user-hour window"
+        },
+        {
+          "signal_name": "behavioral_deviation:email_size_sum",
+          "domain": "ps1_behavioral",
+          "weight": 0.3322,
+          "raw_value": "user robust-z=25.000 in CERT user-hour window"
+        }
+      ],
+      "assessment_id": "42650f2e-3778-5e94-ad32-531093923df5",
+      "schema_version": "1.0",
+      "domain": "ps1_behavioral",
+      "event_time": "2010-01-15T12:49:07+00:00",
+      "time_basis": "cert_simulated_local_utc",
+      "window_start": "2010-01-15T12:00:00+00:00",
+      "window_end": "2010-01-15T13:00:00+00:00",
+      "source": "cert_r4.2",
+      "model_version": "cert-iforest-email-enhanced-v1",
+      "generated_at": "2026-07-23T09:02:51.134366"
+    },
+    {
+      "entity_id": "CERT:LSL0001",
+      "score": 0.9991019776661435,
+      "reasons": [
+        {
+          "signal_name": "isolation_forest_behavioral_anomaly",
+          "domain": "ps1_behavioral",
+          "weight": 0.9991,
+          "raw_value": "Isolation Forest exceeded the operational alert threshold; no non-zero robust-z feature was available."
+        }
+      ],
+      "assessment_id": "a8b83b75-58ab-5c27-9ce9-a47b326ab3ad",
+      "schema_version": "1.0",
+      "domain": "ps1_behavioral",
+      "event_time": "2010-01-11T09:48:05+00:00",
+      "time_basis": "cert_simulated_local_utc",
+      "window_start": "2010-01-11T09:00:00+00:00",
+      "window_end": "2010-01-11T10:00:00+00:00",
+      "source": "cert_r4.2",
+      "model_version": "cert-iforest-email-enhanced-v1",
+      "generated_at": "2026-07-23T09:02:51.134499"
+    },
+    {
+      "entity_id": "CERT:SJT0698",
+      "score": 0.9974227295691952,
+      "reasons": [
+        {
+          "signal_name": "behavioral_deviation:login_hour_surprise_mean",
+          "domain": "ps1_behavioral",
+          "weight": 0.3325,
+          "raw_value": "role robust-z=25.000 in CERT user-hour window"
+        },
+        {
+          "signal_name": "behavioral_deviation:email_size_sum",
+          "domain": "ps1_behavioral",
+          "weight": 0.3325,
+          "raw_value": "role robust-z=25.000 in CERT user-hour window"
+        },
+        {
+          "signal_name": "behavioral_deviation:email_attachment_bytes",
+          "domain": "ps1_behavioral",
+          "weight": 0.3325,
+          "raw_value": "role robust-z=25.000 in CERT user-hour window"
+        }
+      ],
+      "assessment_id": "48e779a7-bd19-5928-8381-a5b486a03ae9",
+      "schema_version": "1.0",
+      "domain": "ps1_behavioral",
+      "event_time": "2010-01-12T10:45:35+00:00",
+      "time_basis": "cert_simulated_local_utc",
+      "window_start": "2010-01-12T10:00:00+00:00",
+      "window_end": "2010-01-12T11:00:00+00:00",
+      "source": "cert_r4.2",
+      "model_version": "cert-iforest-email-enhanced-v1",
+      "generated_at": "2026-07-23T09:02:51.134613"
+    },
+    {
+      "entity_id": "CERT:TVS0520",
+      "score": 0.9908406233254561,
+      "reasons": [
+        {
+          "signal_name": "behavioral_deviation:logon_session_minutes_mean",
+          "domain": "ps1_behavioral",
+          "weight": 0.3303,
+          "raw_value": "user robust-z=25.000 in CERT user-hour window"
+        },
+        {
+          "signal_name": "behavioral_deviation:logon_session_minutes_mean",
+          "domain": "ps1_behavioral",
+          "weight": 0.3303,
+          "raw_value": "role robust-z=25.000 in CERT user-hour window"
+        },
+        {
+          "signal_name": "behavioral_deviation:device_session_minutes_mean",
+          "domain": "ps1_behavioral",
+          "weight": 0.3303,
+          "raw_value": "role robust-z=10.367 in CERT user-hour window"
+        }
+      ],
+      "assessment_id": "8b9b3e38-36fd-505c-a1ae-91f611e1be80",
+      "schema_version": "1.0",
+      "domain": "ps1_behavioral",
+      "event_time": "2010-01-18T17:58:00+00:00",
+      "time_basis": "cert_simulated_local_utc",
+      "window_start": "2010-01-18T17:00:00+00:00",
+      "window_end": "2010-01-18T18:00:00+00:00",
+      "source": "cert_r4.2",
+      "model_version": "cert-iforest-email-enhanced-v1",
+      "generated_at": "2026-07-23T09:02:51.134744"
+    }
+  ]
+}
