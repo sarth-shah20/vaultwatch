@@ -60,7 +60,12 @@ class KafkaMessage(Protocol):
 
 
 class KafkaAssessmentConsumer:
-    """At-least-once consumer. Commit happens only after DB handling + DLQ."""
+    """At-least-once consumer. Commit happens only after DB handling + DLQ.
+
+    Caller must poll until ``consumer.assignment()`` is non-empty before
+    publishing test records; publishing earlier with ``latest`` offset policy
+    can race group assignment and make records appear missing.
+    """
 
     def __init__(self, service: AssessmentIngestionService, config: KafkaIngestionConfig | None = None,
                  consumer: Any | None = None, producer: Any | None = None) -> None:
