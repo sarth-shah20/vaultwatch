@@ -11,6 +11,7 @@ from pydantic import BaseModel
 from backend.app.core.assessment_ingestion import AssessmentBatchEnvelope, AssessmentIngestionService
 from backend.app.core.incident_store import DEFAULT_DB, IncidentStore
 from backend.app.core.lifecycle import ACTION_TO_STATUS, InvalidTransition
+from backend.app.ps1_insider_threat.providers import PS1ProviderConfig
 from backend.app.ps2_correlation.correlation_engine import TemporalCorrelationStore, build_demo_incidents
 from backend.app.quantum_module.crypto_inventory.inventory import (
     DEFAULT_INVENTORY_PATH, build_report, load_inventory,
@@ -34,12 +35,18 @@ def create_app(
     app.state.temporal_store = temporal_store or TemporalCorrelationStore(app.state.store.db_path)
     app.state.ingestion_service = AssessmentIngestionService(app.state.temporal_store, app.state.store)
     app.state.ingestion_api_key = ingestion_api_key if ingestion_api_key is not None else os.getenv("VAULTWATCH_INGESTION_API_KEY")
+    app.state.ps1_provider_config = PS1ProviderConfig.from_env()
 
     if seed:
         try:
             app.state.store.seed(build_demo_incidents(root=root))
         except Exception as exc:
             app.state.seed_error = str(exc)
+
+    @app.get("/providers")
+    def providers() -> dict:
+        config = app.state.ps1_provider_config
+        return {"primary": config.primary, "shadow": config.shadow, "domain": "ps1_behavioral", "shadow_counts_as_corroboration": False}
 
     @app.get("/health")
     def health() -> dict:

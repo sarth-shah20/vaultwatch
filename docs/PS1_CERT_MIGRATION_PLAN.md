@@ -322,6 +322,23 @@ Rollout:
   IDs, timestamp round-trips, and legacy loading.
 - Scope boundary: HTTP/Kafka ingestion remains Step 6.
 
+### Step 7 — Complete (2026-07-23)
+
+- Provider config: `PS1_PRIMARY_PROVIDER=dtaa|cert` and
+  `PS1_SHADOW_PROVIDER=none|dtaa|cert`. Defaults are DTAA primary and CERT
+  shadow; same provider cannot be both.
+- Runtime selection/comparison: `backend/app/ps1_insider_threat/providers.py`.
+  It records alert count, entity count, explanation presence, score summary,
+  source, and model version as operational comparison—not labeled performance.
+- Both providers remain `ps1_behavioral`. The temporal engine retains only the
+  strongest same-domain evidence; DTAA plus CERT can never raise cross-domain
+  corroboration by themselves.
+- `GET /providers` exposes resolved policy and explicitly reports
+  `shadow_counts_as_corroboration: false`.
+- CERT artifact remains real model output. CERT↔PaySim identity bridge and
+  global clock remain synthetic and are only demo/integration constructs.
+- DTAA legacy provider remains available for one migration cycle.
+
 ### Step 6 — Complete (2026-07-23)
 
 - Shared service: `backend/app/core/assessment_ingestion.py`. It validates the
