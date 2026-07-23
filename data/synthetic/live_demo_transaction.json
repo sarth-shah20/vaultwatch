@@ -1,0 +1,26 @@
+{
+  "_label": "Constructed demo transaction with realistic PaySim feature magnitudes (drain-and-cash-out TRANSFER). Scored live by the committed real fraud model; not a captured real transaction. entity_id is the synthetic demo crosswalk.",
+  "type": "TRANSFER",
+  "entity_id": "E027",
+  "step": 34,
+  "features": {
+    "amount": 1281064.0,
+    "oldbalanceOrg": 1281064.0,
+    "newbalanceOrig": 0.0,
+    "oldbalanceDest": 0.0,
+    "newbalanceDest": 0.0,
+    "error_balance_orig": 0.0,
+    "error_balance_dest": 1281064.0,
+    "is_merchant_dest": 0.0,
+    "hour_of_day": 2.0,
+    "day_index": 9.0,
+    "orig_txn_count_trailing_window": 1.0,
+    "orig_total_amount_trailing_window": 1281064.0,
+    "orig_unique_dest_trailing_window": 1.0,
+    "orig_steps_since_prev_txn": 0.0,
+    "amount_to_orig_trailing_avg_amount": 1.0,
+    "is_transfer_then_cashout": 1.0,
+    "type_CASH_OUT": 0.0,
+    "type_TRANSFER": 1.0
+  }
+}

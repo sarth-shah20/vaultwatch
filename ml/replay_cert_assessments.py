@@ -17,53 +17,26 @@ from typing import Iterable
 
 import httpx
 import joblib
-import pandas as pd
 
 from backend.app.core.assessment_ingestion import AssessmentBatchEnvelope
-from backend.app.shared.assessment_schema import RiskAssessmentTransport, stable_assessment_id
-from backend.app.shared.entities import Reason, RiskAssessment
-from ml.models.train_cert_behavioral_model import (
-    ALERT_RISK_THRESHOLD, DEFAULT_FEATURE_ROOT, _top_deviations, anomaly_scores,
-    calibrated_risk, list_dates, load_partition,
-)
-
-DOMAIN = "ps1_behavioral"
-MODEL_VERSION = "cert-behavioral-email-enhanced-v1"
+from backend.app.shared.assessment_schema import RiskAssessmentTransport
+from backend.app.shared.entities import RiskAssessment
+from ml.models.cert_behavioral_scorer import CertBehavioralScorer
+from ml.models.train_cert_behavioral_model import DEFAULT_FEATURE_ROOT, list_dates, load_partition
 
 
 def score_date(feature_root: Path, model_path: Path, event_date: str, limit: int | None = None) -> list[RiskAssessment]:
-    """Score one prepared user-hour partition and retain operational alerts."""
-    bundle = joblib.load(model_path)
-    features = bundle["feature_columns_before_variance_filter"]
-    z_columns = [name for name in features if name.endswith(("_user_robust_z", "_role_robust_z"))]
-    frame = load_partition(feature_root / bundle["variant"], event_date,
-                           ["user_id", "window_start", "window_end", "event_time", *features])
+    """Score one prepared user-hour partition and retain operational alerts.
+
+    Delegates to the shared ``CertBehavioralScorer`` so offline replay and the
+    live ``POST /ingest/behavioral`` endpoint use one scoring path.
+    """
+    scorer = CertBehavioralScorer(bundle=joblib.load(model_path), source="cert_r4.2_prepared_windows")
+    frame = load_partition(feature_root / scorer.bundle["variant"], event_date,
+                           ["user_id", "window_start", "window_end", "event_time", *scorer.features])
     if limit:
         frame = frame.head(limit)
-    risk = calibrated_risk(anomaly_scores(frame, features, bundle["selector"], bundle["scaler"], bundle["model"]),
-                           bundle["calibration_knots"], bundle["calibration_percentiles"])
-    results: list[RiskAssessment] = []
-    for index, (_, row) in enumerate(frame.iterrows()):
-        if risk[index] < ALERT_RISK_THRESHOLD:
-            continue
-        user = str(row["user_id"])
-        event_time = pd.Timestamp(row["event_time"]).to_pydatetime()
-        score = float(risk[index])
-        deviations = _top_deviations(row, z_columns)
-        reasons = [Reason(
-            signal_name=item["feature"], domain=DOMAIN, weight=min(1.0, abs(item["robust_z"]) / 25.0),
-            raw_value=f"{item['baseline']} robust-z={item['robust_z']:.3f}",
-        ) for item in deviations] or [Reason("behavioral_anomaly", DOMAIN, score, "Isolation Forest alert")]
-        entity_id = f"CERT:{user}"
-        results.append(RiskAssessment(
-            assessment_id=stable_assessment_id("cert", entity_id, event_time, MODEL_VERSION),
-            entity_id=entity_id, domain=DOMAIN, score=score, reasons=reasons,
-            event_time=event_time, window_start=pd.Timestamp(row["window_start"]).to_pydatetime(),
-            window_end=pd.Timestamp(row["window_end"]).to_pydatetime(),
-            time_basis="cert_simulated_local_utc", source="cert_r4.2_prepared_windows",
-            model_version=MODEL_VERSION,
-        ))
-    return results
+    return scorer.score_frame(frame)
 
 
 def envelope(assessments: Iterable[RiskAssessment]) -> dict:
