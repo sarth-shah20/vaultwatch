@@ -190,6 +190,13 @@ docs/                ARCHITECTURE · FEATURES · DATASETS · PS1_INTEGRATION · 
 | `POST` | `/incidents/{id}/feedback` | analyst action: `acknowledge` / `escalate` / `dismiss` |
 | `GET` | `/suppressions` | entities suppressed by analyst dismissals |
 | `GET` | `/quantum/report` | crypto inventory scored for quantum risk + PQC-migration priority |
+| `POST` | `/assessments` | ingest already-scored `RiskAssessment`(s) (HTTP/Kafka transport) |
+| `POST` | `/ingest/transaction` | score a prepared PaySim feature row **live** (in-process) and correlate |
+| `POST` | `/ingest/behavioral` | score a prepared CERT behavioral window **live** (in-process) and correlate |
+
+`/ingest/*` moves the live boundary from "already-scored assessment" to
+"unscored feature input" — the server runs the model itself, not just the
+correlation on top of it. See `docs/LIVE_SCORING.md`.
 
 ---
 

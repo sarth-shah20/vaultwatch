@@ -11,6 +11,12 @@ from pydantic import BaseModel
 from backend.app.core.assessment_ingestion import AssessmentBatchEnvelope, AssessmentIngestionService
 from backend.app.core.incident_store import DEFAULT_DB, IncidentStore
 from backend.app.core.lifecycle import ACTION_TO_STATUS, InvalidTransition
+from backend.app.core.live_scoring import (
+    BehavioralWindowIngestRequest,
+    TransactionIngestRequest,
+    score_and_ingest_behavioral,
+    score_and_ingest_transaction,
+)
 from backend.app.ps1_insider_threat.providers import PS1ProviderConfig
 from backend.app.ps2_correlation.correlation_engine import TemporalCorrelationStore, build_demo_incidents
 from backend.app.quantum_module.crypto_inventory.inventory import (
@@ -27,6 +33,7 @@ class FeedbackIn(BaseModel):
 def create_app(
     store: Optional[IncidentStore] = None, seed: bool = True, root: str = ".",
     temporal_store: Optional[TemporalCorrelationStore] = None, ingestion_api_key: str | None = None,
+    fraud_scorer=None, cert_scorer=None,
 ) -> FastAPI:
     app = FastAPI(title="VaultWatch Correlation API", version="0.1.0")
     app.state.store = store or IncidentStore(DEFAULT_DB)
@@ -36,6 +43,30 @@ def create_app(
     app.state.ingestion_service = AssessmentIngestionService(app.state.temporal_store, app.state.store)
     app.state.ingestion_api_key = ingestion_api_key if ingestion_api_key is not None else os.getenv("VAULTWATCH_INGESTION_API_KEY")
     app.state.ps1_provider_config = PS1ProviderConfig.from_env()
+    # Live scorers are expensive to construct (model + SHAP explainer / joblib
+    # bundle), so build once, lazily, on first ingest request. Tests inject tiny
+    # models here, mirroring the store/temporal_store injection above.
+    app.state.fraud_scorer = fraud_scorer
+    app.state.cert_scorer = cert_scorer
+
+    def require_ingestion_key(provided: str | None) -> None:
+        configured_key = app.state.ingestion_api_key
+        if not configured_key:
+            raise HTTPException(status_code=503, detail="assessment ingestion API key is not configured")
+        if not provided or not secrets.compare_digest(provided, configured_key):
+            raise HTTPException(status_code=401, detail="invalid ingestion API key")
+
+    def get_fraud_scorer():
+        if app.state.fraud_scorer is None:
+            from backend.app.ps2_correlation.fraud_detection import FraudScorer
+            app.state.fraud_scorer = FraudScorer(root=root)
+        return app.state.fraud_scorer
+
+    def get_cert_scorer():
+        if app.state.cert_scorer is None:
+            from ml.models.cert_behavioral_scorer import CertBehavioralScorer
+            app.state.cert_scorer = CertBehavioralScorer(root=root)
+        return app.state.cert_scorer
 
     if seed:
         try:
@@ -54,13 +85,27 @@ def create_app(
 
     @app.post("/assessments")
     def post_assessments(envelope: AssessmentBatchEnvelope, x_ingestion_api_key: str | None = Header(default=None)) -> dict:
-        configured_key = app.state.ingestion_api_key
-        if not configured_key:
-            raise HTTPException(status_code=503, detail="assessment ingestion API key is not configured")
-        if not x_ingestion_api_key or not secrets.compare_digest(x_ingestion_api_key, configured_key):
-            raise HTTPException(status_code=401, detail="invalid ingestion API key")
+        require_ingestion_key(x_ingestion_api_key)
         try:
             return app.state.ingestion_service.ingest_envelope(envelope).as_dict()
+        except ValueError as exc:
+            raise HTTPException(status_code=422, detail=str(exc))
+
+    @app.post("/ingest/transaction")
+    def ingest_transaction(req: TransactionIngestRequest, x_ingestion_api_key: str | None = Header(default=None)) -> dict:
+        """Score one prepared PaySim feature row live, then correlate + upsert."""
+        require_ingestion_key(x_ingestion_api_key)
+        try:
+            return score_and_ingest_transaction(get_fraud_scorer(), app.state.ingestion_service, req)
+        except ValueError as exc:
+            raise HTTPException(status_code=422, detail=str(exc))
+
+    @app.post("/ingest/behavioral")
+    def ingest_behavioral(req: BehavioralWindowIngestRequest, x_ingestion_api_key: str | None = Header(default=None)) -> dict:
+        """Score one prepared CERT behavioral window live, then correlate + upsert."""
+        require_ingestion_key(x_ingestion_api_key)
+        try:
+            return score_and_ingest_behavioral(get_cert_scorer(), app.state.ingestion_service, req)
         except ValueError as exc:
             raise HTTPException(status_code=422, detail=str(exc))
 
