@@ -93,3 +93,35 @@ def test_kafka_adapter_commits_after_service_and_dlqs_invalid() -> None:
     adapter.handle_message(_Message({"schema_version": "bad", "assessments": []}))
     assert consumer.commits == 2
     assert producer.messages[0][0] == "vaultwatch.risk-assessments.v1.dlq"
+
+
+def test_duplicate_across_http_then_kafka_does_not_double_correlate() -> None:
+    client = _client()
+    payload = _assessment("ps1_behavioral", 0, "cross-transport-id")
+    assert _post(client, [payload]).json()["accepted"] == ["cross-transport-id"]
+    app = client.app
+    consumer, producer = _Consumer(), _Producer()
+    adapter = KafkaAssessmentConsumer(app.state.ingestion_service, consumer=consumer, producer=producer)
+    result = adapter.handle_message(_Message({"schema_version": "1.0", "assessments": [payload]}))
+    assert result["duplicate"] == ["cross-transport-id"]
+    assert consumer.commits == 1
+    assert app.state.temporal_store.conn.execute(
+        "SELECT count(*) FROM risk_assessments WHERE assessment_id=?", ("cross-transport-id",)
+    ).fetchone()[0] == 1
+    assert len(app.state.temporal_store.incidents_for_entity("CERT:LIVE-001")) == 1
+
+
+def test_kafka_invalid_assessment_is_dlqd_with_validation_details() -> None:
+    consumer, producer = _Consumer(), _Producer()
+    service = AssessmentIngestionService(TemporalCorrelationStore(), IncidentStore())
+    adapter = KafkaAssessmentConsumer(service, consumer=consumer, producer=producer)
+    result = adapter.handle_message(_Message({
+        "schema_version": "1.0",
+        "assessments": [{"assessment_id": "invalid-score", "entity_id": "CERT:BAD", "domain": "ps1_behavioral", "score": 4, "reasons": []}],
+    }))
+    assert result["rejected"][0]["assessment_id"] == "invalid-score"
+    assert consumer.commits == 1
+    topic, message = producer.messages[0]
+    assert topic == "vaultwatch.risk-assessments.v1.dlq"
+    assert message["details"]["rejected"][0]["assessment_id"] == "invalid-score"
+    assert "within [0, 1]" in message["details"]["rejected"][0]["errors"][0]["msg"]
