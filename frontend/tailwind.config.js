@@ -4,46 +4,55 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        display: ['"Fraunces"', "Georgia", "serif"],
-        sans: ['"Instrument Sans"', "system-ui", "-apple-system", "sans-serif"],
-        mono: ['"JetBrains Mono"', "ui-monospace", "monospace"],
+        sans: ['"Inter Variable"', "Inter", "system-ui", "-apple-system", "Segoe UI", "sans-serif"],
+        mono: ['"JetBrains Mono"', "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
       },
       colors: {
-        // Single restrained accent: deep marine navy.
-        vault: {
-          50: "#f4f7fa",
-          100: "#e6edf4",
-          200: "#c7d7e6",
-          500: "#33628c",
-          600: "#24507a",
-          700: "#1a4066",
-          800: "#12324f",
-          900: "#0c2439",
-          950: "#081a2b",
+        // Deep ink ground — blue-black, not neutral grey, so the two domain
+        // hues read as light sources against it.
+        ink: {
+          950: "#080B10",
+          900: "#0B0F14",
+          850: "#10151C",
+          800: "#151C25",
+          700: "#1E2833",
+          600: "#2A3644",
+          500: "#3A4757",
         },
-        // Domain identities (subtle tints, not competing brights).
-        ps1: { tint: "#f5f2fb", edge: "#ddd2f0", ink: "#5b4a8a", deep: "#43356b" },
-        ps2: { tint: "#eff8f7", edge: "#cfe8e5", ink: "#20706b", deep: "#175450" },
+        chalk: {
+          DEFAULT: "#E7ECF3",
+          dim: "#95A2B3",
+          faint: "#5D6B7D",
+        },
+        // PS1 = human behaviour -> warm. PS2 = money/machine -> cool.
+        // Deliberately opposite temperatures, so their convergence reads as
+        // two genuinely different things meeting.
+        ps1: { DEFAULT: "#E8A33D", soft: "#F0C177", deep: "#8A5A15", ghost: "#2A2116" },
+        ps2: { DEFAULT: "#3DC5E8", soft: "#7ADCF3", deep: "#12626F", ghost: "#12242A" },
+        alert: { DEFAULT: "#E5484D", soft: "#F27579", deep: "#7A1D22", ghost: "#2A1416" },
+        good: "#3DD68C",
       },
-      boxShadow: {
-        card: "0 1px 2px rgba(12,36,57,0.06), 0 4px 16px rgba(12,36,57,0.05)",
-        lift: "0 2px 4px rgba(12,36,57,0.08), 0 12px 32px rgba(12,36,57,0.10)",
+      fontSize: {
+        micro: ["10px", { lineHeight: "1.3", letterSpacing: "0.09em" }],
+        tiny: ["11px", { lineHeight: "1.45", letterSpacing: "0.04em" }],
       },
       keyframes: {
-        rise: {
-          "0%": { opacity: "0", transform: "translateY(8px)" },
-          "100%": { opacity: "1", transform: "translateY(0)" },
+        riseIn: { "0%": { opacity: 0, transform: "translateY(10px)" }, "100%": { opacity: 1, transform: "none" } },
+        fadeIn: { "0%": { opacity: 0 }, "100%": { opacity: 1 } },
+        breathe: { "0%,100%": { opacity: 1 }, "50%": { opacity: 0.3 } },
+        landing: {
+          "0%": { transform: "scale(.3)", opacity: 0 },
+          "60%": { transform: "scale(1.3)", opacity: 1 },
+          "100%": { transform: "scale(1)", opacity: 1 },
         },
-        fadein: { "0%": { opacity: "0" }, "100%": { opacity: "1" } },
-        pulseDot: {
-          "0%, 100%": { opacity: "1" },
-          "50%": { opacity: "0.35" },
-        },
+        sweep: { "0%": { transform: "translateX(-100%)" }, "100%": { transform: "translateX(220%)" } },
       },
       animation: {
-        rise: "rise 0.45s cubic-bezier(0.22,1,0.36,1) both",
-        fadein: "fadein 0.35s ease-out both",
-        pulseDot: "pulseDot 2.4s ease-in-out infinite",
+        riseIn: "riseIn .5s cubic-bezier(.22,1,.36,1) both",
+        fadeIn: "fadeIn .4s ease-out both",
+        breathe: "breathe 2.4s ease-in-out infinite",
+        landing: "landing .6s cubic-bezier(.34,1.56,.64,1) both",
+        sweep: "sweep 1.6s ease-in-out infinite",
       },
     },
   },

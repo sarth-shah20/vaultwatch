@@ -136,7 +136,11 @@ class IncidentStore:
         if clauses:
             query += " WHERE " + " AND ".join(clauses)
         query += " ORDER BY combined_score DESC"
-        return [self._row_to_dict(r) for r in self.conn.execute(query, params)]
+        # Materialize before mapping: _row_to_dict issues its own query per row,
+        # and nesting that inside an open cursor on the same connection raises
+        # "bad parameter or other API misuse" once requests overlap on threads.
+        rows = self.conn.execute(query, params).fetchall()
+        return [self._row_to_dict(r) for r in rows]
 
     def get_incident(self, incident_id: str) -> dict:
         row = self.conn.execute("SELECT * FROM incidents WHERE incident_id=?", (incident_id,)).fetchone()
@@ -154,7 +158,7 @@ class IncidentStore:
 
     def feedback_log(self, incident_id: str | None = None) -> list[dict]:
         if incident_id:
-            rows = self.conn.execute("SELECT * FROM feedback WHERE incident_id=? ORDER BY id", (incident_id,))
+            rows = self.conn.execute("SELECT * FROM feedback WHERE incident_id=? ORDER BY id", (incident_id,)).fetchall()
         else:
-            rows = self.conn.execute("SELECT * FROM feedback ORDER BY id")
+            rows = self.conn.execute("SELECT * FROM feedback ORDER BY id").fetchall()
         return [dict(r) for r in rows]

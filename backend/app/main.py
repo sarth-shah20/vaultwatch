@@ -140,6 +140,29 @@ def create_app(
     def suppressions() -> dict:
         return {"suppressed_entities": app.state.store.suppressed_entities()}
 
+    @app.get("/demo/live-payloads")
+    def demo_live_payloads() -> dict:
+        """Serve the committed demo inputs for the live-injection walkthrough.
+
+        These are the same fixtures scripts/demo_live_ingest.py posts. Served so
+        the dashboard has one source of truth instead of its own stale copy.
+        """
+        import json
+        from pathlib import Path
+
+        root_path = Path(root)
+        out: dict = {}
+        for name, rel in (
+            ("behavioral", "data/synthetic/live_demo_behavioral_window.json"),
+            ("transaction", "data/synthetic/live_demo_transaction.json"),
+        ):
+            path = root_path / rel
+            if not path.exists():
+                raise HTTPException(status_code=404, detail=f"demo payload '{name}' not found")
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            out[name] = {"label": payload.pop("_label", None), "payload": payload}
+        return out
+
     @app.get("/quantum/report")
     def quantum_report() -> dict:
         from pathlib import Path

@@ -3,20 +3,85 @@
 @tailwind utilities;
 
 @layer base {
-  html {
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
+  :root {
+    color-scheme: dark;
   }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
   body {
-    @apply text-vault-900 font-sans;
-    background-color: #f7f8fb;
+    @apply bg-ink-900 text-chalk antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "tnum";
+    /* Faint vertical rhythm — reads as graph paper, not a gradient blob. */
     background-image:
-      radial-gradient(1100px 480px at 8% -8%, rgba(36, 80, 122, 0.07), transparent 60%),
-      radial-gradient(900px 420px at 96% -12%, rgba(91, 74, 138, 0.05), transparent 55%),
-      radial-gradient(700px 380px at 55% 115%, rgba(32, 112, 107, 0.04), transparent 60%);
+      radial-gradient(1200px 600px at 78% -10%, rgba(61, 197, 232, 0.05), transparent 60%),
+      radial-gradient(1000px 500px at 12% -5%, rgba(232, 163, 61, 0.045), transparent 60%);
     background-attachment: fixed;
   }
+
   ::selection {
-    @apply bg-vault-200;
+    @apply bg-ps2/25;
+  }
+
+  /* Numbers must line up in columns — this UI is mostly numbers. */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer components {
+  .rule {
+    @apply border-ink-700;
+  }
+
+  /* Uppercase micro-label used for every section heading + axis caption. */
+  .eyebrow {
+    @apply text-micro font-semibold uppercase tracking-[0.16em] text-chalk-faint;
+  }
+
+  .panel {
+    @apply rounded border border-ink-700 bg-ink-850/70;
+  }
+
+  .hairline-grid {
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
+    background-size: 72px 100%;
+  }
+
+  .focusable {
+    @apply outline-none focus-visible:ring-2 focus-visible:ring-ps2/50 focus-visible:ring-offset-1 focus-visible:ring-offset-ink-900;
+  }
+}
+
+/* Scrollbars: present but quiet. */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e2833;
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2a3644;
+  background-clip: content-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
