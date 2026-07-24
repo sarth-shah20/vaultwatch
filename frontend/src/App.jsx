@@ -20,9 +20,13 @@ const VIEWS = [
   { id: "quantum", label: "Quantum" },
 ];
 
-function Mark() {
+function Mark({ onClick }) {
   return (
-    <div className="flex items-center gap-3">
+    <button
+      onClick={onClick}
+      title="Back to home"
+      className="focusable flex items-center gap-3 rounded-sm transition-opacity hover:opacity-80"
+    >
       {/* Two lanes meeting at a point — the product, as a glyph. */}
       <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden className="shrink-0">
         <path d="M3 5 L13 13" stroke="#E8A33D" strokeWidth="1.75" strokeLinecap="round" />
@@ -30,13 +34,13 @@ function Mark() {
         <path d="M13 13 L23 13" stroke="#E5484D" strokeWidth="1.75" strokeLinecap="round" />
         <circle cx="13" cy="13" r="2.6" fill="#E5484D" />
       </svg>
-      <div className="leading-none">
+      <div className="text-left leading-none">
         <div className="text-[17px] font-semibold tracking-tight text-chalk">VaultWatch</div>
         <div className="mt-1 text-micro uppercase tracking-[0.18em] text-chalk-faint">
           Cross-domain correlation
         </div>
       </div>
-    </div>
+    </button>
   );
 }
 
@@ -190,6 +194,13 @@ export default function App() {
       incidents: s.incidents.map((i) => (i.incident_id === updated.incident_id ? { ...i, ...updated } : i)),
     }));
 
+  const goHome = useCallback(() => {
+    setSelectedId(null);
+    setView("convergence");
+    setShowInject(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   // After a live injection, reload and flag whatever changed so it visibly lands.
   const handleIngested = useCallback(async (affected) => {
     await load(true);
@@ -207,7 +218,7 @@ export default function App() {
       {/* header */}
       <header className="sticky top-0 z-20 -mx-6 mb-8 border-b rule bg-ink-900/85 px-6 py-4 backdrop-blur lg:-mx-10 lg:px-10">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <Mark />
+          <Mark onClick={goHome} />
           <div className="flex items-center gap-4">
             <Health health={state.health} providers={state.providers} />
             <button
@@ -272,12 +283,20 @@ export default function App() {
               </section>
 
               {selected && (
-                <section ref={detailRef} className="panel p-5">
-                  <IncidentDetail
-                    incident={selected}
-                    onUpdated={applyUpdate}
-                    onClose={() => setSelectedId(null)}
-                  />
+                <section ref={detailRef}>
+                  <button
+                    onClick={() => setSelectedId(null)}
+                    className="focusable mb-2 inline-flex items-center gap-1.5 text-[13.5px] text-chalk-faint transition-colors hover:text-chalk"
+                  >
+                    <span aria-hidden>←</span> Back to timeline
+                  </button>
+                  <div className="panel p-5">
+                    <IncidentDetail
+                      incident={selected}
+                      onUpdated={applyUpdate}
+                      onClose={() => setSelectedId(null)}
+                    />
+                  </div>
                 </section>
               )}
 
