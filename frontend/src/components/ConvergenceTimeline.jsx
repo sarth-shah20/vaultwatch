@@ -13,7 +13,7 @@ import {
 // wrapper scrolls rather than squashing the axis.
 const W = 1240;
 const H = 260;
-const PAD_L = 128; // room for the lane captions
+const PAD_L = 150; // room for the lane captions
 const PAD_R = 24;
 const AXIS_Y = H / 2;
 const LANE = 74;
@@ -87,7 +87,7 @@ export default function ConvergenceTimeline({ incidents, selectedId, onSelect, r
     }
 
     // A label is only drawn where there is genuinely room for it.
-    const LABEL_W = 52;
+    const LABEL_W = 60;
     nodes.forEach((n, i) => {
       const prev = nodes[i - 1];
       const next = nodes[i + 1];
@@ -131,7 +131,8 @@ export default function ConvergenceTimeline({ incidents, selectedId, onSelect, r
         {/* lane guides */}
         {[AXIS_Y - LANE, AXIS_Y + LANE].map((y, i) => (
           <line key={i} x1={PAD_L} y1={y} x2={W - PAD_R} y2={y}
-                stroke="#1A222C" strokeWidth="1" strokeDasharray="2 6" />
+                stroke="#1A222C" strokeWidth="1" strokeDasharray="2 6"
+                className="origin-left animate-growX" style={{ animationDelay: "60ms" }} />
         ))}
 
         {/* date ticks */}
@@ -146,7 +147,7 @@ export default function ConvergenceTimeline({ incidents, selectedId, onSelect, r
                     stroke="#141B24" strokeWidth="1" />
               {showLabel && (
                 <text x={tx} y={AXIS_Y + LANE + 36} textAnchor="middle"
-                      className="font-mono" fontSize="9.5" fill="#4B5768" letterSpacing="0.1em">
+                      className="font-mono" fontSize="11.5" fill="#4B5768" letterSpacing="0.1em">
                   {fmtDate(new Date(t)).toUpperCase()}
                 </text>
               )}
@@ -155,14 +156,15 @@ export default function ConvergenceTimeline({ incidents, selectedId, onSelect, r
         })}
 
         {/* the decision axis */}
-        <line x1={PAD_L} y1={AXIS_Y} x2={W - PAD_R} y2={AXIS_Y} stroke="#2A3644" strokeWidth="1" />
+        <line x1={PAD_L} y1={AXIS_Y} x2={W - PAD_R} y2={AXIS_Y} stroke="#2A3644" strokeWidth="1"
+              className="origin-left animate-growX" />
 
         {/* lane captions */}
-        <text x={0} y={AXIS_Y - LANE + 4} className="font-mono" fontSize="9.5"
+        <text x={0} y={AXIS_Y - LANE + 4} className="font-mono" fontSize="11.5"
               fill={DOMAIN.ps1_behavioral.hex} letterSpacing="0.13em">PS1 · BEHAVIOURAL</text>
-        <text x={0} y={AXIS_Y + LANE + 4} className="font-mono" fontSize="9.5"
+        <text x={0} y={AXIS_Y + LANE + 4} className="font-mono" fontSize="11.5"
               fill={DOMAIN.ps2_transaction.hex} letterSpacing="0.13em">PS2 · TRANSACTION</text>
-        <text x={0} y={AXIS_Y + 3.5} className="font-mono" fontSize="9.5"
+        <text x={0} y={AXIS_Y + 3.5} className="font-mono" fontSize="11.5"
               fill="#5D6B7D" letterSpacing="0.13em">DECISION</text>
 
         {nodes.map((n) => {
@@ -172,49 +174,57 @@ export default function ConvergenceTimeline({ incidents, selectedId, onSelect, r
           const y2 = AXIS_Y + LANE;
           const dim = selectedId && !sel ? 0.28 : 1;
 
+          const delay = `${Math.min(i, 24) * 22}ms`;
+
           return (
             <g key={n.id} opacity={dim} className="cursor-pointer transition-opacity"
                onClick={() => onSelect(sel ? null : n.id)}>
               <title>{`${shortEntity(n.inc.entity_id)} · ${n.decision.short}`}</title>
               <rect x={n.x - 10} y={y1 - 20} width="20" height={LANE * 2 + 40} fill="transparent" />
 
-              {n.corroborated ? (
-                <>
-                  <line x1={n.x} y1={y1} x2={n.x} y2={y2} stroke="url(#convStem)"
-                        strokeWidth={sel ? 2 : 1.25} opacity={sel ? 1 : 0.7} />
-                  <g style={{ transformOrigin: `${n.x}px ${AXIS_Y}px` }}
-                     className={fresh ? "animate-landing" : undefined}>
-                    <rect x={n.x - 5} y={AXIS_Y - 5} width="10" height="10"
-                          transform={`rotate(45 ${n.x} ${AXIS_Y})`}
-                          fill={n.decision.hex} stroke="#0B0F14" strokeWidth="1.5"
-                          filter={sel || fresh ? "url(#glow)" : undefined} />
-                  </g>
-                </>
-              ) : (
-                <>
-                  <line x1={n.x} y1={n.ps1 ? y1 : y2} x2={n.x} y2={n.ps1 ? AXIS_Y - 14 : AXIS_Y + 14}
-                        stroke={n.ps1 ? DOMAIN.ps1_behavioral.hex : DOMAIN.ps2_transaction.hex}
-                        strokeWidth="1" strokeDasharray="2 4" opacity="0.45" />
-                  <circle cx={n.x} cy={AXIS_Y} r="4" fill="#0B0F14" stroke="#3A4757" strokeWidth="1.25" />
-                </>
-              )}
+              {/* Entrance is isolated to this inner group: its fill-mode locks
+                  opacity to 1 once played, which would otherwise permanently
+                  override the outer group's selection-dim attribute above. */}
+              <g className="animate-riseIn" style={{ animationDelay: delay }}>
+                {n.corroborated ? (
+                  <>
+                    <line x1={n.x} y1={y1} x2={n.x} y2={y2} stroke="url(#convStem)"
+                          strokeWidth={sel ? 2 : 1.25} opacity={sel ? 1 : 0.7}
+                          className="animate-growY" style={{ animationDelay: delay }} />
+                    <g style={{ transformOrigin: `${n.x}px ${AXIS_Y}px` }}
+                       className={fresh ? "animate-landing" : undefined}>
+                      <rect x={n.x - 5} y={AXIS_Y - 5} width="10" height="10"
+                            transform={`rotate(45 ${n.x} ${AXIS_Y})`}
+                            fill={n.decision.hex} stroke="#0B0F14" strokeWidth="1.5"
+                            filter={sel || fresh ? "url(#glow)" : undefined} />
+                    </g>
+                  </>
+                ) : (
+                  <>
+                    <line x1={n.x} y1={n.ps1 ? y1 : y2} x2={n.x} y2={n.ps1 ? AXIS_Y - 14 : AXIS_Y + 14}
+                          stroke={n.ps1 ? DOMAIN.ps1_behavioral.hex : DOMAIN.ps2_transaction.hex}
+                          strokeWidth="1" strokeDasharray="2 4" opacity="0.45" />
+                    <circle cx={n.x} cy={AXIS_Y} r="4" fill="#0B0F14" stroke="#3A4757" strokeWidth="1.25" />
+                  </>
+                )}
 
-              {n.ps1 && (
-                <circle cx={n.x} cy={y1} r={sel ? 5 : 3.4} fill={DOMAIN.ps1_behavioral.hex}
-                        stroke="#0B0F14" strokeWidth="1.25" filter={sel ? "url(#glow)" : undefined} />
-              )}
-              {n.ps2 && (
-                <circle cx={n.x} cy={y2} r={sel ? 5 : 3.4} fill={DOMAIN.ps2_transaction.hex}
-                        stroke="#0B0F14" strokeWidth="1.25" filter={sel ? "url(#glow)" : undefined} />
-              )}
+                {n.ps1 && (
+                  <circle cx={n.x} cy={y1} r={sel ? 5 : 3.4} fill={DOMAIN.ps1_behavioral.hex}
+                          stroke="#0B0F14" strokeWidth="1.25" filter={sel ? "url(#glow)" : undefined} />
+                )}
+                {n.ps2 && (
+                  <circle cx={n.x} cy={y2} r={sel ? 5 : 3.4} fill={DOMAIN.ps2_transaction.hex}
+                          stroke="#0B0F14" strokeWidth="1.25" filter={sel ? "url(#glow)" : undefined} />
+                )}
 
-              {(sel || n.roomy) && (
-                <text x={n.x} y={y1 - 13} textAnchor="middle" className="font-mono"
-                      fontSize="9" letterSpacing="0.05em" fill={sel ? "#E7ECF3" : "#55637333"}
-                      style={{ fill: sel ? "#E7ECF3" : "#556373" }}>
-                  {shortEntity(n.inc.entity_id)}
-                </text>
-              )}
+                {(sel || n.roomy) && (
+                  <text x={n.x} y={y1 - 13} textAnchor="middle" className="font-mono"
+                        fontSize="11" letterSpacing="0.05em" fill={sel ? "#E7ECF3" : "#55637333"}
+                        style={{ fill: sel ? "#E7ECF3" : "#556373" }}>
+                    {shortEntity(n.inc.entity_id)}
+                  </text>
+                )}
+              </g>
             </g>
           );
         })}
@@ -242,7 +252,7 @@ export default function ConvergenceTimeline({ incidents, selectedId, onSelect, r
               </button>
             );
           })}
-          <span className="text-[11px] text-chalk-faint">
+          <span className="text-[13px] text-chalk-faint">
             no timestamp → cannot enter a correlation window
           </span>
         </div>

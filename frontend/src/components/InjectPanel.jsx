@@ -73,8 +73,8 @@ export default function InjectPanel({ onIngested, onClose }) {
     <div className="animate-riseIn panel p-5">
       <div className="flex items-start justify-between gap-4 border-b rule pb-3">
         <div>
-          <h3 className="text-[15px] font-semibold tracking-tight text-chalk">Inject a live signal</h3>
-          <p className="mt-1 max-w-xl text-[12.5px] leading-relaxed text-chalk-dim">
+          <h3 className="text-[17px] font-semibold tracking-tight text-chalk">Inject a live signal</h3>
+          <p className="mt-1 max-w-xl text-[14.5px] leading-relaxed text-chalk-dim">
             Watch detection happen rather than reading a stored result. The server scores each
             payload in-process, re-runs correlation, and the timeline updates.
           </p>
@@ -101,9 +101,9 @@ export default function InjectPanel({ onIngested, onClose }) {
                     <DomainTag domain={s.domain} size="xs" />
                   </div>
                 </div>
-                <div className="mt-2 text-[13px] font-medium text-chalk">{s.title}</div>
-                <p className="mt-1 text-[11.5px] leading-relaxed text-chalk-dim">{s.body}</p>
-                <p className="mt-1.5 text-[11.5px] italic leading-relaxed text-chalk-faint">{s.expect}</p>
+                <div className="mt-2 text-[15px] font-medium text-chalk">{s.title}</div>
+                <p className="mt-1 text-[13.5px] leading-relaxed text-chalk-dim">{s.body}</p>
+                <p className="mt-1.5 text-[13.5px] italic leading-relaxed text-chalk-faint">{s.expect}</p>
                 <button
                   disabled={!payloads || busy}
                   onClick={() => inject(s.kind)}
@@ -132,7 +132,7 @@ export default function InjectPanel({ onIngested, onClose }) {
               />
             </label>
           </div>
-          <p className="mt-2 text-[11px] leading-relaxed text-chalk-faint">
+          <p className="mt-2 text-[13px] leading-relaxed text-chalk-faint">
             Demo control: the key is sent from the browser. In a real deployment a detector
             publishes server-side over HTTP or Kafka — the browser never holds this.
           </p>

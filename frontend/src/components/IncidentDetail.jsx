@@ -48,10 +48,10 @@ function MicroWindow({ incident }) {
       <line x1={L} y1={Y - 21} x2={L} y2={Y + 21} stroke="#3A4757" strokeWidth="1" />
       <line x1={W - R} y1={Y - 21} x2={W - R} y2={Y + 21} stroke="#3A4757" strokeWidth="1" />
       {/* Window bounds sit on their own baseline, clear of the marker captions. */}
-      <text x={L} y={Y + 58} className="font-mono" fontSize="9" fill="#5D6B7D" letterSpacing="0.08em">
+      <text x={L} y={Y + 58} className="font-mono" fontSize="11" fill="#5D6B7D" letterSpacing="0.08em">
         {fmtClock(start)}Z
       </text>
-      <text x={W - R} y={Y + 58} textAnchor="end" className="font-mono" fontSize="9" fill="#5D6B7D" letterSpacing="0.08em">
+      <text x={W - R} y={Y + 58} textAnchor="end" className="font-mono" fontSize="11" fill="#5D6B7D" letterSpacing="0.08em">
         +{CORRELATION_WINDOW_MIN} MIN
       </text>
 
@@ -65,7 +65,7 @@ function MicroWindow({ incident }) {
             <rect x={x1} y={Y - 17} width={Math.max(1, x2 - x1)} height="34" fill="#E5484D" opacity="0.09" />
             <line x1={x1} y1={Y - 26} x2={x2} y2={Y - 26} stroke="#E5484D" strokeWidth="1" opacity="0.55" />
             <text x={(x1 + x2) / 2} y={Y - 32} textAnchor="middle" className="font-mono"
-                  fontSize="10" fill="#F27579" letterSpacing="0.06em">
+                  fontSize="12" fill="#F27579" letterSpacing="0.06em">
               {fmtGap(gapMin)} apart
             </text>
           </g>
@@ -78,10 +78,11 @@ function MicroWindow({ incident }) {
           <line x1={pos(parseTime(ps1.event_time))} y1={Y - 17} x2={pos(parseTime(ps1.event_time))} y2={Y}
                 stroke={DOMAIN.ps1_behavioral.hex} strokeWidth="1.5" />
           <circle cx={pos(parseTime(ps1.event_time))} cy={Y - 17} r="4.5"
+                  className="animate-landing" style={{ transformOrigin: `${pos(parseTime(ps1.event_time))}px ${Y - 17}px` }}
                   fill={DOMAIN.ps1_behavioral.hex} stroke="#0B0F14" strokeWidth="1.25" />
           <text x={labelX(pos(parseTime(ps1.event_time)))} y={Y - 46}
                 textAnchor={anchorFor(pos(parseTime(ps1.event_time)))}
-                className="font-mono" fontSize="9" fill={DOMAIN.ps1_behavioral.hex} letterSpacing="0.06em">
+                className="font-mono" fontSize="11" fill={DOMAIN.ps1_behavioral.hex} letterSpacing="0.06em">
             PS1 {fmtScore(ps1.score)} · {fmtClock(parseTime(ps1.event_time))}Z
           </text>
         </g>
@@ -91,10 +92,11 @@ function MicroWindow({ incident }) {
           <line x1={pos(parseTime(ps2.event_time))} y1={Y} x2={pos(parseTime(ps2.event_time))} y2={Y + 17}
                 stroke={DOMAIN.ps2_transaction.hex} strokeWidth="1.5" />
           <circle cx={pos(parseTime(ps2.event_time))} cy={Y + 17} r="4.5"
+                  className="animate-landing" style={{ transformOrigin: `${pos(parseTime(ps2.event_time))}px ${Y + 17}px`, animationDelay: "120ms" }}
                   fill={DOMAIN.ps2_transaction.hex} stroke="#0B0F14" strokeWidth="1.25" />
           <text x={labelX(pos(parseTime(ps2.event_time)))} y={Y + 38}
                 textAnchor={anchorFor(pos(parseTime(ps2.event_time)))}
-                className="font-mono" fontSize="9" fill={DOMAIN.ps2_transaction.hex} letterSpacing="0.06em">
+                className="font-mono" fontSize="11" fill={DOMAIN.ps2_transaction.hex} letterSpacing="0.06em">
             PS2 {fmtScore(ps2.score)} · {fmtClock(parseTime(ps2.event_time))}Z
           </text>
         </g>
@@ -109,7 +111,7 @@ function EvidenceColumn({ domain, assessment }) {
     return (
       <div className="rounded border border-dashed border-ink-700 p-4">
         <DomainTag domain={domain} />
-        <p className="mt-3 text-[12.5px] leading-relaxed text-chalk-faint">
+        <p className="mt-3 text-[14.5px] leading-relaxed text-chalk-faint">
           No {d.label.toLowerCase()} signal fired for this entity inside the window.
           <span className="mt-2 block text-chalk-faint/80">
             The absence is the reason this stayed uncorroborated — and why the
@@ -123,20 +125,20 @@ function EvidenceColumn({ domain, assessment }) {
     <div className="rounded border p-4" style={{ borderColor: `${d.hex}2e`, background: `${d.hex}09` }}>
       <div className="flex items-center justify-between">
         <DomainTag domain={domain} />
-        <span className="tnum font-mono text-[15px]" style={{ color: d.hex }}>{fmtScore(assessment.score)}</span>
+        <span className="tnum font-mono text-[17px]" style={{ color: d.hex }}>{fmtScore(assessment.score)}</span>
       </div>
 
       <div className="mt-3 space-y-2.5">
         {(assessment.reasons || []).map((r, i) => (
           <div key={i}>
             <div className="flex items-baseline justify-between gap-3">
-              <span className="font-mono text-[11.5px] text-chalk">{r.signal_name}</span>
+              <span className="font-mono text-[13.5px] text-chalk">{r.signal_name}</span>
               <span className="tnum font-mono text-micro text-chalk-faint">{(r.weight * 100).toFixed(0)}%</span>
             </div>
             <div className="mt-1 h-[2px] w-full overflow-hidden bg-ink-700">
               <div className="h-full" style={{ width: `${Math.max(2, r.weight * 100)}%`, background: d.hex }} />
             </div>
-            <p className="mt-1 text-[11.5px] leading-snug text-chalk-dim">{r.raw_value}</p>
+            <p className="mt-1 text-[13.5px] leading-snug text-chalk-dim">{r.raw_value}</p>
           </div>
         ))}
       </div>
@@ -190,7 +192,7 @@ function DecisionLadder({ incident }) {
         })}
       </div>
       {!corroborated && (
-        <p className="mt-3 border-l-2 border-ps1/40 pl-3 text-[12px] leading-relaxed text-chalk-dim">
+        <p className="mt-3 border-l-2 border-ps1/40 pl-3 text-[14px] leading-relaxed text-chalk-dim">
           A lone signal is capped at step-up verification no matter how loud it is.
           <span className="text-chalk-faint"> That cap is the false-positive defence — nobody is locked out on one detector’s word.</span>
         </p>
@@ -230,7 +232,7 @@ export default function IncidentDetail({ incident, onUpdated, onClose }) {
       <div className="flex flex-wrap items-start justify-between gap-4 border-b rule pb-4">
         <div className="min-w-0">
           <div className="flex items-center gap-2.5">
-            <h3 className="font-mono text-[19px] font-semibold tracking-tight text-chalk">
+            <h3 className="font-mono text-[21px] font-semibold tracking-tight text-chalk">
               {shortEntity(incident.entity_id)}
             </h3>
             <DecisionChip decision={incident.access_decision} size="lg" />
@@ -246,7 +248,7 @@ export default function IncidentDetail({ incident, onUpdated, onClose }) {
         <div className="flex items-center gap-6">
           <div className="text-right">
             <Eyebrow>Combined</Eyebrow>
-            <div className="tnum mt-0.5 font-mono text-[26px] leading-none" style={{ color: d.hex }}>
+            <div className="tnum mt-0.5 font-mono text-[28px] leading-none" style={{ color: d.hex }}>
               {fmtScore(incident.combined_score)}
             </div>
           </div>
@@ -294,14 +296,14 @@ export default function IncidentDetail({ incident, onUpdated, onClose }) {
           <div className="mt-2.5 flex flex-col gap-1.5">
             {ACTIONS.map((a) => (
               <button key={a.key} disabled={!!busy} onClick={() => act(a.key)}
-                      className="focusable flex items-center justify-between rounded-sm border border-ink-700 px-3 py-2 text-left text-[12.5px] text-chalk-dim transition-colors hover:border-ink-500 hover:bg-ink-800 hover:text-chalk disabled:opacity-40">
+                      className="focusable flex items-center justify-between rounded-sm border border-ink-700 px-3 py-2 text-left text-[14.5px] text-chalk-dim transition-colors hover:border-ink-500 hover:bg-ink-800 hover:text-chalk disabled:opacity-40">
                 <span>{a.label}</span>
                 <span className="font-mono text-micro text-chalk-faint">{busy === a.key ? "···" : "→"}</span>
               </button>
             ))}
           </div>
           {err && <p className="mt-2 font-mono text-micro text-alert-soft">{err}</p>}
-          <p className="mt-3 text-[11.5px] leading-relaxed text-chalk-faint">
+          <p className="mt-3 text-[13.5px] leading-relaxed text-chalk-faint">
             Dismissing suppresses future lone alerts for this entity.
           </p>
         </div>

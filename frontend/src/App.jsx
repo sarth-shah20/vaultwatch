@@ -31,7 +31,7 @@ function Mark() {
         <circle cx="13" cy="13" r="2.6" fill="#E5484D" />
       </svg>
       <div className="leading-none">
-        <div className="text-[15px] font-semibold tracking-tight text-chalk">VaultWatch</div>
+        <div className="text-[17px] font-semibold tracking-tight text-chalk">VaultWatch</div>
         <div className="mt-1 text-micro uppercase tracking-[0.18em] text-chalk-faint">
           Cross-domain correlation
         </div>
@@ -66,11 +66,11 @@ function Thesis({ stats }) {
   return (
     <div className="grid gap-6 border-b rule pb-6 lg:grid-cols-[1fr_auto]">
       <div className="max-w-3xl">
-        <h1 className="text-[26px] font-semibold leading-[1.25] tracking-tight text-chalk">
+        <h1 className="text-[28px] font-semibold leading-[1.25] tracking-tight text-chalk">
           A behavioural red flag is weak. A suspicious transaction is weak.
           <span className="text-chalk-dim"> The same person tripping both, inside {CORRELATION_WINDOW_MIN} minutes, is not.</span>
         </h1>
-        <p className="mt-3 max-w-2xl text-[13px] leading-relaxed text-chalk-dim">
+        <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-chalk-dim">
           Banks run insider-threat and fraud detection in systems that never talk. An attacker
           who stays just under each threshold slips past both. VaultWatch joins the two on a
           shared identity and a shared clock — and only lets corroborated evidence reach the
@@ -85,7 +85,7 @@ function Thesis({ stats }) {
         ].map((s) => (
           <div key={s.label}>
             <Eyebrow>{s.label}</Eyebrow>
-            <div className="tnum mt-1 font-mono text-[28px] leading-none" style={{ color: s.hex }}>
+            <div className="tnum mt-1 font-mono text-[30px] leading-none" style={{ color: s.hex }}>
               {s.value}
             </div>
           </div>
@@ -105,7 +105,7 @@ function Legend() {
   return (
     <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
       {items.map((i) => (
-        <span key={i.t} className="inline-flex items-center gap-2 text-[11.5px] text-chalk-dim">
+        <span key={i.t} className="inline-flex items-center gap-2 text-[13.5px] text-chalk-dim">
           {i.d ? (
             <span className="h-2.5 w-2.5 rotate-45" style={{ background: i.c }} />
           ) : i.ring ? (
@@ -224,7 +224,7 @@ export default function App() {
             <button
               key={v.id}
               onClick={() => setView(v.id)}
-              className={`focusable rounded-sm px-3 py-1.5 text-[12.5px] transition-colors ${
+              className={`focusable rounded-sm px-3 py-1.5 text-[14.5px] transition-colors ${
                 view === v.id ? "bg-ink-800 text-chalk" : "text-chalk-faint hover:bg-ink-850 hover:text-chalk-dim"
               }`}
             >
@@ -319,7 +319,7 @@ export default function App() {
         </main>
       )}
 
-      <footer className="mt-auto border-t rule pt-4 text-[11px] leading-relaxed text-chalk-faint">
+      <footer className="mt-auto border-t rule pt-4 text-[13px] leading-relaxed text-chalk-faint">
         Live boundary: models run in-process on ingest, correlation and decisioning are live.
         Raw log → feature engineering remains an offline batch stage. Cross-dataset identity
         and clock alignment between CERT and PaySim are labelled synthetic demo constructs —

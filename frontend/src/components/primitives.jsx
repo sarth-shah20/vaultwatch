@@ -61,12 +61,12 @@ export function CorroborationMark({ level, domains = [] }) {
 export function ScoreMeter({ value, hex = "#E7ECF3", width = 44 }) {
   return (
     <span className="inline-flex items-center gap-2">
-      <span className="tnum font-mono text-[13px] tabular-nums" style={{ color: hex }}>
+      <span className="tnum font-mono text-[15px] tabular-nums" style={{ color: hex }}>
         {fmtScore(value)}
       </span>
       <span className="relative block h-[3px] overflow-hidden rounded-full bg-ink-700" style={{ width }}>
         <span
-          className="absolute inset-y-0 left-0 rounded-full"
+          className="absolute inset-y-0 left-0 origin-left animate-growX rounded-full"
           style={{ width: `${Math.max(2, (value || 0) * 100)}%`, background: hex }}
         />
       </span>
@@ -82,8 +82,8 @@ export function SectionHead({ title, caption, right }) {
   return (
     <div className="mb-4 flex items-end justify-between gap-6 border-b rule pb-2.5">
       <div>
-        <h2 className="text-[15px] font-semibold tracking-tight text-chalk">{title}</h2>
-        {caption && <p className="mt-1 max-w-2xl text-[12.5px] leading-relaxed text-chalk-dim">{caption}</p>}
+        <h2 className="text-[17px] font-semibold tracking-tight text-chalk">{title}</h2>
+        {caption && <p className="mt-1 max-w-2xl text-[14.5px] leading-relaxed text-chalk-dim">{caption}</p>}
       </div>
       {right}
     </div>
@@ -120,7 +120,7 @@ export function ErrorNote({ error, onRetry }) {
 
 export function Empty({ children }) {
   return (
-    <div className="flex items-center justify-center rounded border border-dashed border-ink-700 px-6 py-14 text-center text-[13px] text-chalk-faint">
+    <div className="flex items-center justify-center rounded border border-dashed border-ink-700 px-6 py-14 text-center text-[15px] text-chalk-faint">
       {children}
     </div>
   );

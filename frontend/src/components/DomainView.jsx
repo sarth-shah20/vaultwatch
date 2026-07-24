@@ -23,8 +23,8 @@ function Distribution({ values, hex }) {
       <div className="flex h-20 items-end gap-[3px]">
         {bins.map((n, i) => (
           <div key={i} className="group relative flex-1" title={`${(i / 10).toFixed(1)}–${((i + 1) / 10).toFixed(1)}: ${n}`}>
-            <div className="w-full rounded-[1px] transition-all"
-                 style={{ height: `${(n / max) * 76}px`, background: n ? hex : "#1A222C", opacity: n ? 0.35 + 0.65 * (n / max) : 1 }} />
+            <div className="w-full origin-bottom animate-growY rounded-[1px] transition-all"
+                 style={{ height: `${(n / max) * 76}px`, background: n ? hex : "#1A222C", opacity: n ? 0.35 + 0.65 * (n / max) : 1, animationDelay: `${i * 35}ms` }} />
           </div>
         ))}
       </div>
@@ -83,7 +83,7 @@ export default function DomainView({ domain, incidents, onSelect }) {
           <div className="mt-3 panel p-4">
             <Distribution values={scores} hex={d.hex} />
           </div>
-          <p className="mt-3 text-[11.5px] leading-relaxed text-chalk-faint">
+          <p className="mt-3 text-[13.5px] leading-relaxed text-chalk-faint">
             {domain === "ps2_transaction"
               ? "The fraud model is near-binary — scores pile up at the extremes rather than spreading across the range. A known, documented property of training on PaySim."
               : "Only windows above the 0·99 operational alert threshold are surfaced at all, so this view is the extreme tail by construction."}
@@ -109,11 +109,11 @@ export default function DomainView({ domain, incidents, onSelect }) {
                     <tr key={s.assessment_id}
                         onClick={() => onSelect?.(s.incident_id)}
                         className="cursor-pointer border-b border-ink-800/70 transition-colors hover:bg-ink-850">
-                      <td className="py-2 pr-3 font-mono text-[12.5px] text-chalk">{shortEntity(s.entity_id)}</td>
-                      <td className="tnum py-2 pr-6 text-right font-mono text-[12.5px]" style={{ color: d.hex }}>
+                      <td className="py-2 pr-3 font-mono text-[14.5px] text-chalk">{shortEntity(s.entity_id)}</td>
+                      <td className="tnum py-2 pr-6 text-right font-mono text-[14.5px]" style={{ color: d.hex }}>
                         {fmtScore(s.score)}
                       </td>
-                      <td className="max-w-[280px] truncate py-2 pr-3 font-mono text-[11.5px] text-chalk-dim"
+                      <td className="max-w-[280px] truncate py-2 pr-3 font-mono text-[13.5px] text-chalk-dim"
                           title={s.reasons?.[0]?.raw_value}>
                         {s.reasons?.[0]?.signal_name || "—"}
                       </td>

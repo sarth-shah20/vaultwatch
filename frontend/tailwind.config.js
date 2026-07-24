@@ -33,8 +33,11 @@ export default {
         good: "#3DD68C",
       },
       fontSize: {
-        micro: ["10px", { lineHeight: "1.3", letterSpacing: "0.09em" }],
-        tiny: ["11px", { lineHeight: "1.45", letterSpacing: "0.04em" }],
+        micro: ["12px", { lineHeight: "1.35", letterSpacing: "0.08em" }],
+        tiny: ["13.5px", { lineHeight: "1.45", letterSpacing: "0.03em" }],
+        xs: ["13.5px", { lineHeight: "1.5" }],
+        sm: ["15px", { lineHeight: "1.55" }],
+        base: ["16.5px", { lineHeight: "1.6" }],
       },
       keyframes: {
         riseIn: { "0%": { opacity: 0, transform: "translateY(10px)" }, "100%": { opacity: 1, transform: "none" } },
@@ -46,6 +49,9 @@ export default {
           "100%": { transform: "scale(1)", opacity: 1 },
         },
         sweep: { "0%": { transform: "translateX(-100%)" }, "100%": { transform: "translateX(220%)" } },
+        growY: { "0%": { transform: "scaleY(0)" }, "100%": { transform: "scaleY(1)" } },
+        growX: { "0%": { transform: "scaleX(0)" }, "100%": { transform: "scaleX(1)" } },
+        drawIn: { "0%": { strokeDashoffset: "var(--len, 1000)" }, "100%": { strokeDashoffset: "0" } },
       },
       animation: {
         riseIn: "riseIn .5s cubic-bezier(.22,1,.36,1) both",
@@ -53,6 +59,9 @@ export default {
         breathe: "breathe 2.4s ease-in-out infinite",
         landing: "landing .6s cubic-bezier(.34,1.56,.64,1) both",
         sweep: "sweep 1.6s ease-in-out infinite",
+        growY: "growY .7s cubic-bezier(.22,1,.36,1) both",
+        growX: "growX .7s cubic-bezier(.22,1,.36,1) both",
+        drawIn: "drawIn 1s cubic-bezier(.22,1,.36,1) both",
       },
     },
   },

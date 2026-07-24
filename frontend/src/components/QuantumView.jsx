@@ -13,8 +13,8 @@ function Stat({ label, value, sub, hex }) {
   return (
     <div>
       <Eyebrow>{label}</Eyebrow>
-      <div className="tnum mt-1 font-mono text-[26px] leading-none" style={{ color: hex || "#E7ECF3" }}>{value}</div>
-      {sub && <div className="mt-1 text-[11.5px] text-chalk-faint">{sub}</div>}
+      <div className="tnum mt-1 font-mono text-[28px] leading-none" style={{ color: hex || "#E7ECF3" }}>{value}</div>
+      {sub && <div className="mt-1 text-[13.5px] text-chalk-faint">{sub}</div>}
     </div>
   );
 }
@@ -72,7 +72,7 @@ export default function QuantumView() {
                     <td className="py-2.5 pr-3">
                       <div className="flex items-center gap-2">
                         <span className="h-3.5 w-[2px] rounded-full" style={{ background: hex }} />
-                        <span className="text-[12.5px] text-chalk">{a.system}</span>
+                        <span className="text-[14.5px] text-chalk">{a.system}</span>
                         {a.hndl_risk && (
                           <span className="rounded-sm border border-alert/40 bg-alert/10 px-1.5 font-mono text-micro uppercase tracking-wider text-alert-soft"
                                 title="Vulnerable algorithm + sensitive data + 5y+ confidentiality: harvest today, decrypt later.">
@@ -81,29 +81,29 @@ export default function QuantumView() {
                         )}
                       </div>
                     </td>
-                    <td className="py-2.5 pr-3 text-[11.5px] text-chalk-dim">{a.data_flow}</td>
-                    <td className="py-2.5 pr-3 font-mono text-[11.5px]"
+                    <td className="py-2.5 pr-3 text-[13.5px] text-chalk-dim">{a.data_flow}</td>
+                    <td className="py-2.5 pr-3 font-mono text-[13.5px]"
                         style={{ color: a.quantum_status === "quantum_vulnerable" ? "#F0C177" : "#95A2B3" }}>
                       {a.crypto_algorithm}
                     </td>
                     <td className="py-2.5 pr-3 font-mono text-micro uppercase tracking-wider text-chalk-dim">
                       {a.data_sensitivity}
                     </td>
-                    <td className="tnum py-2.5 pr-6 text-right font-mono text-[11.5px] text-chalk-dim">
+                    <td className="tnum py-2.5 pr-6 text-right font-mono text-[13.5px] text-chalk-dim">
                       {a.retention_years}y
                     </td>
                     <td className="py-2.5 pr-6">
                       <div className="flex items-center justify-end gap-2">
-                        <span className="tnum font-mono text-[12.5px]" style={{ color: hex }}>
+                        <span className="tnum font-mono text-[14.5px]" style={{ color: hex }}>
                           {a.priority_score.toFixed(2)}
                         </span>
                         <span className="h-[3px] w-14 overflow-hidden rounded-full bg-ink-700">
-                          <span className="block h-full rounded-full"
-                                style={{ width: `${(a.priority_score / maxScore) * 100}%`, background: hex }} />
+                          <span className="block h-full origin-left animate-growX rounded-full"
+                                style={{ width: `${(a.priority_score / maxScore) * 100}%`, background: hex, animationDelay: `${i * 30}ms` }} />
                         </span>
                       </div>
                     </td>
-                    <td className="py-2.5 font-mono text-[11.5px] text-chalk-dim">{a.recommended_pqc}</td>
+                    <td className="py-2.5 font-mono text-[13.5px] text-chalk-dim">{a.recommended_pqc}</td>
                   </tr>
                 );
               })}

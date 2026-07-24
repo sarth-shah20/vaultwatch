@@ -50,7 +50,7 @@ export default function IncidentLedger({ incidents, selectedId, onSelect, recent
                 <td className="py-2.5 pr-3">
                   <div className="flex items-center gap-2">
                     <span className="h-3.5 w-[2px] rounded-full" style={{ background: d.hex, opacity: sel ? 1 : 0.55 }} />
-                    <span className="font-mono text-[12.5px] text-chalk">{shortEntity(inc.entity_id)}</span>
+                    <span className="font-mono text-[14.5px] text-chalk">{shortEntity(inc.entity_id)}</span>
                     {fresh && (
                       <span className="rounded-sm border border-good/40 bg-good/10 px-1 font-mono text-micro uppercase text-good">
                         new
@@ -62,15 +62,15 @@ export default function IncidentLedger({ incidents, selectedId, onSelect, recent
                 <td className="py-2.5 pr-3">
                   <CorroborationMark level={inc.confidence} domains={inc.contributing_domains} />
                 </td>
-                <td className="tnum py-2.5 pr-6 text-right font-mono text-[12.5px]"
+                <td className="tnum py-2.5 pr-6 text-right font-mono text-[14.5px]"
                     style={{ color: by.ps1_behavioral ? "#E8A33D" : "#2A3644" }}>
                   {by.ps1_behavioral ? fmtScore(by.ps1_behavioral.score) : "—"}
                 </td>
-                <td className="tnum py-2.5 pr-6 text-right font-mono text-[12.5px]"
+                <td className="tnum py-2.5 pr-6 text-right font-mono text-[14.5px]"
                     style={{ color: by.ps2_transaction ? "#3DC5E8" : "#2A3644" }}>
                   {by.ps2_transaction ? fmtScore(by.ps2_transaction.score) : "—"}
                 </td>
-                <td className="tnum py-2.5 pr-6 text-right font-mono text-[12px] text-chalk-dim">
+                <td className="tnum py-2.5 pr-6 text-right font-mono text-[14px] text-chalk-dim">
                   {isCorroborated(inc) ? fmtGap(gap) : "—"}
                 </td>
                 <td className="py-2.5 pr-3 font-mono text-micro text-chalk-faint">
