@@ -167,7 +167,7 @@ export default function ConvergenceTimeline({ incidents, selectedId, onSelect, r
         <text x={0} y={AXIS_Y + 3.5} className="font-mono" fontSize="11.5"
               fill="#5D6B7D" letterSpacing="0.13em">DECISION</text>
 
-        {nodes.map((n) => {
+        {nodes.map((n, i) => {
           const sel = n.id === selectedId;
           const fresh = recentIds?.has(n.id);
           const y1 = AXIS_Y - LANE;
